@@ -1,0 +1,475 @@
+// Mock data for Nexus platform
+
+export type AgentStatus = "active" | "paused" | "deprecated";
+export type ExecutionStatus = "completed" | "failed" | "running" | "waiting_approval";
+export type StepType = "trigger" | "llm_call" | "api_call" | "conditional" | "human_approval";
+
+export interface AgentIntegration {
+  name: string;
+  type: "API" | "MCP";
+  connected: boolean;
+}
+
+export interface Agent {
+  id: string;
+  name: string;
+  description: string;
+  status: AgentStatus;
+  createdBy: string;
+  version: string;
+  executionCount: number;
+  successRate: number;
+  avgCost: number;
+  lastRun: string;
+  createdAt: string;
+  model: string;
+  integrations: AgentIntegration[];
+  goal: string;
+  instructions: string[];
+}
+
+export interface ExecutionStep {
+  id: string;
+  name: string;
+  type: StepType;
+  status: ExecutionStatus;
+  duration: number;
+  cost: number;
+  input?: any;
+  output?: any;
+  error?: string;
+}
+
+export interface Execution {
+  id: string;
+  agentId: string;
+  agentName: string;
+  status: ExecutionStatus;
+  startedAt: string;
+  completedAt?: string;
+  duration: number;
+  cost: number;
+  steps: ExecutionStep[];
+  traceId: string;
+}
+
+export interface DashboardStats {
+  totalAgents: number;
+  activeAgents: number;
+  totalExecutions: number;
+  successRate: number;
+  totalCost: number;
+  avgResponseTime: number;
+}
+
+export const mockAgents: Agent[] = [
+  {
+    id: "agent-1",
+    name: "Lead Enrichment Agent",
+    description: "Enriches new leads from Salesforce with company information from Clearbit",
+    status: "active",
+    createdBy: "Sara Klein",
+    version: "1.2.0",
+    executionCount: 1234,
+    successRate: 98.5,
+    avgCost: 0.052,
+    lastRun: new Date(Date.now() - 2 * 60 * 1000).toISOString(),
+    createdAt: "2024-09-15T10:30:00Z",
+    model: "Claude Sonnet 4.5",
+    integrations: [
+      { name: "Salesforce", type: "API", connected: true },
+      { name: "Clearbit", type: "API", connected: true },
+    ],
+    goal: "Automatically enrich new leads from Salesforce with company information, contact details, and social profiles using Clearbit's data enrichment API.",
+    instructions: [
+      "When a new lead is created in Salesforce, extract the email and company name",
+      "Use Clearbit API to fetch company information including industry, size, and funding",
+      "Enrich the lead with social profiles and contact details",
+      "Update the Salesforce lead record with enriched data",
+      "If enrichment fails, mark the lead for manual review",
+    ],
+  },
+  {
+    id: "agent-2",
+    name: "Customer Support Ticket Router",
+    description: "Automatically categorizes and routes support tickets to the right team",
+    status: "active",
+    createdBy: "Taylor Chen",
+    version: "2.1.0",
+    executionCount: 3456,
+    successRate: 99.2,
+    avgCost: 0.034,
+    lastRun: new Date(Date.now() - 5 * 60 * 1000).toISOString(),
+    createdAt: "2024-08-22T14:15:00Z",
+    model: "GPT-4.1",
+    integrations: [
+      { name: "Zendesk", type: "API", connected: true },
+      { name: "Slack", type: "API", connected: true },
+    ],
+    goal: "Analyze incoming support tickets, categorize them by type and urgency, and route them to the appropriate support team automatically.",
+    instructions: [
+      "Monitor Zendesk for new incoming tickets",
+      "Analyze ticket content to determine category (billing, technical, feature request, bug)",
+      "Assess urgency based on keywords and customer tier",
+      "Route ticket to appropriate team queue",
+      "Send Slack notification to team channel for urgent tickets",
+    ],
+  },
+  {
+    id: "agent-3",
+    name: "Weekly Report Generator",
+    description: "Generates and emails weekly sales performance reports",
+    status: "active",
+    createdBy: "Sara Klein",
+    version: "1.0.3",
+    executionCount: 48,
+    successRate: 100,
+    avgCost: 0.087,
+    lastRun: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
+    createdAt: "2024-10-01T09:00:00Z",
+    model: "Claude Opus 4.5",
+    integrations: [
+      { name: "Salesforce", type: "API", connected: true },
+      { name: "Notion", type: "API", connected: true },
+      { name: "Gmail", type: "API", connected: true },
+    ],
+    goal: "Generate comprehensive weekly sales performance reports with insights, trends, and recommendations, then distribute to stakeholders.",
+    instructions: [
+      "Every Monday at 8 AM, fetch sales data from Salesforce for the past week",
+      "Calculate key metrics: revenue, deals closed, pipeline changes",
+      "Generate insights and trend analysis using historical data",
+      "Create a formatted report document in Notion",
+      "Email report summary to sales leadership team",
+    ],
+  },
+  {
+    id: "agent-4",
+    name: "Code Review Assistant",
+    description: "Reviews pull requests and provides automated feedback",
+    status: "active",
+    createdBy: "Maya Rodriguez",
+    version: "1.5.2",
+    executionCount: 892,
+    successRate: 97.8,
+    avgCost: 0.156,
+    lastRun: new Date(Date.now() - 8 * 60 * 1000).toISOString(),
+    createdAt: "2024-07-10T16:45:00Z",
+    model: "Claude Sonnet 4.5",
+    integrations: [
+      { name: "GitHub", type: "API", connected: true },
+      { name: "Linear", type: "API", connected: true },
+    ],
+    goal: "Automatically review pull requests for code quality, security issues, and best practices, providing actionable feedback to developers.",
+    instructions: [
+      "When a PR is opened or updated, fetch the diff from GitHub",
+      "Analyze code changes for security vulnerabilities",
+      "Check for code style and best practice violations",
+      "Review test coverage and suggest missing tests",
+      "Post review comments directly on the PR",
+      "Update linked Linear issue with review status",
+    ],
+  },
+  {
+    id: "agent-5",
+    name: "Invoice Processing Agent",
+    description: "Extracts data from invoices and updates accounting system",
+    status: "paused",
+    createdBy: "Dev Team",
+    version: "0.9.0",
+    executionCount: 234,
+    successRate: 94.2,
+    avgCost: 0.045,
+    lastRun: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
+    createdAt: "2024-11-05T11:20:00Z",
+    model: "GPT-5.1",
+    integrations: [
+      { name: "Gmail", type: "API", connected: true },
+      { name: "QuickBooks", type: "API", connected: false },
+    ],
+    goal: "Extract invoice data from email attachments and automatically create entries in the accounting system.",
+    instructions: [
+      "Monitor Gmail for emails with invoice attachments",
+      "Extract PDF attachments and parse invoice data",
+      "Identify vendor, amount, due date, and line items",
+      "Create invoice entry in QuickBooks",
+      "Flag invoices that need manual review",
+    ],
+  },
+  {
+    id: "agent-6",
+    name: "Meeting Notes Summarizer",
+    description: "Transcribes and summarizes meeting recordings into action items",
+    status: "active",
+    createdBy: "Alex Park",
+    version: "1.1.0",
+    executionCount: 567,
+    successRate: 96.3,
+    avgCost: 0.089,
+    lastRun: new Date(Date.now() - 45 * 60 * 1000).toISOString(),
+    createdAt: "2024-10-20T08:30:00Z",
+    model: "Claude Sonnet 4.5",
+    integrations: [
+      { name: "Zoom", type: "API", connected: true },
+      { name: "Notion", type: "API", connected: true },
+      { name: "Slack", type: "API", connected: true },
+    ],
+    goal: "Automatically transcribe meeting recordings, generate summaries, extract action items, and distribute to participants.",
+    instructions: [
+      "When a Zoom meeting recording is available, download the audio",
+      "Transcribe the audio using speech-to-text",
+      "Generate a structured summary with key discussion points",
+      "Extract action items with assigned owners and deadlines",
+      "Create a meeting notes page in Notion",
+      "Send summary and action items to participants via Slack",
+    ],
+  },
+  {
+    id: "agent-7",
+    name: "Competitor Monitor",
+    description: "Tracks competitor pricing and product changes daily",
+    status: "active",
+    createdBy: "Sara Klein",
+    version: "2.0.1",
+    executionCount: 180,
+    successRate: 100,
+    avgCost: 0.12,
+    lastRun: new Date(Date.now() - 12 * 60 * 60 * 1000).toISOString(),
+    createdAt: "2024-09-28T13:00:00Z",
+    model: "GPT-5.1",
+    integrations: [
+      { name: "Notion", type: "API", connected: true },
+      { name: "Slack", type: "API", connected: true },
+    ],
+    goal: "Monitor competitor websites daily for pricing changes, new features, and product updates, alerting the team to significant changes.",
+    instructions: [
+      "Daily at 6 AM, crawl configured competitor websites",
+      "Extract pricing information and feature lists",
+      "Compare with previous data to detect changes",
+      "Update competitor tracking database in Notion",
+      "Send Slack alert for significant pricing or feature changes",
+      "Generate weekly competitor analysis summary",
+    ],
+  },
+];
+
+export const mockExecutions: Execution[] = [
+  {
+    id: "exec-1",
+    agentId: "agent-1",
+    agentName: "Lead Enrichment Agent",
+    status: "completed",
+    startedAt: new Date(Date.now() - 2 * 60 * 1000).toISOString(),
+    completedAt: new Date(Date.now() - 1.8 * 60 * 1000).toISOString(),
+    duration: 1200,
+    cost: 0.051,
+    traceId: "trace-abc123",
+    steps: [
+      {
+        id: "step-1",
+        name: "Salesforce Trigger",
+        type: "trigger",
+        status: "completed",
+        duration: 45,
+        cost: 0.001,
+      },
+      {
+        id: "step-2",
+        name: "Extract Lead Data",
+        type: "llm_call",
+        status: "completed",
+        duration: 234,
+        cost: 0.002,
+      },
+      {
+        id: "step-3",
+        name: "Clearbit Enrichment",
+        type: "api_call",
+        status: "completed",
+        duration: 856,
+        cost: 0.045,
+      },
+      {
+        id: "step-4",
+        name: "Update Salesforce",
+        type: "api_call",
+        status: "completed",
+        duration: 65,
+        cost: 0.003,
+      },
+    ],
+  },
+  {
+    id: "exec-2",
+    agentId: "agent-2",
+    agentName: "Customer Support Ticket Router",
+    status: "completed",
+    startedAt: new Date(Date.now() - 5 * 60 * 1000).toISOString(),
+    completedAt: new Date(Date.now() - 4.85 * 60 * 1000).toISOString(),
+    duration: 900,
+    cost: 0.034,
+    traceId: "trace-def456",
+    steps: [
+      {
+        id: "step-1",
+        name: "Zendesk Webhook",
+        type: "trigger",
+        status: "completed",
+        duration: 23,
+        cost: 0.001,
+      },
+      {
+        id: "step-2",
+        name: "Categorize Ticket",
+        type: "llm_call",
+        status: "completed",
+        duration: 456,
+        cost: 0.028,
+      },
+      {
+        id: "step-3",
+        name: "Route to Team",
+        type: "api_call",
+        status: "completed",
+        duration: 421,
+        cost: 0.005,
+      },
+    ],
+  },
+  {
+    id: "exec-3",
+    agentId: "agent-1",
+    agentName: "Lead Enrichment Agent",
+    status: "failed",
+    startedAt: new Date(Date.now() - 8 * 60 * 1000).toISOString(),
+    completedAt: new Date(Date.now() - 7.8 * 60 * 1000).toISOString(),
+    duration: 3100,
+    cost: 0.012,
+    traceId: "trace-ghi789",
+    steps: [
+      {
+        id: "step-1",
+        name: "Salesforce Trigger",
+        type: "trigger",
+        status: "completed",
+        duration: 42,
+        cost: 0.001,
+      },
+      {
+        id: "step-2",
+        name: "Extract Lead Data",
+        type: "llm_call",
+        status: "completed",
+        duration: 298,
+        cost: 0.003,
+      },
+      {
+        id: "step-3",
+        name: "Clearbit Enrichment",
+        type: "api_call",
+        status: "failed",
+        duration: 2760,
+        cost: 0.008,
+        error: "API rate limit exceeded for Clearbit (429)",
+      },
+    ],
+  },
+  {
+    id: "exec-4",
+    agentId: "agent-4",
+    agentName: "Code Review Assistant",
+    status: "running",
+    startedAt: new Date(Date.now() - 30 * 1000).toISOString(),
+    duration: 30000,
+    cost: 0.089,
+    traceId: "trace-jkl012",
+    steps: [
+      {
+        id: "step-1",
+        name: "GitHub Webhook",
+        type: "trigger",
+        status: "completed",
+        duration: 18,
+        cost: 0.001,
+      },
+      {
+        id: "step-2",
+        name: "Analyze Code Changes",
+        type: "llm_call",
+        status: "running",
+        duration: 0,
+        cost: 0.088,
+      },
+    ],
+  },
+  {
+    id: "exec-5",
+    agentId: "agent-3",
+    agentName: "Weekly Report Generator",
+    status: "waiting_approval",
+    startedAt: new Date(Date.now() - 60 * 1000).toISOString(),
+    duration: 60000,
+    cost: 0.045,
+    traceId: "trace-mno345",
+    steps: [
+      {
+        id: "step-1",
+        name: "Schedule Trigger",
+        type: "trigger",
+        status: "completed",
+        duration: 12,
+        cost: 0.001,
+      },
+      {
+        id: "step-2",
+        name: "Fetch Sales Data",
+        type: "api_call",
+        status: "completed",
+        duration: 1234,
+        cost: 0.015,
+      },
+      {
+        id: "step-3",
+        name: "Generate Report",
+        type: "llm_call",
+        status: "completed",
+        duration: 3456,
+        cost: 0.029,
+      },
+      {
+        id: "step-4",
+        name: "Review Report",
+        type: "human_approval",
+        status: "waiting_approval",
+        duration: 0,
+        cost: 0,
+      },
+    ],
+  },
+];
+
+export const mockDashboardStats: DashboardStats = {
+  totalAgents: 5,
+  activeAgents: 4,
+  totalExecutions: 5972,
+  successRate: 98.2,
+  totalCost: 312.45,
+  avgResponseTime: 1.2,
+};
+
+export const mockCostData = [
+  { date: "Nov 22", cost: 42.3, executions: 856 },
+  { date: "Nov 23", cost: 38.7, executions: 782 },
+  { date: "Nov 24", cost: 51.2, executions: 923 },
+  { date: "Nov 25", cost: 47.8, executions: 891 },
+  { date: "Nov 26", cost: 44.5, executions: 834 },
+  { date: "Nov 27", cost: 49.1, executions: 887 },
+  { date: "Nov 28", cost: 38.9, executions: 799 },
+];
+
+export const mockCostBreakdown = [
+  { name: "OpenAI GPT-4", cost: 156.2, percentage: 50 },
+  { name: "Clearbit API", cost: 78.1, percentage: 25 },
+  { name: "Salesforce API", cost: 46.9, percentage: 15 },
+  { name: "Other APIs", cost: 31.25, percentage: 10 },
+];
+
