@@ -1,66 +1,15 @@
 // Mock data for Nexus platform
+// Types are now centralized in @/lib/types.ts
 
-export type AgentStatus = "active" | "paused" | "deprecated";
-export type ExecutionStatus = "completed" | "failed" | "running" | "waiting_approval";
-export type StepType = "trigger" | "llm_call" | "api_call" | "conditional" | "human_approval";
+import type {
+  Agent,
+  Execution,
+  DashboardStats,
+} from "@/lib/types";
 
-export interface AgentIntegration {
-  name: string;
-  type: "API" | "MCP";
-  connected: boolean;
-}
-
-export interface Agent {
-  id: string;
-  name: string;
-  description: string;
-  status: AgentStatus;
-  createdBy: string;
-  version: string;
-  executionCount: number;
-  successRate: number;
-  avgCost: number;
-  lastRun: string;
-  createdAt: string;
-  model: string;
-  integrations: AgentIntegration[];
-  goal: string;
-  instructions: string[];
-}
-
-export interface ExecutionStep {
-  id: string;
-  name: string;
-  type: StepType;
-  status: ExecutionStatus;
-  duration: number;
-  cost: number;
-  input?: any;
-  output?: any;
-  error?: string;
-}
-
-export interface Execution {
-  id: string;
-  agentId: string;
-  agentName: string;
-  status: ExecutionStatus;
-  startedAt: string;
-  completedAt?: string;
-  duration: number;
-  cost: number;
-  steps: ExecutionStep[];
-  traceId: string;
-}
-
-export interface DashboardStats {
-  totalAgents: number;
-  activeAgents: number;
-  totalExecutions: number;
-  successRate: number;
-  totalCost: number;
-  avgResponseTime: number;
-}
+// Re-export types for backward compatibility
+export type { Agent, Execution, DashboardStats } from "@/lib/types";
+export type { AgentStatus, ExecutionStatus, StepType, AgentIntegration, ExecutionStep } from "@/lib/types";
 
 export const mockAgents: Agent[] = [
   {
@@ -456,20 +405,7 @@ export const mockDashboardStats: DashboardStats = {
   avgResponseTime: 1.2,
 };
 
-export const mockCostData = [
-  { date: "Nov 22", cost: 42.3, executions: 856 },
-  { date: "Nov 23", cost: 38.7, executions: 782 },
-  { date: "Nov 24", cost: 51.2, executions: 923 },
-  { date: "Nov 25", cost: 47.8, executions: 891 },
-  { date: "Nov 26", cost: 44.5, executions: 834 },
-  { date: "Nov 27", cost: 49.1, executions: 887 },
-  { date: "Nov 28", cost: 38.9, executions: 799 },
-];
-
-export const mockCostBreakdown = [
-  { name: "OpenAI GPT-4", cost: 156.2, percentage: 50 },
-  { name: "Clearbit API", cost: 78.1, percentage: 25 },
-  { name: "Salesforce API", cost: 46.9, percentage: 15 },
-  { name: "Other APIs", cost: 31.25, percentage: 10 },
-];
+// Cost data is now in @/lib/data/analytics-data.ts
+// Re-export for backward compatibility
+export { mockCostData, mockCostBreakdown } from "@/lib/data/analytics-data";
 

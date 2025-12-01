@@ -4,15 +4,18 @@ import * as React from "react"
 import {
   LayoutDashboard,
   Bot,
-  DollarSign,
-  Settings,
   Zap,
-  ShieldCheck,
   HelpCircle,
+  Activity,
+  BookOpen,
+  Key,
+  Users,
+  BarChart3,
+  Webhook,
+  Building2,
 } from "lucide-react"
 
 import { NavMain } from "@/components/nav-main"
-import { NavSecondary } from "@/components/nav-secondary"
 import { NavUser } from "@/components/nav-user"
 import {
   Sidebar,
@@ -30,21 +33,11 @@ const data = {
     email: "sara@company.com",
     avatar: "",
   },
-  navMain: [
-    {
-      title: "Dashboard",
-      url: "/",
-      icon: LayoutDashboard,
-    },
+  build: [
     {
       title: "Agents",
       url: "/agents",
       icon: Bot,
-    },
-    {
-      title: "Cost Analytics",
-      url: "/analytics",
-      icon: DollarSign,
     },
     {
       title: "Integrations",
@@ -52,16 +45,52 @@ const data = {
       icon: Zap,
     },
     {
-      title: "Policies",
-      url: "/policies",
-      icon: ShieldCheck,
+      title: "Webhooks",
+      url: "/webhooks",
+      icon: Webhook,
     },
   ],
-  navSecondary: [
+  dashboard: [
     {
-      title: "Settings",
-      url: "/settings",
-      icon: Settings,
+      title: "Dashboard",
+      url: "/",
+      icon: LayoutDashboard,
+    },
+  ],
+  run: [
+    {
+      title: "Activity",
+      url: "/activity",
+      icon: Activity,
+    },
+    {
+      title: "Analytics",
+      url: "/analytics",
+      icon: BarChart3,
+    },
+  ],
+  access: [
+    {
+      title: "Organization",
+      url: "/organization",
+      icon: Building2,
+    },
+    {
+      title: "API Keys",
+      url: "/api-keys",
+      icon: Key,
+    },
+    {
+      title: "Team",
+      url: "/team",
+      icon: Users,
+    },
+  ],
+  resources: [
+    {
+      title: "Documentation",
+      url: "/docs",
+      icon: BookOpen,
     },
     {
       title: "Help",
@@ -98,8 +127,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} />
-        <NavSecondary items={data.navSecondary} className="mt-auto" />
+        <NavMain items={data.dashboard} />
+        <NavMain items={data.build} label="Build" />
+        <NavMain items={data.run} label="Run" />
+        <NavMain items={data.access} label="Access" />
+        <NavMain items={data.resources} label="Resources" />
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={data.user} />
@@ -107,4 +139,3 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     </Sidebar>
   )
 }
-
