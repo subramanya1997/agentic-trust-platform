@@ -224,26 +224,26 @@ export function TestConsole({ tools, serverUrl }: TestConsoleProps) {
     : "";
 
   return (
-    <Card className="bg-stone-900 border-stone-800">
+    <Card className="bg-card border">
       <CardHeader className="pb-4">
-        <CardTitle className="text-base text-stone-200">
+        <CardTitle className="text-base text-foreground">
           Test Console
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-6">
         {/* Tool Selection */}
         <div className="space-y-2">
-          <Label className="text-stone-300">Select Tool</Label>
+          <Label className="text-muted-foreground">Select Tool</Label>
           <Select value={selectedToolId} onValueChange={handleToolChange}>
-            <SelectTrigger className="bg-stone-800 border-stone-700 text-stone-200">
+            <SelectTrigger className="bg-accent border text-foreground">
               <SelectValue placeholder="Choose a tool to test" />
             </SelectTrigger>
-            <SelectContent className="bg-stone-800 border-stone-700 max-h-[300px]">
+            <SelectContent className="bg-accent border max-h-[300px]">
               {tools.map((tool) => (
                 <SelectItem
                   key={`${tool.sourceId}-${tool.toolName}`}
                   value={`${tool.sourceId}-${tool.toolName}`}
-                  className="text-stone-200 focus:bg-stone-700"
+                  className="text-foreground focus:bg-muted"
                 >
                   <div className="flex items-center gap-2">
                     {tool.sourceType === "integration" ? (
@@ -259,14 +259,8 @@ export function TestConsole({ tools, serverUrl }: TestConsoleProps) {
                     )}
                     <span className="font-mono text-sm">{tool.toolName}</span>
                     <Badge
-                      variant="outline"
-                      className={`text-[10px] px-1 py-0 ml-1 ${
-                        tool.category === "read"
-                          ? "bg-green-950/50 text-green-400 border-green-800"
-                          : tool.category === "write"
-                          ? "bg-blue-950/50 text-blue-400 border-blue-800"
-                          : "bg-amber-950/50 text-amber-400 border-amber-800"
-                      }`}
+                      variant={tool.category === "read" ? "success" : tool.category === "write" ? "info" : "warning"}
+                      className="text-[10px] px-1 py-0 ml-1"
                     >
                       {tool.category}
                     </Badge>
@@ -276,21 +270,21 @@ export function TestConsole({ tools, serverUrl }: TestConsoleProps) {
             </SelectContent>
           </Select>
           {selectedTool && (
-            <p className="text-xs text-stone-500">{selectedTool.toolDescription}</p>
+            <p className="text-xs text-foreground0">{selectedTool.toolDescription}</p>
           )}
         </div>
 
         {/* Parameters Form */}
         {selectedTool && selectedTool.parameters.length > 0 && (
           <div className="space-y-4">
-            <Label className="text-stone-300">Parameters</Label>
+            <Label className="text-muted-foreground">Parameters</Label>
             <div className="grid gap-4">
               {selectedTool.parameters.map((param) => (
                 <div key={param.name} className="space-y-1.5">
                   <div className="flex items-center gap-2">
                     <Label
                       htmlFor={param.name}
-                      className="text-sm text-stone-400 font-mono"
+                      className="text-sm text-muted-foreground font-mono"
                     >
                       {param.name}
                     </Label>
@@ -311,7 +305,7 @@ export function TestConsole({ tools, serverUrl }: TestConsoleProps) {
                       onChange={(e) => handleParamChange(param.name, e.target.value)}
                       placeholder={param.description}
                       rows={2}
-                      className="bg-stone-800 border-stone-700 text-stone-200 placeholder:text-stone-600 text-sm font-mono resize-none"
+                      className="bg-accent border text-foreground placeholder:text-stone-600 text-sm font-mono resize-none"
                     />
                   ) : (
                     <Input
@@ -320,7 +314,7 @@ export function TestConsole({ tools, serverUrl }: TestConsoleProps) {
                       value={params[param.name] || ""}
                       onChange={(e) => handleParamChange(param.name, e.target.value)}
                       placeholder={param.description}
-                      className="bg-stone-800 border-stone-700 text-stone-200 placeholder:text-stone-600 text-sm font-mono"
+                      className="bg-accent border text-foreground placeholder:text-stone-600 text-sm font-mono"
                     />
                   )}
                 </div>
@@ -373,7 +367,7 @@ export function TestConsole({ tools, serverUrl }: TestConsoleProps) {
                   {result.success ? "Success" : "Error"}
                 </span>
               </div>
-              <div className="flex items-center gap-4 text-xs text-stone-400">
+              <div className="flex items-center gap-4 text-xs text-muted-foreground">
                 <span className="flex items-center gap-1">
                   <Clock className="h-3.5 w-3.5" />
                   {result.duration}ms
@@ -383,24 +377,24 @@ export function TestConsole({ tools, serverUrl }: TestConsoleProps) {
 
             {/* Request/Response Tabs */}
             <Tabs defaultValue="response" className="w-full">
-              <TabsList className="bg-stone-800 border border-stone-700">
+              <TabsList className="bg-accent border border">
                 <TabsTrigger
                   value="response"
-                  className="data-[state=active]:bg-stone-700 text-stone-400 data-[state=active]:text-stone-100"
+                  className="data-[state=active]:bg-muted text-muted-foreground data-[state=active]:text-foreground"
                 >
                   <FileJson className="h-3.5 w-3.5 mr-1.5" />
                   Response
                 </TabsTrigger>
                 <TabsTrigger
                   value="request"
-                  className="data-[state=active]:bg-stone-700 text-stone-400 data-[state=active]:text-stone-100"
+                  className="data-[state=active]:bg-muted text-muted-foreground data-[state=active]:text-foreground"
                 >
                   <Code className="h-3.5 w-3.5 mr-1.5" />
                   MCP Request
                 </TabsTrigger>
                 <TabsTrigger
                   value="mcp-response"
-                  className="data-[state=active]:bg-stone-700 text-stone-400 data-[state=active]:text-stone-100"
+                  className="data-[state=active]:bg-muted text-muted-foreground data-[state=active]:text-foreground"
                 >
                   <Code className="h-3.5 w-3.5 mr-1.5" />
                   MCP Response
@@ -412,7 +406,7 @@ export function TestConsole({ tools, serverUrl }: TestConsoleProps) {
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="absolute top-2 right-2 h-7 w-7 text-stone-500 hover:text-stone-300"
+                    className="absolute top-2 right-2 h-7 w-7 text-foreground0 hover:text-muted-foreground"
                     onClick={() =>
                       copyToClipboard(
                         JSON.stringify(result.response || { error: result.error }, null, 2),
@@ -426,7 +420,7 @@ export function TestConsole({ tools, serverUrl }: TestConsoleProps) {
                       <Copy className="h-3.5 w-3.5" />
                     )}
                   </Button>
-                  <pre className="p-4 rounded-lg bg-stone-950 border border-stone-800 text-xs font-mono text-stone-300 overflow-x-auto max-h-[300px]">
+                  <pre className="p-4 rounded-lg bg-background border border text-xs font-mono text-muted-foreground overflow-x-auto max-h-[300px]">
                     {result.success
                       ? JSON.stringify(result.response, null, 2)
                       : result.error}
@@ -439,7 +433,7 @@ export function TestConsole({ tools, serverUrl }: TestConsoleProps) {
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="absolute top-2 right-2 h-7 w-7 text-stone-500 hover:text-stone-300"
+                    className="absolute top-2 right-2 h-7 w-7 text-foreground0 hover:text-muted-foreground"
                     onClick={() => copyToClipboard(mcpRequest, "request")}
                   >
                     {copiedRequest ? (
@@ -448,7 +442,7 @@ export function TestConsole({ tools, serverUrl }: TestConsoleProps) {
                       <Copy className="h-3.5 w-3.5" />
                     )}
                   </Button>
-                  <pre className="p-4 rounded-lg bg-stone-950 border border-stone-800 text-xs font-mono text-stone-300 overflow-x-auto max-h-[300px]">
+                  <pre className="p-4 rounded-lg bg-background border border text-xs font-mono text-muted-foreground overflow-x-auto max-h-[300px]">
                     {mcpRequest}
                   </pre>
                 </div>
@@ -459,7 +453,7 @@ export function TestConsole({ tools, serverUrl }: TestConsoleProps) {
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="absolute top-2 right-2 h-7 w-7 text-stone-500 hover:text-stone-300"
+                    className="absolute top-2 right-2 h-7 w-7 text-foreground0 hover:text-muted-foreground"
                     onClick={() => copyToClipboard(mcpResponse, "response")}
                   >
                     {copiedResponse ? (
@@ -468,7 +462,7 @@ export function TestConsole({ tools, serverUrl }: TestConsoleProps) {
                       <Copy className="h-3.5 w-3.5" />
                     )}
                   </Button>
-                  <pre className="p-4 rounded-lg bg-stone-950 border border-stone-800 text-xs font-mono text-stone-300 overflow-x-auto max-h-[300px]">
+                  <pre className="p-4 rounded-lg bg-background border border text-xs font-mono text-muted-foreground overflow-x-auto max-h-[300px]">
                     {mcpResponse}
                   </pre>
                 </div>
@@ -478,9 +472,9 @@ export function TestConsole({ tools, serverUrl }: TestConsoleProps) {
         )}
 
         {/* Server URL Info */}
-        <div className="pt-4 border-t border-stone-800">
-          <p className="text-xs text-stone-500 mb-2">Server Endpoint</p>
-          <code className="block text-xs text-stone-400 font-mono bg-stone-800 px-3 py-2 rounded break-all">
+        <div className="pt-4">
+          <p className="text-xs text-foreground0 mb-2">Server Endpoint</p>
+          <code className="block text-xs text-muted-foreground font-mono bg-accent px-3 py-2 rounded break-all">
             {serverUrl}
           </code>
         </div>

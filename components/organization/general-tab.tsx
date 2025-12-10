@@ -23,57 +23,57 @@ export function GeneralTab() {
     <div className="grid grid-cols-2 gap-6">
       {/* Left Column - General Settings */}
       <div className="space-y-6">
-        <Card className="bg-stone-900 border-stone-800">
+        <Card className="bg-card border">
           <CardHeader className="pb-4">
-            <CardTitle className="text-stone-100 text-base">General Settings</CardTitle>
+            <CardTitle className="text-foreground text-base">General Settings</CardTitle>
           </CardHeader>
           <CardContent className="p-0">
             <table className="min-w-full">
               <tbody className="divide-y divide-stone-800">
                 <tr>
                   <td className="px-6 py-4 w-2/5">
-                    <span className="text-sm font-medium text-stone-300">Organization Name</span>
+                    <span className="text-sm font-medium text-muted-foreground">Organization Name</span>
                   </td>
                   <td className="px-6 py-4">
                     <input
                       type="text"
                       defaultValue="Acme Corp"
-                      className="w-full rounded-lg border border-stone-700 bg-stone-800 px-3 py-2 text-sm text-stone-200 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500"
+                      className="w-full rounded-lg border border bg-accent px-3 py-2 text-sm text-foreground focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500"
                     />
                   </td>
                 </tr>
                 <tr>
                   <td className="px-6 py-4 w-2/5">
-                    <span className="text-sm font-medium text-stone-300">Organization Slug</span>
+                    <span className="text-sm font-medium text-muted-foreground">Organization Slug</span>
                   </td>
                   <td className="px-6 py-4">
                     <input
                       type="text"
                       defaultValue="acme-corp"
-                      className="w-full rounded-lg border border-stone-700 bg-stone-800 px-3 py-2 text-sm text-stone-200 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500"
+                      className="w-full rounded-lg border border bg-accent px-3 py-2 text-sm text-foreground focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500"
                     />
                   </td>
                 </tr>
                 <tr>
                   <td className="px-6 py-4 w-2/5">
-                    <span className="text-sm font-medium text-stone-300">Timezone</span>
+                    <span className="text-sm font-medium text-muted-foreground">Timezone</span>
                   </td>
                   <td className="px-6 py-4">
                     <Select defaultValue="pst">
-                      <SelectTrigger className="w-full border-stone-700 bg-stone-800 text-stone-200">
+                      <SelectTrigger className="w-full border bg-accent text-foreground">
                         <SelectValue />
                       </SelectTrigger>
-                      <SelectContent className="border-stone-700 bg-stone-900">
-                        <SelectItem value="pst" className="text-stone-300 focus:bg-stone-800 focus:text-stone-100">
+                      <SelectContent className="border bg-card">
+                        <SelectItem value="pst" className="text-muted-foreground focus:bg-accent focus:text-foreground">
                           America/Los_Angeles (PST)
                         </SelectItem>
-                        <SelectItem value="est" className="text-stone-300 focus:bg-stone-800 focus:text-stone-100">
+                        <SelectItem value="est" className="text-muted-foreground focus:bg-accent focus:text-foreground">
                           America/New_York (EST)
                         </SelectItem>
-                        <SelectItem value="gmt" className="text-stone-300 focus:bg-stone-800 focus:text-stone-100">
+                        <SelectItem value="gmt" className="text-muted-foreground focus:bg-accent focus:text-foreground">
                           Europe/London (GMT)
                         </SelectItem>
-                        <SelectItem value="jst" className="text-stone-300 focus:bg-stone-800 focus:text-stone-100">
+                        <SelectItem value="jst" className="text-muted-foreground focus:bg-accent focus:text-foreground">
                           Asia/Tokyo (JST)
                         </SelectItem>
                       </SelectContent>
@@ -82,27 +82,27 @@ export function GeneralTab() {
                 </tr>
                 <tr>
                   <td className="px-6 py-4 w-2/5">
-                    <span className="text-sm font-medium text-stone-300">Default LLM Model</span>
+                    <span className="text-sm font-medium text-muted-foreground">Default LLM Model</span>
                   </td>
                   <td className="px-6 py-4">
                     <Select defaultValue="claude-sonnet">
-                      <SelectTrigger className="w-full border-stone-700 bg-stone-800 text-stone-200">
+                      <SelectTrigger className="w-full border bg-accent text-foreground">
                         <SelectValue />
                       </SelectTrigger>
-                      <SelectContent className="border-stone-700 bg-stone-900">
-                        <SelectItem value="claude-sonnet" className="text-stone-300 focus:bg-stone-800 focus:text-stone-100">
+                      <SelectContent className="border bg-card">
+                        <SelectItem value="claude-sonnet" className="text-muted-foreground focus:bg-accent focus:text-foreground">
                           Claude Sonnet 4.5
                         </SelectItem>
-                        <SelectItem value="claude-opus" className="text-stone-300 focus:bg-stone-800 focus:text-stone-100">
+                        <SelectItem value="claude-opus" className="text-muted-foreground focus:bg-accent focus:text-foreground">
                           Claude Opus 4.5
                         </SelectItem>
-                        <SelectItem value="gpt-5.1" className="text-stone-300 focus:bg-stone-800 focus:text-stone-100">
+                        <SelectItem value="gpt-5.1" className="text-muted-foreground focus:bg-accent focus:text-foreground">
                           GPT-5.1
                         </SelectItem>
-                        <SelectItem value="gpt-5.1-mini" className="text-stone-300 focus:bg-stone-800 focus:text-stone-100">
+                        <SelectItem value="gpt-5.1-mini" className="text-muted-foreground focus:bg-accent focus:text-foreground">
                           GPT-5.1 Mini
                         </SelectItem>
-                        <SelectItem value="gemini-3-pro" className="text-stone-300 focus:bg-stone-800 focus:text-stone-100">
+                        <SelectItem value="gemini-3-pro" className="text-muted-foreground focus:bg-accent focus:text-foreground">
                           Gemini 3 Pro
                         </SelectItem>
                       </SelectContent>
@@ -112,8 +112,8 @@ export function GeneralTab() {
                 <tr>
                   <td className="px-6 py-4 w-2/5">
                     <div>
-                      <span className="text-sm font-medium text-stone-300">Require approval</span>
-                      <p className="text-xs text-stone-500 mt-0.5">New agents must be approved</p>
+                      <span className="text-sm font-medium text-muted-foreground">Require approval</span>
+                      <p className="text-xs text-foreground0 mt-0.5">New agents must be approved</p>
                     </div>
                   </td>
                   <td className="px-6 py-4">
@@ -130,9 +130,9 @@ export function GeneralTab() {
 
       {/* Right Column - Notifications */}
       <div className="space-y-6">
-        <Card className="bg-stone-900 border-stone-800">
+        <Card className="bg-card border">
           <CardHeader className="pb-4">
-            <CardTitle className="text-stone-100 text-base">Email Notifications</CardTitle>
+            <CardTitle className="text-foreground text-base">Email Notifications</CardTitle>
           </CardHeader>
           <CardContent className="p-0">
             <table className="min-w-full">
@@ -141,14 +141,14 @@ export function GeneralTab() {
                   <tr key={index}>
                     <td className="px-6 py-4">
                       <div>
-                        <p className="text-sm font-medium text-stone-300">{item.label}</p>
-                        <p className="text-xs text-stone-500 mt-0.5">{item.description}</p>
+                        <p className="text-sm font-medium text-muted-foreground">{item.label}</p>
+                        <p className="text-xs text-foreground0 mt-0.5">{item.description}</p>
                       </div>
                     </td>
                     <td className="px-6 py-4 text-right">
                       <button
                         className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                          item.enabled ? "bg-amber-600" : "bg-stone-700"
+                          item.enabled ? "bg-amber-600" : "bg-muted"
                         }`}
                       >
                         <span
@@ -165,13 +165,13 @@ export function GeneralTab() {
           </CardContent>
         </Card>
 
-        <Card className="bg-stone-900 border-stone-800">
+        <Card className="bg-card border">
           <CardHeader className="pb-4">
-            <CardTitle className="text-stone-100 text-base">Slack Notifications</CardTitle>
-            <CardDescription className="text-stone-400">Connect Slack to receive notifications</CardDescription>
+            <CardTitle className="text-foreground text-base">Slack Notifications</CardTitle>
+            <CardDescription className="text-muted-foreground">Connect Slack to receive notifications</CardDescription>
           </CardHeader>
           <CardContent>
-            <Button variant="outline" className="border-stone-700 text-stone-300">
+            <Button variant="outline" className="border text-muted-foreground">
               <Mail className="h-4 w-4 mr-2" />
               Connect Slack
             </Button>

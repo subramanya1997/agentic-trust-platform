@@ -56,7 +56,7 @@ export default function DocsPage() {
               Coming Soon
             </div>
 
-            <p className="text-sm text-stone-400 mb-10 max-w-md mx-auto leading-relaxed">
+            <p className="text-sm text-muted-foreground mb-10 max-w-md mx-auto leading-relaxed">
               Comprehensive guides, API references, and tutorials to help you build powerful AI agents with Agentic Trust.
             </p>
 
@@ -65,15 +65,15 @@ export default function DocsPage() {
               {upcomingFeatures.map((feature) => (
                 <div
                   key={feature.title}
-                  className="group p-4 rounded-lg bg-stone-900/40 border border-stone-800/60 hover:border-stone-700 transition-all text-left"
+                  className="group p-4 rounded-lg bg-card/40 border border/60 hover:border transition-all text-left"
                 >
                   <div className="flex items-start gap-3">
-                    <div className="p-2 rounded-md bg-stone-800/50 group-hover:bg-amber-500/10 transition-colors">
-                      <feature.icon className="w-4 h-4 text-stone-500 group-hover:text-amber-500 transition-colors" />
+                    <div className="p-2 rounded-md bg-accent/50 group-hover:bg-amber-500/10 transition-colors">
+                      <feature.icon className="w-4 h-4 text-foreground0 group-hover:text-amber-500 transition-colors" />
                     </div>
                     <div>
-                      <h3 className="text-sm font-medium text-stone-300 mb-0.5">{feature.title}</h3>
-                      <p className="text-xs text-stone-500">{feature.description}</p>
+                      <h3 className="text-sm font-medium text-muted-foreground mb-0.5">{feature.title}</h3>
+                      <p className="text-xs text-foreground0">{feature.description}</p>
                     </div>
                   </div>
                 </div>
@@ -92,7 +92,7 @@ export default function DocsPage() {
               <Button 
                 size="sm"
                 variant="outline" 
-                className="border-stone-700 text-stone-400 hover:bg-stone-800 hover:text-stone-100 text-xs"
+                className="border text-muted-foreground hover:bg-accent hover:text-foreground text-xs"
                 asChild
               >
                 <Link href="/">
@@ -103,8 +103,8 @@ export default function DocsPage() {
             </div>
 
             {/* Timeline */}
-            <div className="mt-12 pt-6 border-t border-stone-800/50">
-              <p className="text-xs text-stone-500">
+            <div className="mt-12 pt-6">
+              <p className="text-xs text-foreground0">
                 Expected launch: <span className="text-amber-500 font-medium">Q1 2026</span>
               </p>
             </div>

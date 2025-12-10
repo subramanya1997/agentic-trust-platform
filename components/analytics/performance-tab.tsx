@@ -66,48 +66,48 @@ export function PerformanceTab({ dateRange }: PerformanceTabProps) {
       </div>
 
       {/* Agent Performance Table */}
-      <Card className="bg-stone-900 border-stone-800">
+      <Card className="bg-card border">
         <CardHeader>
-          <CardTitle className="text-stone-100">Agent Performance</CardTitle>
+          <CardTitle className="text-foreground">Agent Performance</CardTitle>
         </CardHeader>
         <CardContent className="p-0">
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-stone-800">
-              <thead className="bg-stone-900">
+              <thead className="bg-card">
                 <tr>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-stone-400 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                     Agent
                   </th>
-                  <th className="px-6 py-4 text-right text-xs font-medium text-stone-400 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-right text-xs font-medium text-muted-foreground uppercase tracking-wider">
                     Executions
                   </th>
-                  <th className="px-6 py-4 text-right text-xs font-medium text-stone-400 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-right text-xs font-medium text-muted-foreground uppercase tracking-wider">
                     Success Rate
                   </th>
-                  <th className="px-6 py-4 text-right text-xs font-medium text-stone-400 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-right text-xs font-medium text-muted-foreground uppercase tracking-wider">
                     Avg Duration
                   </th>
-                  <th className="px-6 py-4 text-right text-xs font-medium text-stone-400 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-right text-xs font-medium text-muted-foreground uppercase tracking-wider">
                     Avg Cost
                   </th>
-                  <th className="px-6 py-4 text-right text-xs font-medium text-stone-400 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-right text-xs font-medium text-muted-foreground uppercase tracking-wider">
                     Trend
                   </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-stone-800">
                 {sortedByExecutions.map((agent) => (
-                  <tr key={agent.agentId} className="hover:bg-stone-800/50 transition-colors">
+                  <tr key={agent.agentId} className="hover:bg-accent/50 transition-colors">
                     <td className="px-6 py-4 whitespace-nowrap">
                       <Link
                         href={`/agents/${agent.agentId}`}
-                        className="text-sm font-medium text-stone-100 hover:text-amber-500 transition-colors"
+                        className="text-sm font-medium text-foreground hover:text-amber-500 transition-colors"
                       >
                         {agent.agentName}
                       </Link>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right">
-                      <span className="text-sm text-stone-200">
+                      <span className="text-sm text-foreground">
                         {agent.executions.toLocaleString()}
                       </span>
                     </td>
@@ -115,7 +115,7 @@ export function PerformanceTab({ dateRange }: PerformanceTabProps) {
                       <span
                         className={`text-sm font-medium ${
                           agent.successRate >= 95
-                            ? "text-stone-200"
+                            ? "text-foreground"
                             : agent.successRate >= 90
                             ? "text-amber-400"
                             : "text-red-400"
@@ -125,10 +125,10 @@ export function PerformanceTab({ dateRange }: PerformanceTabProps) {
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right">
-                      <span className="text-sm text-stone-300">{formatDuration(agent.avgDuration)}</span>
+                      <span className="text-sm text-muted-foreground">{formatDuration(agent.avgDuration)}</span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right">
-                      <span className="text-sm text-stone-300">{formatCurrency(agent.avgCost)}</span>
+                      <span className="text-sm text-muted-foreground">{formatCurrency(agent.avgCost)}</span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right">
                       <div className="flex items-center justify-end gap-1">
@@ -146,8 +146,8 @@ export function PerformanceTab({ dateRange }: PerformanceTabProps) {
                         )}
                         {agent.trend === "stable" && (
                           <>
-                            <Minus className="h-4 w-4 text-stone-500" />
-                            <span className="text-sm text-stone-500">0%</span>
+                            <Minus className="h-4 w-4 text-foreground0" />
+                            <span className="text-sm text-foreground0">0%</span>
                           </>
                         )}
                       </div>
@@ -161,9 +161,9 @@ export function PerformanceTab({ dateRange }: PerformanceTabProps) {
       </Card>
 
       {/* Success Rate Distribution */}
-      <Card className="bg-stone-900 border-stone-800">
+      <Card className="bg-card border">
         <CardHeader>
-          <CardTitle className="text-stone-100">Success Rate by Agent</CardTitle>
+          <CardTitle className="text-foreground">Success Rate by Agent</CardTitle>
         </CardHeader>
         <CardContent>
           <ResponsiveContainer width="100%" height={300}>

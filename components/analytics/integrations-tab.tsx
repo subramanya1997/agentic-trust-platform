@@ -64,44 +64,44 @@ export function IntegrationsTab({ dateRange }: IntegrationsTabProps) {
       </div>
 
       {/* Integration Usage Table */}
-      <Card className="bg-stone-900 border-stone-800">
+      <Card className="bg-card border">
         <CardHeader>
-          <CardTitle className="text-stone-100">Integration Usage</CardTitle>
+          <CardTitle className="text-foreground">Integration Usage</CardTitle>
         </CardHeader>
         <CardContent className="p-0">
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-stone-800">
-              <thead className="bg-stone-900">
+              <thead className="bg-card">
                 <tr>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-stone-400 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                     Integration
                   </th>
-                  <th className="px-6 py-4 text-right text-xs font-medium text-stone-400 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-right text-xs font-medium text-muted-foreground uppercase tracking-wider">
                     API Calls
                   </th>
-                  <th className="px-6 py-4 text-right text-xs font-medium text-stone-400 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-right text-xs font-medium text-muted-foreground uppercase tracking-wider">
                     Avg Latency
                   </th>
-                  <th className="px-6 py-4 text-right text-xs font-medium text-stone-400 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-right text-xs font-medium text-muted-foreground uppercase tracking-wider">
                     Error Rate
                   </th>
-                  <th className="px-6 py-4 text-right text-xs font-medium text-stone-400 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-right text-xs font-medium text-muted-foreground uppercase tracking-wider">
                     Cost
                   </th>
-                  <th className="px-6 py-4 text-right text-xs font-medium text-stone-400 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-right text-xs font-medium text-muted-foreground uppercase tracking-wider">
                     Agents
                   </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-stone-800">
                 {sortedByUsage.map((integration) => (
-                  <tr key={integration.integrationId} className="hover:bg-stone-800/50 transition-colors">
+                  <tr key={integration.integrationId} className="hover:bg-accent/50 transition-colors">
                     <td className="px-6 py-4 whitespace-nowrap">
                       <Link
                         href={`/integrations/${integration.integrationId}`}
                         className="flex items-center gap-3 hover:opacity-80 transition-opacity"
                       >
-                        <div className="h-8 w-8 rounded-lg bg-stone-800 flex items-center justify-center overflow-hidden">
+                        <div className="h-8 w-8 rounded-lg bg-accent flex items-center justify-center overflow-hidden">
                           <Image
                             src={getIntegrationIcon(integration.integrationId)}
                             alt={integration.integrationName}
@@ -110,13 +110,13 @@ export function IntegrationsTab({ dateRange }: IntegrationsTabProps) {
                             className="rounded"
                           />
                         </div>
-                        <span className="text-sm font-medium text-stone-100">
+                        <span className="text-sm font-medium text-foreground">
                           {integration.integrationName}
                         </span>
                       </Link>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right">
-                      <span className="text-sm text-stone-200">
+                      <span className="text-sm text-foreground">
                         {integration.callCount.toLocaleString()}
                       </span>
                     </td>
@@ -124,7 +124,7 @@ export function IntegrationsTab({ dateRange }: IntegrationsTabProps) {
                       <span
                         className={`text-sm ${
                           integration.avgLatency < 400
-                            ? "text-stone-200"
+                            ? "text-foreground"
                             : integration.avgLatency < 600
                             ? "text-amber-400"
                             : "text-red-400"
@@ -141,7 +141,7 @@ export function IntegrationsTab({ dateRange }: IntegrationsTabProps) {
                         <span
                           className={`text-sm ${
                             integration.errorRate < 1
-                              ? "text-stone-200"
+                              ? "text-foreground"
                               : integration.errorRate < 2
                               ? "text-amber-400"
                               : "text-red-400"
@@ -152,10 +152,10 @@ export function IntegrationsTab({ dateRange }: IntegrationsTabProps) {
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right">
-                      <span className="text-sm text-stone-300">{formatCurrency(integration.cost)}</span>
+                      <span className="text-sm text-muted-foreground">{formatCurrency(integration.cost)}</span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right">
-                      <Badge variant="outline" className="bg-stone-800 text-stone-300 border-stone-700">
+                      <Badge variant="outline" className="bg-accent text-muted-foreground border">
                         {integration.agentsUsing}
                       </Badge>
                     </td>
@@ -170,9 +170,9 @@ export function IntegrationsTab({ dateRange }: IntegrationsTabProps) {
       {/* Charts */}
       <div className="grid gap-6 lg:grid-cols-2">
         {/* API Calls by Integration - Horizontal Bar */}
-        <Card className="bg-stone-900 border-stone-800">
+        <Card className="bg-card border">
           <CardHeader>
-            <CardTitle className="text-stone-100">API Calls by Integration</CardTitle>
+            <CardTitle className="text-foreground">API Calls by Integration</CardTitle>
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
@@ -204,9 +204,9 @@ export function IntegrationsTab({ dateRange }: IntegrationsTabProps) {
         </Card>
 
         {/* Latency by Integration */}
-        <Card className="bg-stone-900 border-stone-800">
+        <Card className="bg-card border">
           <CardHeader>
-            <CardTitle className="text-stone-100">Latency by Integration</CardTitle>
+            <CardTitle className="text-foreground">Latency by Integration</CardTitle>
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>

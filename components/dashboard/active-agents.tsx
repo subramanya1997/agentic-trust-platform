@@ -29,7 +29,7 @@ export function ActiveAgents({ agents }: ActiveAgentsProps) {
             <Link
               key={agent.id}
               href={`/agents/${agent.id}`}
-              className="block rounded-lg border border-stone-800 p-4 hover:border-amber-600/50 hover:bg-stone-800/50 transition-all"
+              className="block rounded-lg border border p-4 hover:border-amber-600/50 hover:bg-accent/50 transition-all"
             >
               <div className="flex items-start justify-between">
                 <div className="flex items-start gap-3 flex-1">
@@ -38,17 +38,17 @@ export function ActiveAgents({ agents }: ActiveAgentsProps) {
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
-                      <h4 className="font-semibold text-stone-100 truncate">
+                      <h4 className="font-semibold text-foreground truncate">
                         {agent.name}
                       </h4>
                       <Badge variant={agent.status === "active" ? "default" : "destructive"}>
                         {agent.status}
                       </Badge>
                     </div>
-                    <p className="mt-1 text-sm text-stone-400 line-clamp-2">
+                    <p className="mt-1 text-sm text-muted-foreground line-clamp-2">
                       {agent.description}
                     </p>
-                    <div className="mt-3 flex items-center gap-4 text-xs text-stone-500">
+                    <div className="mt-3 flex items-center gap-4 text-xs text-foreground0">
                       <span>v{agent.version}</span>
                       <span>•</span>
                       <span>{agent.executionCount} runs</span>
@@ -62,7 +62,7 @@ export function ActiveAgents({ agents }: ActiveAgentsProps) {
                     <TrendingUp className="h-4 w-4" />
                     {formatPercentage(agent.successRate)}
                   </div>
-                  <div className="text-sm text-stone-400">
+                  <div className="text-sm text-muted-foreground">
                     Avg: {formatCurrency(agent.avgCost)}
                   </div>
                 </div>

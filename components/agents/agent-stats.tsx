@@ -26,11 +26,11 @@ export function AgentStats({ agent }: AgentStatsProps) {
   };
 
   return (
-    <div className="grid gap-4 md:grid-cols-4 mb-8 pt-6 border-t border-stone-800">
-      <Card className="bg-stone-900 border-stone-800">
+    <div className="grid gap-4 md:grid-cols-4 mb-8 pt-6">
+      <Card className="bg-card border">
         <div className="px-4">
-          <p className="text-xs font-medium text-stone-400">Total Runs</p>
-          <p className="mt-0.5 text-xl font-bold text-stone-50">
+          <p className="text-xs font-medium text-muted-foreground">Total Runs</p>
+          <p className="mt-0.5 text-xl font-bold text-foreground">
             {agent.executionCount.toLocaleString()}
           </p>
           {trends.runs.change && (
@@ -46,7 +46,7 @@ export function AgentStats({ agent }: AgentStatsProps) {
                   "text-xs font-medium",
                   trends.runs.type === "positive" && "text-green-500",
                   trends.runs.type === "negative" && "text-red-500",
-                  trends.runs.type === "neutral" && "text-stone-400"
+                  trends.runs.type === "neutral" && "text-muted-foreground"
                 )}
               >
                 {trends.runs.change}
@@ -56,9 +56,9 @@ export function AgentStats({ agent }: AgentStatsProps) {
         </div>
       </Card>
 
-      <Card className="bg-stone-900 border-stone-800">
+      <Card className="bg-card border">
         <div className="px-4">
-          <p className="text-xs font-medium text-stone-400">Success Rate</p>
+          <p className="text-xs font-medium text-muted-foreground">Success Rate</p>
           <p className="mt-0.5 text-xl font-bold text-green-400">
             {formatPercentage(agent.successRate)}
           </p>
@@ -75,7 +75,7 @@ export function AgentStats({ agent }: AgentStatsProps) {
                   "text-xs font-medium",
                   trends.successRate.type === "positive" && "text-green-500",
                   trends.successRate.type === "negative" && "text-red-500",
-                  trends.successRate.type === "neutral" && "text-stone-400"
+                  trends.successRate.type === "neutral" && "text-muted-foreground"
                 )}
               >
                 {trends.successRate.change}
@@ -85,10 +85,10 @@ export function AgentStats({ agent }: AgentStatsProps) {
         </div>
       </Card>
 
-      <Card className="bg-stone-900 border-stone-800">
+      <Card className="bg-card border">
         <div className="px-4">
-          <p className="text-xs font-medium text-stone-400">Avg Cost</p>
-          <p className="mt-0.5 text-xl font-bold text-stone-50">
+          <p className="text-xs font-medium text-muted-foreground">Avg Cost</p>
+          <p className="mt-0.5 text-xl font-bold text-foreground">
             {formatCurrency(agent.avgCost)}
           </p>
           {trends.avgCost.change && (
@@ -104,7 +104,7 @@ export function AgentStats({ agent }: AgentStatsProps) {
                   "text-xs font-medium",
                   trends.avgCost.type === "positive" && "text-green-500",
                   trends.avgCost.type === "negative" && "text-red-500",
-                  trends.avgCost.type === "neutral" && "text-stone-400"
+                  trends.avgCost.type === "neutral" && "text-muted-foreground"
                 )}
               >
                 {trends.avgCost.change}
@@ -114,10 +114,10 @@ export function AgentStats({ agent }: AgentStatsProps) {
         </div>
       </Card>
 
-      <Card className="bg-stone-900 border-stone-800">
+      <Card className="bg-card border">
         <div className="px-4">
-          <p className="text-xs font-medium text-stone-400">Version</p>
-          <p className="mt-0.5 text-xl font-bold text-stone-50">{agent.version}</p>
+          <p className="text-xs font-medium text-muted-foreground">Version</p>
+          <p className="mt-0.5 text-xl font-bold text-foreground">{agent.version}</p>
         </div>
       </Card>
     </div>

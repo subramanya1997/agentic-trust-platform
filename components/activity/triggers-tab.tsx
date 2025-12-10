@@ -116,57 +116,57 @@ export function TriggersTab({ searchQuery, typeFilter, statusFilter }: TriggersT
       </div>
 
       {/* Triggers Table */}
-      <Card className="bg-stone-900 border-stone-800">
+      <Card className="bg-card border">
         <CardContent className="p-0">
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-stone-800">
-              <thead className="bg-stone-900">
+              <thead className="bg-card">
                 <tr>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-stone-400 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                     Trigger
                   </th>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-stone-400 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                     Type
                   </th>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-stone-400 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                     Agent
                   </th>
-                  <th className="px-6 py-4 text-center text-xs font-medium text-stone-400 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-center text-xs font-medium text-muted-foreground uppercase tracking-wider">
                     Status
                   </th>
-                  <th className="px-6 py-4 text-center text-xs font-medium text-stone-400 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-center text-xs font-medium text-muted-foreground uppercase tracking-wider">
                     Runs
                   </th>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-stone-400 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                     Last / Next
                   </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-stone-800">
                 {paginatedTriggers.map((trigger) => (
-                  <tr key={trigger.id} className="hover:bg-stone-800/50 transition-colors">
+                  <tr key={trigger.id} className="hover:bg-accent/50 transition-colors">
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div>
-                        <span className="text-sm font-medium text-stone-100">
+                        <span className="text-sm font-medium text-foreground">
                           {trigger.name}
                         </span>
-                        <p className="text-xs text-stone-500 mt-0.5 max-w-xs truncate font-mono">
+                        <p className="text-xs text-foreground0 mt-0.5 max-w-xs truncate font-mono">
                           {getTriggerDescription(trigger)}
                         </p>
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <Badge
-                        variant="outline"
-                        className={`capitalize ${
+                        variant={
                           trigger.type === "webhook"
-                            ? "bg-purple-950 text-purple-400 border-purple-800"
+                            ? "purple"
                             : trigger.type === "scheduled"
-                            ? "bg-blue-950 text-blue-400 border-blue-800"
+                            ? "info"
                             : trigger.type === "api"
-                            ? "bg-green-950 text-green-400 border-green-800"
-                            : "bg-amber-950 text-amber-400 border-amber-800"
-                        }`}
+                            ? "success"
+                            : "warning"
+                        }
+                        className="capitalize"
                       >
                         {trigger.type}
                       </Badge>
@@ -174,7 +174,7 @@ export function TriggersTab({ searchQuery, typeFilter, statusFilter }: TriggersT
                     <td className="px-6 py-4 whitespace-nowrap">
                       <Link
                         href={`/agents/${trigger.agentId}`}
-                        className="text-sm text-stone-300 hover:text-amber-500 transition-colors flex items-center gap-1"
+                        className="text-sm text-muted-foreground hover:text-amber-500 transition-colors flex items-center gap-1"
                       >
                         {trigger.agentName}
                         <ExternalLink className="h-3 w-3" />
@@ -182,25 +182,20 @@ export function TriggersTab({ searchQuery, typeFilter, statusFilter }: TriggersT
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-center">
                       <Badge
-                        variant="outline"
-                        className={
-                          trigger.enabled
-                            ? "bg-green-950 text-green-400 border-green-800"
-                            : "bg-stone-800 text-stone-400 border-stone-700"
-                        }
+                        variant={trigger.enabled ? "success" : "outline"}
                       >
                         {trigger.enabled ? "Active" : "Inactive"}
                       </Badge>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-center">
-                      <span className="text-sm font-medium text-stone-200">
+                      <span className="text-sm font-medium text-foreground">
                         {trigger.triggerCount.toLocaleString()}
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="space-y-1">
                         {trigger.lastTriggered && (
-                          <div className="flex items-center gap-1 text-xs text-stone-400">
+                          <div className="flex items-center gap-1 text-xs text-muted-foreground">
                             <Clock className="h-3 w-3" />
                             <span suppressHydrationWarning>
                               {formatRelativeTime(trigger.lastTriggered)}
@@ -223,8 +218,8 @@ export function TriggersTab({ searchQuery, typeFilter, statusFilter }: TriggersT
 
           {/* Pagination */}
           {totalPages > 1 && (
-            <div className="flex items-center justify-between px-6 py-4 border-t border-stone-800">
-              <div className="text-sm text-stone-400">
+            <div className="flex items-center justify-between px-6 py-4">
+              <div className="text-sm text-muted-foreground">
                 Showing {startIndex + 1} to{" "}
                 {Math.min(startIndex + ITEMS_PER_PAGE, filteredTriggers.length)} of{" "}
                 {filteredTriggers.length} triggers
@@ -235,7 +230,7 @@ export function TriggersTab({ searchQuery, typeFilter, statusFilter }: TriggersT
                   size="sm"
                   onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
                   disabled={currentPage === 1}
-                  className="border-stone-700 text-stone-300 disabled:opacity-50"
+                  className="border text-muted-foreground disabled:opacity-50"
                 >
                   <ChevronLeft className="h-4 w-4 mr-1" />
                   Previous
@@ -262,7 +257,7 @@ export function TriggersTab({ searchQuery, typeFilter, statusFilter }: TriggersT
                         className={
                           currentPage === pageNum
                             ? "bg-amber-600 hover:bg-amber-500 text-white"
-                            : "text-stone-400 hover:text-stone-200"
+                            : "text-muted-foreground hover:text-foreground"
                         }
                       >
                         {pageNum}
@@ -276,7 +271,7 @@ export function TriggersTab({ searchQuery, typeFilter, statusFilter }: TriggersT
                   size="sm"
                   onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
                   disabled={currentPage === totalPages}
-                  className="border-stone-700 text-stone-300 disabled:opacity-50"
+                  className="border text-muted-foreground disabled:opacity-50"
                 >
                   Next
                   <ChevronRight className="h-4 w-4 ml-1" />
@@ -289,7 +284,7 @@ export function TriggersTab({ searchQuery, typeFilter, statusFilter }: TriggersT
           {paginatedTriggers.length === 0 && (
             <div className="px-6 py-12 text-center">
               <Zap className="h-12 w-12 text-stone-600 mx-auto mb-4" />
-              <p className="text-stone-400">No triggers found matching your criteria.</p>
+              <p className="text-muted-foreground">No triggers found matching your criteria.</p>
             </div>
           )}
         </CardContent>

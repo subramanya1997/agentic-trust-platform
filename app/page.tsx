@@ -57,7 +57,7 @@ export default function Home() {
               <Link href="/activity?status=waiting_approval">
                 <Badge
                   variant="outline"
-                  className="bg-amber-950/50 text-amber-400 border-amber-800 hover:bg-amber-900/50 cursor-pointer"
+                  className="bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20 dark:border-amber-800 hover:bg-amber-500/20 cursor-pointer"
                 >
                   <Clock className="h-3.5 w-3.5 mr-1.5" />
                   {pendingApprovals} Pending
@@ -68,7 +68,7 @@ export default function Home() {
               <Link href="/activity?status=failed">
                 <Badge
                   variant="outline"
-                  className="bg-red-950/50 text-red-400 border-red-800 hover:bg-red-900/50 cursor-pointer"
+                  className="bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/20 dark:border-red-800 hover:bg-red-500/20 cursor-pointer"
                 >
                   <AlertTriangle className="h-3.5 w-3.5 mr-1.5" />
                   {recentFailures} Failed

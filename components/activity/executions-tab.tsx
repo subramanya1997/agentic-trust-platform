@@ -116,35 +116,35 @@ export function ExecutionsTab({ dateRange, searchQuery, statusFilter, agentFilte
       </div>
 
       {/* Executions Table */}
-      <Card className="bg-stone-900 border-stone-800">
+      <Card className="bg-card border">
         <CardContent className="p-0">
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-stone-800">
-              <thead className="bg-stone-900">
+              <thead className="bg-card">
                 <tr>
                   <th className="w-10 px-4 py-4"></th>
-                  <th className="px-4 py-4 text-left text-xs font-medium text-stone-400 uppercase tracking-wider">
+                  <th className="px-4 py-4 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                     Execution
                   </th>
-                  <th className="px-4 py-4 text-left text-xs font-medium text-stone-400 uppercase tracking-wider">
+                  <th className="px-4 py-4 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                     Agent
                   </th>
-                  <th className="px-4 py-4 text-left text-xs font-medium text-stone-400 uppercase tracking-wider">
+                  <th className="px-4 py-4 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                     Status
                   </th>
-                  <th className="px-4 py-4 text-left text-xs font-medium text-stone-400 uppercase tracking-wider">
+                  <th className="px-4 py-4 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                     Trigger
                   </th>
-                  <th className="px-4 py-4 text-right text-xs font-medium text-stone-400 uppercase tracking-wider">
+                  <th className="px-4 py-4 text-right text-xs font-medium text-muted-foreground uppercase tracking-wider">
                     Duration
                   </th>
-                  <th className="px-4 py-4 text-right text-xs font-medium text-stone-400 uppercase tracking-wider">
+                  <th className="px-4 py-4 text-right text-xs font-medium text-muted-foreground uppercase tracking-wider">
                     Cost
                   </th>
-                  <th className="px-4 py-4 text-right text-xs font-medium text-stone-400 uppercase tracking-wider">
+                  <th className="px-4 py-4 text-right text-xs font-medium text-muted-foreground uppercase tracking-wider">
                     Steps
                   </th>
-                  <th className="px-4 py-4 text-right text-xs font-medium text-stone-400 uppercase tracking-wider">
+                  <th className="px-4 py-4 text-right text-xs font-medium text-muted-foreground uppercase tracking-wider">
                     Started
                   </th>
                 </tr>
@@ -158,12 +158,12 @@ export function ExecutionsTab({ dateRange, searchQuery, statusFilter, agentFilte
                     <Fragment key={trace.id}>
                       <tr
                         className={`cursor-pointer transition-colors ${
-                          isExpanded ? "bg-stone-800/50" : "hover:bg-stone-800/30"
+                          isExpanded ? "bg-accent/50" : "hover:bg-accent/30"
                         }`}
                         onClick={() => toggleTrace(trace.id)}
                       >
                         <td className="px-4 py-4">
-                          <button className="text-stone-500 hover:text-stone-300">
+                          <button className="text-foreground0 hover:text-muted-foreground">
                             {isExpanded ? (
                               <ChevronDown className="h-4 w-4" />
                             ) : (
@@ -172,14 +172,14 @@ export function ExecutionsTab({ dateRange, searchQuery, statusFilter, agentFilte
                           </button>
                         </td>
                         <td className="px-4 py-4 whitespace-nowrap">
-                          <div className="text-sm font-mono text-stone-300">
+                          <div className="text-sm font-mono text-muted-foreground">
                             {trace.id}
                           </div>
                         </td>
                         <td className="px-4 py-4 whitespace-nowrap">
                           <Link
                             href={`/agents/${trace.agentId}`}
-                            className="text-sm font-medium text-stone-100 hover:text-amber-500 transition-colors"
+                            className="text-sm font-medium text-foreground hover:text-amber-500 transition-colors"
                             onClick={(e) => e.stopPropagation()}
                           >
                             {trace.agentName}
@@ -187,14 +187,13 @@ export function ExecutionsTab({ dateRange, searchQuery, statusFilter, agentFilte
                         </td>
                         <td className="px-4 py-4 whitespace-nowrap">
                           <Badge
-                            variant="outline"
-                            className={`${
+                            variant={
                               trace.status === "completed"
-                                ? "bg-green-900/30 text-green-400 border-green-800"
+                                ? "success"
                                 : trace.status === "failed"
-                                ? "bg-red-900/30 text-red-400 border-red-800"
-                                : "bg-blue-900/30 text-blue-400 border-blue-800"
-                            }`}
+                                ? "error"
+                                : "info"
+                            }
                           >
                             {trace.status === "completed" && (
                               <CheckCircle className="h-3 w-3 mr-1" />
@@ -210,28 +209,28 @@ export function ExecutionsTab({ dateRange, searchQuery, statusFilter, agentFilte
                         </td>
                         <td className="px-4 py-4 whitespace-nowrap">
                           <div className="flex items-center gap-2">
-                            <TriggerIcon className="h-4 w-4 text-stone-500" />
-                            <span className="text-sm text-stone-400 capitalize">
+                            <TriggerIcon className="h-4 w-4 text-foreground0" />
+                            <span className="text-sm text-muted-foreground capitalize">
                               {trace.triggerType}
                             </span>
                           </div>
                           <div className="flex items-center gap-1 mt-0.5">
-                            <User className="h-3 w-3 text-stone-600" />
-                            <span className="text-xs text-stone-500">
+                            <User className="h-3 w-3 text-muted-foreground" />
+                            <span className="text-xs text-muted-foreground">
                               {trace.triggeredBy}
                             </span>
                           </div>
                         </td>
                         <td className="px-4 py-4 whitespace-nowrap text-right">
                           <div className="flex items-center justify-end gap-1">
-                            <Timer className="h-3.5 w-3.5 text-stone-500" />
-                            <span className="text-sm text-stone-200">
+                            <Timer className="h-3.5 w-3.5 text-foreground0" />
+                            <span className="text-sm text-foreground">
                               {formatDuration(trace.duration)}
                             </span>
                           </div>
                         </td>
                         <td className="px-4 py-4 whitespace-nowrap text-right">
-                          <span className="text-sm text-stone-300">
+                          <span className="text-sm text-muted-foreground">
                             ${trace.totalCost.toFixed(4)}
                           </span>
                         </td>
@@ -240,8 +239,8 @@ export function ExecutionsTab({ dateRange, searchQuery, statusFilter, agentFilte
                             <span className="text-sm text-green-400">
                               {trace.successfulSteps}
                             </span>
-                            <span className="text-stone-600">/</span>
-                            <span className="text-sm text-stone-400">
+                            <span className="text-muted-foreground">/</span>
+                            <span className="text-sm text-muted-foreground">
                               {trace.totalSteps}
                             </span>
                             {trace.failedSteps > 0 && (
@@ -253,7 +252,7 @@ export function ExecutionsTab({ dateRange, searchQuery, statusFilter, agentFilte
                         </td>
                         <td className="px-4 py-4 whitespace-nowrap text-right">
                           <span
-                            className="text-sm text-stone-400"
+                            className="text-sm text-muted-foreground"
                             suppressHydrationWarning
                           >
                             {formatRelativeTime(trace.startedAt)}
@@ -262,7 +261,7 @@ export function ExecutionsTab({ dateRange, searchQuery, statusFilter, agentFilte
                       </tr>
                       {isExpanded && (
                         <tr>
-                          <td colSpan={9} className="p-4 bg-stone-950">
+                          <td colSpan={9} className="p-4 bg-background">
                             <TraceViewer trace={trace} />
                           </td>
                         </tr>
@@ -276,8 +275,8 @@ export function ExecutionsTab({ dateRange, searchQuery, statusFilter, agentFilte
 
           {/* Pagination */}
           {totalPages > 1 && (
-            <div className="flex items-center justify-between px-4 py-4 border-t border-stone-800">
-              <div className="text-sm text-stone-500">
+            <div className="flex items-center justify-between px-4 py-4">
+              <div className="text-sm text-foreground0">
                 Showing {startIndex + 1} to{" "}
                 {Math.min(startIndex + itemsPerPage, filteredTraces.length)} of{" "}
                 {filteredTraces.length} executions
@@ -288,7 +287,7 @@ export function ExecutionsTab({ dateRange, searchQuery, statusFilter, agentFilte
                   size="sm"
                   onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
                   disabled={currentPage === 1}
-                  className="border-stone-700 text-stone-300 hover:bg-stone-800 disabled:opacity-50"
+                  className="border text-muted-foreground hover:bg-accent disabled:opacity-50"
                 >
                   Previous
                 </Button>
@@ -313,7 +312,7 @@ export function ExecutionsTab({ dateRange, searchQuery, statusFilter, agentFilte
                         className={
                           currentPage === pageNum
                             ? "bg-amber-600 hover:bg-amber-500 text-white"
-                            : "border-stone-700 text-stone-300 hover:bg-stone-800"
+                            : "border text-muted-foreground hover:bg-accent"
                         }
                       >
                         {pageNum}
@@ -326,7 +325,7 @@ export function ExecutionsTab({ dateRange, searchQuery, statusFilter, agentFilte
                   size="sm"
                   onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
                   disabled={currentPage === totalPages}
-                  className="border-stone-700 text-stone-300 hover:bg-stone-800 disabled:opacity-50"
+                  className="border text-muted-foreground hover:bg-accent disabled:opacity-50"
                 >
                   Next
                 </Button>

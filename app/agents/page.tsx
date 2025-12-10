@@ -17,6 +17,8 @@ import {
   CircleDot,
   Circle,
   Plus,
+  CheckCircle,
+  Pause,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -74,7 +76,7 @@ export default function AgentsPage() {
           <div className="flex items-center gap-4 flex-wrap">
             {/* Search */}
             <div className="relative flex-1 max-w-md">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-stone-500" />
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-foreground0" />
               <input
                 type="text"
                 placeholder="Search agents..."
@@ -83,12 +85,12 @@ export default function AgentsPage() {
                   setSearchQuery(e.target.value);
                   setCurrentPage(1);
                 }}
-                className="w-full rounded-lg border border-stone-700 bg-stone-900 py-2 pl-10 pr-4 text-sm text-stone-200 placeholder:text-stone-500 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500"
+                className="w-full rounded-lg border border bg-card py-2 pl-10 pr-4 text-sm text-foreground placeholder:text-foreground0 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500"
               />
             </div>
 
             {/* Status Filter */}
-            <div className="flex items-center gap-1 p-1 rounded-lg bg-stone-900/50 border border-stone-800">
+            <div className="flex items-center gap-1 p-1 rounded-lg bg-card/50 border border">
               {statusFilters.map((filter) => (
                 <button
                   key={filter.value}
@@ -98,81 +100,83 @@ export default function AgentsPage() {
                   }}
                   className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
                     statusFilter === filter.value
-                      ? "bg-stone-800 text-stone-100"
-                      : "text-stone-400 hover:text-stone-300"
+                      ? "bg-accent text-foreground"
+                      : "text-muted-foreground hover:text-muted-foreground"
                   }`}
                 >
                   {filter.icon}
                   {filter.label}
-                  <span className="text-stone-500 ml-1">{statusCounts[filter.value as keyof typeof statusCounts]}</span>
+                  <span className="text-foreground0 ml-1">{statusCounts[filter.value as keyof typeof statusCounts]}</span>
                 </button>
               ))}
             </div>
           </div>
 
           {/* Agents Table */}
-          <Card className="bg-stone-900 border-stone-800">
+          <Card className="bg-card border">
             <CardContent className="p-0">
               <div className="overflow-x-auto">
                 <table className="min-w-full divide-y divide-stone-800">
-                  <thead className="bg-stone-900">
+                  <thead className="bg-card">
                     <tr>
-                      <th className="px-6 py-4 text-left text-xs font-medium text-stone-400 uppercase tracking-wider">
+                      <th className="px-6 py-4 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                         Name
                       </th>
-                      <th className="px-6 py-4 text-left text-xs font-medium text-stone-400 uppercase tracking-wider">
+                      <th className="px-6 py-4 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                         Created by
                       </th>
-                      <th className="px-6 py-4 text-left text-xs font-medium text-stone-400 uppercase tracking-wider">
+                      <th className="px-6 py-4 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                         Status
                       </th>
-                      <th className="px-6 py-4 text-center text-xs font-medium text-stone-400 uppercase tracking-wider">
+                      <th className="px-6 py-4 text-center text-xs font-medium text-muted-foreground uppercase tracking-wider">
                         Runs
                       </th>
-                      <th className="px-6 py-4 text-center text-xs font-medium text-stone-400 uppercase tracking-wider">
+                      <th className="px-6 py-4 text-center text-xs font-medium text-muted-foreground uppercase tracking-wider">
                         Success Rate
                       </th>
-                      <th className="px-6 py-4 text-left text-xs font-medium text-stone-400 uppercase tracking-wider">
+                      <th className="px-6 py-4 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                         Created
                       </th>
-                      <th className="px-6 py-4 text-left text-xs font-medium text-stone-400 uppercase tracking-wider">
+                      <th className="px-6 py-4 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                         Last Used
                       </th>
-                      <th className="px-6 py-4 text-right text-xs font-medium text-stone-400 uppercase tracking-wider">
+                      <th className="px-6 py-4 text-right text-xs font-medium text-muted-foreground uppercase tracking-wider">
                         
                       </th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-stone-800">
                     {paginatedAgents.map((agent) => (
-                      <tr key={agent.id} className="hover:bg-stone-800/50 transition-colors">
+                      <tr key={agent.id} className="hover:bg-accent/50 transition-colors">
                         <td className="px-6 py-4 whitespace-nowrap">
                           <Link
                             href={`/agents/${agent.id}`}
-                            className="text-sm font-medium text-stone-100 hover:text-amber-500 transition-colors"
+                            className="text-sm font-medium text-foreground hover:text-amber-500 transition-colors"
                           >
                             {agent.name}
                           </Link>
-                          <p className="text-xs text-stone-500 mt-0.5 max-w-xs truncate">
+                          <p className="text-xs text-foreground0 mt-0.5 max-w-xs truncate">
                             {agent.description}
                           </p>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <span className="text-sm text-stone-300">{agent.createdBy}</span>
+                          <span className="text-sm text-muted-foreground">{agent.createdBy}</span>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <Badge 
-                            variant="outline" 
-                            className={agent.status === "active" 
-                              ? "bg-green-950 text-green-400 border-green-800" 
-                              : "bg-stone-800 text-stone-400 border-stone-700"
-                            }
+                            variant={agent.status === "active" ? "success" : "outline"}
                           >
+                            {agent.status === "active" && (
+                              <CheckCircle className="h-3 w-3 mr-1" />
+                            )}
+                            {agent.status === "paused" && (
+                              <Pause className="h-3 w-3 mr-1" />
+                            )}
                             {agent.status}
                           </Badge>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-center">
-                          <span className="text-sm font-medium text-stone-200">
+                          <span className="text-sm font-medium text-foreground">
                             {agent.executionCount.toLocaleString()}
                           </span>
                         </td>
@@ -191,7 +195,7 @@ export default function AgentsPage() {
                           </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <span className="text-sm text-stone-400">
+                          <span className="text-sm text-muted-foreground">
                             {new Date(agent.createdAt).toLocaleDateString('en-US', { 
                               month: 'short', 
                               day: 'numeric',
@@ -200,12 +204,12 @@ export default function AgentsPage() {
                           </span>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <span className="text-sm text-stone-400" suppressHydrationWarning>
+                          <span className="text-sm text-muted-foreground" suppressHydrationWarning>
                             {formatRelativeTime(agent.lastRun)}
                           </span>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-right">
-                          <Button variant="ghost" size="icon" className="h-8 w-8 text-stone-400 hover:text-stone-200">
+                          <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-foreground">
                             <MoreHorizontal className="h-4 w-4" />
                           </Button>
                         </td>
@@ -217,8 +221,8 @@ export default function AgentsPage() {
 
               {/* Pagination */}
               {totalPages > 1 && (
-                <div className="flex items-center justify-between px-6 py-4 border-t border-stone-800">
-                  <div className="text-sm text-stone-400">
+                <div className="flex items-center justify-between px-6 py-4">
+                  <div className="text-sm text-muted-foreground">
                     Showing {startIndex + 1} to {Math.min(startIndex + ITEMS_PER_PAGE, filteredAgents.length)} of {filteredAgents.length} agents
                   </div>
                   <div className="flex items-center gap-2">
@@ -227,7 +231,7 @@ export default function AgentsPage() {
                       size="sm"
                       onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
                       disabled={currentPage === 1}
-                      className="border-stone-700 text-stone-300 disabled:opacity-50"
+                      className="border text-muted-foreground disabled:opacity-50"
                     >
                       <ChevronLeft className="h-4 w-4 mr-1" />
                       Previous
@@ -243,7 +247,7 @@ export default function AgentsPage() {
                           onClick={() => setCurrentPage(page)}
                           className={currentPage === page 
                             ? "bg-amber-600 hover:bg-amber-500 text-white" 
-                            : "text-stone-400 hover:text-stone-200"
+                            : "text-muted-foreground hover:text-foreground"
                           }
                         >
                           {page}
@@ -256,7 +260,7 @@ export default function AgentsPage() {
                       size="sm"
                       onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
                       disabled={currentPage === totalPages}
-                      className="border-stone-700 text-stone-300 disabled:opacity-50"
+                      className="border text-muted-foreground disabled:opacity-50"
                     >
                       Next
                       <ChevronRight className="h-4 w-4 ml-1" />
@@ -268,11 +272,11 @@ export default function AgentsPage() {
               {/* Empty State */}
               {paginatedAgents.length === 0 && (
                 <div className="px-6 py-12 text-center">
-                  <p className="text-stone-400">No agents found matching your criteria.</p>
+                  <p className="text-muted-foreground">No agents found matching your criteria.</p>
                   <Button 
                     variant="outline" 
                     size="sm" 
-                    className="mt-4 border-stone-700 text-stone-300"
+                    className="mt-4 border text-muted-foreground"
                     onClick={() => { setSearchQuery(""); setStatusFilter("all"); }}
                   >
                     Clear Filters

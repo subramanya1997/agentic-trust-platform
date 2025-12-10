@@ -34,7 +34,7 @@ const mockInvitations: Invitation[] = [
 const mockRoles: Role[] = [
   { id: "admin", name: "Admin", description: "Full access to all features and settings", color: "bg-amber-950 text-amber-400 border-amber-800", memberCount: 1, isSystem: true },
   { id: "editor", name: "Editor", description: "Can create and edit agents and integrations", color: "bg-blue-950 text-blue-400 border-blue-800", memberCount: 2, isDefault: true },
-  { id: "viewer", name: "Viewer", description: "Read-only access to view agents and analytics", color: "bg-stone-800 text-stone-400 border-stone-700", memberCount: 1 },
+  { id: "viewer", name: "Viewer", description: "Read-only access to view agents and analytics", color: "bg-accent text-muted-foreground border", memberCount: 1 },
   { id: "developer", name: "Developer", description: "Can create agents and manage API keys", color: "bg-purple-950 text-purple-400 border-purple-800", memberCount: 0 },
 ];
 
@@ -136,7 +136,7 @@ export default function TeamPage() {
         );
       case "permissions":
         return (
-          <Button size="sm" variant="outline" className="border-stone-700 text-stone-300">
+          <Button size="sm" variant="outline" className="border text-muted-foreground">
             <RotateCcw className="h-4 w-4 mr-2" />
             Reset to Defaults
           </Button>
@@ -154,21 +154,21 @@ export default function TeamPage() {
 
           {/* Tab Navigation - Analytics style */}
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-1 bg-stone-900 p-1 rounded-lg border border-stone-800">
+            <div className="flex items-center gap-1 bg-card/50 p-1 rounded-lg border border">
               {tabs.map((tab) => (
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
                     activeTab === tab.id
-                      ? "bg-stone-800 text-stone-100"
-                      : "text-stone-400 hover:text-stone-200"
+                      ? "bg-accent text-foreground"
+                      : "text-muted-foreground hover:text-muted-foreground"
                   }`}
                 >
-                  <tab.icon className="h-4 w-4" />
+                  <tab.icon className="h-3.5 w-3.5" />
                   {tab.label}
                   {tab.id === "invited" && mockInvitations.length > 0 && (
-                    <span className="ml-1 text-xs bg-amber-600 text-white px-1.5 py-0.5 rounded">
+                    <span className="ml-1 text-[10px] bg-amber-600 text-white px-1.5 py-0.5 rounded">
                       {mockInvitations.length}
                     </span>
                   )}

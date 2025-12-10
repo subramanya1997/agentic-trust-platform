@@ -69,12 +69,12 @@ export function AddIntegrationDialog({ trigger }: AddIntegrationDialogProps) {
           </Button>
         )}
       </DialogTrigger>
-      <DialogContent className="sm:max-w-md bg-stone-900 border-stone-800">
+      <DialogContent className="sm:max-w-md bg-card border">
         <DialogHeader>
-          <DialogTitle className="text-stone-100">
+          <DialogTitle className="text-foreground">
             {isSuccess ? "Integration Added" : selectedType ? (selectedType === "mcp" ? "Add MCP Server" : "Import OpenAPI") : "Add Integration"}
           </DialogTitle>
-          <DialogDescription className="text-stone-400">
+          <DialogDescription className="text-muted-foreground">
             {isSuccess 
               ? "Your integration has been added successfully."
               : selectedType 
@@ -91,7 +91,7 @@ export function AddIntegrationDialog({ trigger }: AddIntegrationDialogProps) {
             <div className="h-12 w-12 rounded-full bg-green-950 flex items-center justify-center mb-4">
               <Check className="h-6 w-6 text-green-500" />
             </div>
-            <p className="text-stone-300">Integration configured successfully</p>
+            <p className="text-muted-foreground">Integration configured successfully</p>
           </div>
         ) : selectedType === null ? (
           <div className="grid gap-3 py-4">
@@ -113,7 +113,7 @@ export function AddIntegrationDialog({ trigger }: AddIntegrationDialogProps) {
         ) : selectedType === "mcp" ? (
           <div className="py-4 space-y-4">
             <div>
-              <label className="text-sm font-medium text-stone-300 mb-2 block">
+              <label className="text-sm font-medium text-muted-foreground mb-2 block">
                 MCP Server URL
               </label>
               <input
@@ -121,9 +121,9 @@ export function AddIntegrationDialog({ trigger }: AddIntegrationDialogProps) {
                 value={mcpUrl}
                 onChange={(e) => setMcpUrl(e.target.value)}
                 placeholder="https://mcp.example.com/server"
-                className="w-full rounded-lg border border-stone-700 bg-stone-800 px-4 py-2.5 text-sm text-stone-200 placeholder:text-stone-500 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500"
+                className="w-full rounded-lg border border bg-accent px-4 py-2.5 text-sm text-foreground placeholder:text-foreground0 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500"
               />
-              <p className="mt-2 text-xs text-stone-500">
+              <p className="mt-2 text-xs text-foreground0">
                 The URL should point to a running MCP server endpoint
               </p>
             </div>
@@ -131,7 +131,7 @@ export function AddIntegrationDialog({ trigger }: AddIntegrationDialogProps) {
             <div className="flex gap-2 pt-2">
               <Button
                 variant="outline"
-                className="flex-1 border-stone-700 text-stone-300 hover:bg-stone-800"
+                className="flex-1 border text-muted-foreground hover:bg-accent"
                 onClick={handleBack}
               >
                 Back
@@ -155,7 +155,7 @@ export function AddIntegrationDialog({ trigger }: AddIntegrationDialogProps) {
         ) : (
           <div className="py-4 space-y-4">
             <div>
-              <label className="text-sm font-medium text-stone-300 mb-2 block">
+              <label className="text-sm font-medium text-muted-foreground mb-2 block">
                 OpenAPI Specification
               </label>
               <div className="relative">
@@ -168,20 +168,20 @@ export function AddIntegrationDialog({ trigger }: AddIntegrationDialogProps) {
                 />
                 <label
                   htmlFor="openapi-file"
-                  className="flex items-center justify-center gap-3 w-full rounded-lg border-2 border-dashed border-stone-700 bg-stone-800/50 px-4 py-8 cursor-pointer hover:border-stone-600 transition-colors"
+                  className="flex items-center justify-center gap-3 w-full rounded-lg border-2 border-dashed border bg-accent/50 px-4 py-8 cursor-pointer hover:border-accent transition-colors"
                 >
                   {fileName ? (
-                    <div className="flex items-center gap-2 text-stone-200">
+                    <div className="flex items-center gap-2 text-foreground">
                       <FileJson className="h-5 w-5 text-amber-500" />
                       <span className="text-sm font-medium">{fileName}</span>
                     </div>
                   ) : (
                     <div className="text-center">
-                      <Upload className="h-8 w-8 text-stone-500 mx-auto mb-2" />
-                      <p className="text-sm text-stone-400">
+                      <Upload className="h-8 w-8 text-foreground0 mx-auto mb-2" />
+                      <p className="text-sm text-muted-foreground">
                         Click to upload or drag and drop
                       </p>
-                      <p className="text-xs text-stone-500 mt-1">
+                      <p className="text-xs text-foreground0 mt-1">
                         JSON or YAML (OpenAPI 3.0+)
                       </p>
                     </div>
@@ -193,7 +193,7 @@ export function AddIntegrationDialog({ trigger }: AddIntegrationDialogProps) {
             <div className="flex gap-2 pt-2">
               <Button
                 variant="outline"
-                className="flex-1 border-stone-700 text-stone-300 hover:bg-stone-800"
+                className="flex-1 border text-muted-foreground hover:bg-accent"
                 onClick={handleBack}
               >
                 Back
@@ -236,19 +236,19 @@ function IntegrationTypeCard({
   return (
     <button
       onClick={onClick}
-      className="flex items-start gap-4 p-4 rounded-lg border border-stone-800 hover:border-stone-700 hover:bg-stone-800/50 transition-all text-left w-full"
+      className="flex items-start gap-4 p-4 rounded-lg border border hover:border hover:bg-accent/50 transition-all text-left w-full"
     >
-      <div className="h-10 w-10 rounded-lg bg-stone-800 flex items-center justify-center shrink-0">
+      <div className="h-10 w-10 rounded-lg bg-accent flex items-center justify-center shrink-0">
         <Icon className="h-5 w-5 text-amber-500" />
       </div>
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2">
-          <span className="text-sm font-medium text-stone-100">{title}</span>
-          <Badge variant="outline" className="text-xs bg-stone-800 text-stone-400 border-stone-700">
+          <span className="text-sm font-medium text-foreground">{title}</span>
+          <Badge variant="outline" className="text-xs bg-accent text-muted-foreground border">
             {badge}
           </Badge>
         </div>
-        <p className="text-xs text-stone-500 mt-1">{description}</p>
+        <p className="text-xs text-foreground0 mt-1">{description}</p>
       </div>
     </button>
   );

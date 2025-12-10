@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import Image from "next/image";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -14,7 +13,7 @@ import {
   defaultServerConfig,
   type ServerConfig,
 } from "@/components/mcp-registry/server-config-form";
-import { getIntegrationIcon } from "@/lib/integration-icons";
+import { IntegrationIcon } from "@/components/integration-icon";
 import type { SelectedTool } from "@/lib/types";
 import {
   ArrowLeft,
@@ -140,7 +139,7 @@ export default function NewMCPServerPage() {
           {/* Back Link */}
           <Link
             href="/mcp-registry"
-            className="inline-flex items-center gap-2 text-sm text-stone-400 hover:text-stone-200 transition-colors"
+            className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
           >
             <ArrowLeft className="h-4 w-4" />
             Back to MCP Registry
@@ -161,14 +160,14 @@ export default function NewMCPServerPage() {
                           ? "bg-green-600"
                           : isCurrent
                           ? "bg-amber-600"
-                          : "bg-stone-800 border border-stone-700"
+                          : "bg-accent border border"
                       }`}
                     >
                       {isCompleted ? (
                         <Check className="h-5 w-5 text-white" />
                       ) : (
                         <span
-                          className={isCurrent ? "text-white" : "text-stone-400"}
+                          className={isCurrent ? "text-white" : "text-muted-foreground"}
                         >
                           {step.icon}
                         </span>
@@ -177,12 +176,12 @@ export default function NewMCPServerPage() {
                     <div>
                       <p
                         className={`text-sm font-medium ${
-                          isCurrent ? "text-stone-100" : "text-stone-400"
+                          isCurrent ? "text-foreground" : "text-muted-foreground"
                         }`}
                       >
                         {step.label}
                       </p>
-                      <p className="text-xs text-stone-500">
+                      <p className="text-xs text-foreground0">
                         Step {index + 1} of {steps.length}
                       </p>
                     </div>
@@ -190,7 +189,7 @@ export default function NewMCPServerPage() {
                   {index < steps.length - 1 && (
                     <div
                       className={`flex-1 h-px mx-4 ${
-                        isCompleted ? "bg-green-600" : "bg-stone-700"
+                        isCompleted ? "bg-green-600" : "bg-muted"
                       }`}
                     />
                   )}
@@ -200,7 +199,7 @@ export default function NewMCPServerPage() {
           </div>
 
           {/* Step Content */}
-          <Card className="bg-stone-900 border-stone-800">
+          <Card className="bg-card border">
             <CardContent className="p-6">
               {/* Step 1: Configuration */}
               {currentStep === "config" && (
@@ -210,10 +209,10 @@ export default function NewMCPServerPage() {
                       <Settings className="h-5 w-5 text-amber-400" />
                     </div>
                     <div>
-                      <h2 className="text-lg font-semibold text-stone-100">
+                      <h2 className="text-lg font-semibold text-foreground">
                         Server Configuration
                       </h2>
-                      <p className="text-sm text-stone-400">
+                      <p className="text-sm text-muted-foreground">
                         Set up the basic configuration for your MCP server
                       </p>
                     </div>
@@ -231,8 +230,8 @@ export default function NewMCPServerPage() {
                       <Wrench className="h-5 w-5 text-blue-400" />
                     </div>
                     <div>
-                      <h2 className="text-lg font-semibold text-stone-100">Select Tools</h2>
-                      <p className="text-sm text-stone-400">
+                      <h2 className="text-lg font-semibold text-foreground">Select Tools</h2>
+                      <p className="text-sm text-muted-foreground">
                         Choose which tools to include in your MCP server
                       </p>
                     </div>
@@ -261,64 +260,64 @@ export default function NewMCPServerPage() {
                       <Eye className="h-5 w-5 text-green-400" />
                     </div>
                     <div>
-                      <h2 className="text-lg font-semibold text-stone-100">Review & Create</h2>
-                      <p className="text-sm text-stone-400">
+                      <h2 className="text-lg font-semibold text-foreground">Review & Create</h2>
+                      <p className="text-sm text-muted-foreground">
                         Review your configuration before creating the server
                       </p>
                     </div>
                   </div>
 
                   {/* Server Info Card */}
-                  <Card className="bg-stone-800 border-stone-700">
+                  <Card className="bg-accent border">
                     <CardHeader className="pb-3">
-                      <CardTitle className="text-base text-stone-200 flex items-center gap-2">
-                        <Server className="h-4 w-4 text-stone-400" />
+                      <CardTitle className="text-base text-foreground flex items-center gap-2">
+                        <Server className="h-4 w-4 text-muted-foreground" />
                         Server Details
                       </CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-4">
                       <div className="grid grid-cols-2 gap-4">
                         <div>
-                          <p className="text-xs text-stone-500">Name</p>
-                          <p className="text-sm text-stone-200 font-medium">{config.name}</p>
+                          <p className="text-xs text-foreground0">Name</p>
+                          <p className="text-sm text-foreground font-medium">{config.name}</p>
                         </div>
                         <div>
-                          <p className="text-xs text-stone-500">Authentication</p>
+                          <p className="text-xs text-foreground0">Authentication</p>
                           <div className="flex items-center gap-1.5">
                             <Shield className="h-3.5 w-3.5 text-purple-400" />
-                            <p className="text-sm text-stone-200">{config.authType}</p>
+                            <p className="text-sm text-foreground">{config.authType}</p>
                           </div>
                         </div>
                         <div>
-                          <p className="text-xs text-stone-500">Rate Limit</p>
+                          <p className="text-xs text-foreground0">Rate Limit</p>
                           <div className="flex items-center gap-1.5">
                             <Gauge className="h-3.5 w-3.5 text-blue-400" />
-                            <p className="text-sm text-stone-200">
+                            <p className="text-sm text-foreground">
                               {config.rateLimitPerMinute} req/min
                             </p>
                           </div>
                         </div>
                         <div>
-                          <p className="text-xs text-stone-500">Tools</p>
-                          <p className="text-sm text-stone-200">{selectedTools.length} tools</p>
+                          <p className="text-xs text-foreground0">Tools</p>
+                          <p className="text-sm text-foreground">{selectedTools.length} tools</p>
                         </div>
                       </div>
 
                       <div>
-                        <p className="text-xs text-stone-500 mb-1">Description</p>
-                        <p className="text-sm text-stone-300">{config.description}</p>
+                        <p className="text-xs text-foreground0 mb-1">Description</p>
+                        <p className="text-sm text-muted-foreground">{config.description}</p>
                       </div>
 
                       <div>
-                        <p className="text-xs text-stone-500 mb-1">Server URL</p>
+                        <p className="text-xs text-foreground0 mb-1">Server URL</p>
                         <div className="flex items-center gap-2">
-                          <code className="flex-1 text-sm text-amber-400 font-mono bg-stone-900 px-3 py-2 rounded">
+                          <code className="flex-1 text-sm text-amber-400 font-mono bg-card px-3 py-2 rounded">
                             {serverUrl}
                           </code>
                           <Button
                             variant="outline"
                             size="icon"
-                            className="border-stone-600 text-stone-400 hover:text-stone-200"
+                            className="border-stone-600 text-muted-foreground hover:text-foreground"
                             onClick={copyUrl}
                           >
                             {copiedUrl ? (
@@ -333,16 +332,16 @@ export default function NewMCPServerPage() {
                   </Card>
 
                   {/* Selected Tools */}
-                  <Card className="bg-stone-800 border-stone-700">
+                  <Card className="bg-accent border">
                     <CardHeader className="pb-3">
-                      <CardTitle className="text-base text-stone-200 flex items-center gap-2">
-                        <Wrench className="h-4 w-4 text-stone-400" />
+                      <CardTitle className="text-base text-foreground flex items-center gap-2">
+                        <Wrench className="h-4 w-4 text-muted-foreground" />
                         Selected Tools ({selectedTools.length})
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
                       {selectedTools.length === 0 ? (
-                        <p className="text-sm text-stone-500 text-center py-4">
+                        <p className="text-sm text-foreground0 text-center py-4">
                           No tools selected
                         </p>
                       ) : (
@@ -351,8 +350,8 @@ export default function NewMCPServerPage() {
                             <div key={`${group.sourceType}-${group.sourceId}`}>
                               <div className="flex items-center gap-2 mb-2">
                                 {group.sourceType === "integration" ? (
-                                  <Image
-                                    src={getIntegrationIcon(group.sourceId)}
+                                  <IntegrationIcon
+                                    integrationId={group.sourceId}
                                     alt={group.sourceName}
                                     width={16}
                                     height={16}
@@ -361,12 +360,12 @@ export default function NewMCPServerPage() {
                                 ) : (
                                   <Bot className="h-4 w-4 text-amber-400" />
                                 )}
-                                <span className="text-sm font-medium text-stone-300">
+                                <span className="text-sm font-medium text-muted-foreground">
                                   {group.sourceName}
                                 </span>
                                 <Badge
                                   variant="outline"
-                                  className="bg-stone-700 text-stone-400 border-stone-600 text-xs"
+                                  className="bg-muted text-muted-foreground border-stone-600 text-xs"
                                 >
                                   {group.tools.length}
                                 </Badge>
@@ -375,14 +374,8 @@ export default function NewMCPServerPage() {
                                 {group.tools.map((tool) => (
                                   <Badge
                                     key={`${tool.sourceId}-${tool.toolName}`}
-                                    variant="outline"
-                                    className={`text-xs ${
-                                      tool.category === "read"
-                                        ? "bg-green-950/50 text-green-400 border-green-800"
-                                        : tool.category === "write"
-                                        ? "bg-blue-950/50 text-blue-400 border-blue-800"
-                                        : "bg-amber-950/50 text-amber-400 border-amber-800"
-                                    }`}
+                                    variant={tool.category === "read" ? "success" : tool.category === "write" ? "info" : "warning"}
+                                    className="text-xs"
                                   >
                                     {tool.toolName}
                                   </Badge>
@@ -405,7 +398,7 @@ export default function NewMCPServerPage() {
               variant="outline"
               onClick={handleBack}
               disabled={currentStep === "config"}
-              className="border-stone-700 text-stone-300 disabled:opacity-50"
+              className="border text-muted-foreground disabled:opacity-50"
             >
               <ArrowLeft className="h-4 w-4 mr-2" />
               Back

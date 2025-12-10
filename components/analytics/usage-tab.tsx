@@ -63,9 +63,9 @@ export function UsageTab({ dateRange }: UsageTabProps) {
       {/* Charts */}
       <div className="grid gap-6 lg:grid-cols-2">
         {/* Hourly Usage */}
-        <Card className="bg-stone-900 border-stone-800">
+        <Card className="bg-card border">
           <CardHeader>
-            <CardTitle className="text-stone-100">Hourly Usage Pattern</CardTitle>
+            <CardTitle className="text-foreground">Hourly Usage Pattern</CardTitle>
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
@@ -107,9 +107,9 @@ export function UsageTab({ dateRange }: UsageTabProps) {
         </Card>
 
         {/* Daily Usage */}
-        <Card className="bg-stone-900 border-stone-800">
+        <Card className="bg-card border">
           <CardHeader>
-            <CardTitle className="text-stone-100">Usage by Day of Week</CardTitle>
+            <CardTitle className="text-foreground">Usage by Day of Week</CardTitle>
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
@@ -133,28 +133,28 @@ export function UsageTab({ dateRange }: UsageTabProps) {
       </div>
 
       {/* Usage Table */}
-      <Card className="bg-stone-900 border-stone-800">
+      <Card className="bg-card border">
         <CardHeader>
-          <CardTitle className="text-stone-100">Daily Activity Summary</CardTitle>
+          <CardTitle className="text-foreground">Daily Activity Summary</CardTitle>
         </CardHeader>
         <CardContent className="p-0">
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-stone-800">
-              <thead className="bg-stone-900">
+              <thead className="bg-card">
                 <tr>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-stone-400 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                     Day
                   </th>
-                  <th className="px-6 py-4 text-right text-xs font-medium text-stone-400 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-right text-xs font-medium text-muted-foreground uppercase tracking-wider">
                     Executions
                   </th>
-                  <th className="px-6 py-4 text-right text-xs font-medium text-stone-400 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-right text-xs font-medium text-muted-foreground uppercase tracking-wider">
                     Unique Agents
                   </th>
-                  <th className="px-6 py-4 text-right text-xs font-medium text-stone-400 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-right text-xs font-medium text-muted-foreground uppercase tracking-wider">
                     Unique Users
                   </th>
-                  <th className="px-6 py-4 text-center text-xs font-medium text-stone-400 uppercase tracking-wider">
+                  <th className="px-6 py-4 text-center text-xs font-medium text-muted-foreground uppercase tracking-wider">
                     Activity Level
                   </th>
                 </tr>
@@ -164,22 +164,22 @@ export function UsageTab({ dateRange }: UsageTabProps) {
                   const maxExec = Math.max(...usageByDay.map((d) => d.executions));
                   const activityLevel = (day.executions / maxExec) * 100;
                   return (
-                    <tr key={day.day} className="hover:bg-stone-800/50 transition-colors">
+                    <tr key={day.day} className="hover:bg-accent/50 transition-colors">
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <span className="text-sm font-medium text-stone-100">{day.day}</span>
+                        <span className="text-sm font-medium text-foreground">{day.day}</span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right">
-                        <span className="text-sm text-stone-200">{day.executions.toLocaleString()}</span>
+                        <span className="text-sm text-foreground">{day.executions.toLocaleString()}</span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right">
-                        <span className="text-sm text-stone-300">{day.uniqueAgents}</span>
+                        <span className="text-sm text-muted-foreground">{day.uniqueAgents}</span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right">
-                        <span className="text-sm text-stone-300">{day.uniqueUsers}</span>
+                        <span className="text-sm text-muted-foreground">{day.uniqueUsers}</span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="flex items-center justify-center">
-                          <div className="w-24 bg-stone-800 rounded-full h-2">
+                          <div className="w-24 bg-accent rounded-full h-2">
                             <div
                               className="h-2 rounded-full bg-amber-500"
                               style={{ width: `${activityLevel}%` }}

@@ -19,20 +19,20 @@ export function RecentExecutions({ executions }: RecentExecutionsProps) {
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr className="border-b border-stone-800">
-                <th className="pb-3 text-left text-xs font-medium text-stone-500 uppercase tracking-wider">
+              <tr className="border-b border-border">
+                <th className="pb-3 text-left text-xs font-medium text-foreground0 uppercase tracking-wider">
                   Time
                 </th>
-                <th className="pb-3 text-left text-xs font-medium text-stone-500 uppercase tracking-wider">
+                <th className="pb-3 text-left text-xs font-medium text-foreground0 uppercase tracking-wider">
                   Agent
                 </th>
-                <th className="pb-3 text-left text-xs font-medium text-stone-500 uppercase tracking-wider">
+                <th className="pb-3 text-left text-xs font-medium text-foreground0 uppercase tracking-wider">
                   Status
                 </th>
-                <th className="pb-3 text-right text-xs font-medium text-stone-500 uppercase tracking-wider">
+                <th className="pb-3 text-right text-xs font-medium text-foreground0 uppercase tracking-wider">
                   Duration
                 </th>
-                <th className="pb-3 text-right text-xs font-medium text-stone-500 uppercase tracking-wider">
+                <th className="pb-3 text-right text-xs font-medium text-foreground0 uppercase tracking-wider">
                   Cost
                 </th>
               </tr>
@@ -41,15 +41,15 @@ export function RecentExecutions({ executions }: RecentExecutionsProps) {
               {executions.map((execution) => (
                 <tr
                   key={execution.id}
-                  className="hover:bg-stone-800/50 cursor-pointer"
+                  className="hover:bg-accent/50 cursor-pointer"
                 >
-                  <td className="py-4 text-sm text-stone-400" suppressHydrationWarning>
+                  <td className="py-4 text-sm text-muted-foreground" suppressHydrationWarning>
                     {formatRelativeTime(execution.startedAt)}
                   </td>
                   <td className="py-4">
                     <Link
                       href={`/agents/${execution.agentId}`}
-                      className="text-sm font-medium text-stone-200 hover:text-amber-500"
+                      className="text-sm font-medium text-foreground hover:text-amber-500"
                     >
                       {execution.agentName}
                     </Link>
@@ -57,10 +57,10 @@ export function RecentExecutions({ executions }: RecentExecutionsProps) {
                   <td className="py-4">
                     <ExecutionStatusBadge status={execution.status} />
                   </td>
-                  <td className="py-4 text-right text-sm text-stone-400">
+                  <td className="py-4 text-right text-sm text-muted-foreground">
                     {formatDuration(execution.duration)}
                   </td>
-                  <td className="py-4 text-right text-sm text-stone-200 font-medium">
+                  <td className="py-4 text-right text-sm text-foreground font-medium">
                     {formatCurrency(execution.cost)}
                   </td>
                 </tr>

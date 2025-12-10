@@ -50,16 +50,16 @@ export function PermissionsTab({ permissions, roles, rolePermissions, onTogglePe
   };
 
   return (
-    <Card className="bg-stone-900 border-stone-800">
+    <Card className="bg-card border">
       <CardContent className="p-0">
         <table className="min-w-full">
           <thead>
-            <tr className="border-b border-stone-800">
-              <th className="px-6 py-4 text-left text-xs font-medium text-stone-400 uppercase tracking-wider w-1/3">
+            <tr className="border-b border-border">
+              <th className="px-6 py-4 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider w-1/3">
                 Permission
               </th>
               {roles.map((role) => (
-                <th key={role.id} className="px-4 py-4 text-center text-xs font-medium text-stone-400 uppercase tracking-wider">
+                <th key={role.id} className="px-4 py-4 text-center text-xs font-medium text-muted-foreground uppercase tracking-wider">
                   {role.name}
                 </th>
               ))}
@@ -73,18 +73,18 @@ export function PermissionsTab({ permissions, roles, rolePermissions, onTogglePe
                 <Fragment key={category}>
                   {/* Category Header */}
                   <tr 
-                    className="bg-stone-800/30 cursor-pointer hover:bg-stone-800/50"
+                    className="bg-accent/30 cursor-pointer hover:bg-accent/50"
                     onClick={() => toggleCategory(category)}
                   >
                     <td colSpan={roles.length + 1} className="px-6 py-3">
                       <div className="flex items-center gap-2">
                         {isExpanded ? (
-                          <ChevronDown className="h-4 w-4 text-stone-500" />
+                          <ChevronDown className="h-4 w-4 text-foreground0" />
                         ) : (
-                          <ChevronRight className="h-4 w-4 text-stone-500" />
+                          <ChevronRight className="h-4 w-4 text-foreground0" />
                         )}
-                        <span className="text-sm font-medium text-stone-300">{category}</span>
-                        <span className="text-xs text-stone-500">({perms.length})</span>
+                        <span className="text-sm font-medium text-muted-foreground">{category}</span>
+                        <span className="text-xs text-foreground0">({perms.length})</span>
                       </div>
                     </td>
                   </tr>
@@ -93,12 +93,12 @@ export function PermissionsTab({ permissions, roles, rolePermissions, onTogglePe
                   {isExpanded && perms.map((permission) => (
                     <tr
                       key={permission.id}
-                      className="border-b border-stone-800/50 hover:bg-stone-800/30"
+                      className="border-b border/50 hover:bg-accent/30"
                     >
                       <td className="px-6 py-3 pl-12">
                         <div>
-                          <span className="text-sm text-stone-300">{permission.name}</span>
-                          <p className="text-xs text-stone-500 mt-0.5">{permission.description}</p>
+                          <span className="text-sm text-muted-foreground">{permission.name}</span>
+                          <p className="text-xs text-foreground0 mt-0.5">{permission.description}</p>
                         </div>
                       </td>
                       {roles.map((role) => {
@@ -110,7 +110,7 @@ export function PermissionsTab({ permissions, roles, rolePermissions, onTogglePe
                               className={`h-8 w-8 rounded-lg flex items-center justify-center mx-auto transition-colors ${
                                 hasPerm
                                   ? "bg-green-950 text-green-400 hover:bg-green-900"
-                                  : "bg-stone-800 text-stone-600 hover:bg-stone-700 hover:text-stone-400"
+                                  : "bg-accent text-stone-600 hover:bg-muted hover:text-muted-foreground"
                               }`}
                             >
                               {hasPerm ? (

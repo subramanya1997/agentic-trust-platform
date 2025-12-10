@@ -45,18 +45,18 @@ export default function OrganizationPage() {
 
           {/* Tab Navigation - Team page style */}
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-1 bg-stone-900 p-1 rounded-lg border border-stone-800">
+            <div className="flex items-center gap-1 bg-card/50 p-1 rounded-lg border border">
               {tabs.map((tab) => (
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
                     activeTab === tab.id
-                      ? "bg-stone-800 text-stone-100"
-                      : "text-stone-400 hover:text-stone-200"
+                      ? "bg-accent text-foreground"
+                      : "text-muted-foreground hover:text-muted-foreground"
                   }`}
                 >
-                  <tab.icon className="h-4 w-4" />
+                  <tab.icon className="h-3.5 w-3.5" />
                   {tab.label}
                 </button>
               ))}

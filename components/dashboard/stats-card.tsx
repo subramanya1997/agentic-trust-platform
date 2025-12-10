@@ -43,7 +43,7 @@ export function StatsCard({
   const sparklineColor = sparkline?.color || "#f59e0b";
 
   return (
-    <Card className="bg-stone-900 border-stone-800 relative overflow-hidden">
+    <Card className="relative overflow-hidden">
       {/* Sparkline Background */}
       {sparkline && sparkline.data.length > 0 && (
         <div className="absolute inset-0 opacity-20">
@@ -71,8 +71,8 @@ export function StatsCard({
       )}
       
       <div className="px-4 relative z-10">
-        <p className="text-xs font-medium text-stone-400">{title}</p>
-        <p className="mt-0.5 text-xl font-bold text-stone-50">{value}</p>
+        <p className="text-xs font-medium text-muted-foreground">{title}</p>
+        <p className="mt-0.5 text-xl font-bold text-foreground">{value}</p>
         
         {/* Change indicator or Usage bar */}
         {usage ? (
@@ -91,18 +91,18 @@ export function StatsCard({
                       "text-xs font-medium",
                       changeType === "positive" && "text-green-500",
                       changeType === "negative" && "text-red-500",
-                      changeType === "neutral" && "text-stone-400"
+                      changeType === "neutral" && "text-muted-foreground"
                     )}
                   >
                     {change}
                   </span>
                 </div>
               )}
-              <span className="text-[10px] text-stone-500">
+              <span className="text-[10px] text-muted-foreground/60">
                 {usage.label || `${formatCompact(usage.current)} / ${formatCompact(usage.max)}`}
               </span>
             </div>
-            <div className="w-full h-1.5 bg-stone-800 rounded-full overflow-hidden">
+            <div className="w-full h-1.5 bg-secondary rounded-full overflow-hidden">
               <div 
                 className={cn(
                   "h-full rounded-full transition-all",
@@ -126,7 +126,7 @@ export function StatsCard({
                 "text-xs font-medium",
                 changeType === "positive" && "text-green-500",
                 changeType === "negative" && "text-red-500",
-                changeType === "neutral" && "text-stone-400"
+                changeType === "neutral" && "text-muted-foreground"
               )}
             >
               {change}

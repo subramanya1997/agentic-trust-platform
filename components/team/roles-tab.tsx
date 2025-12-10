@@ -40,27 +40,27 @@ export function RolesTab({ roles, onAddRole, onEditRole, onDeleteRole }: RolesTa
     <div className="space-y-4">
       {/* Add Role Form */}
       {showAddForm && (
-        <Card className="bg-stone-900 border-stone-800">
+        <Card className="bg-card border">
           <CardContent className="p-4">
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-stone-300 mb-2">Role Name</label>
+                <label className="block text-sm font-medium text-muted-foreground mb-2">Role Name</label>
                 <input
                   type="text"
                   value={newRoleName}
                   onChange={(e) => setNewRoleName(e.target.value)}
                   placeholder="e.g., Developer"
-                  className="w-full rounded-lg border border-stone-700 bg-stone-800 px-4 py-2 text-sm text-stone-200 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500"
+                  className="w-full rounded-lg border border bg-accent px-4 py-2 text-sm text-foreground focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-stone-300 mb-2">Description</label>
+                <label className="block text-sm font-medium text-muted-foreground mb-2">Description</label>
                 <input
                   type="text"
                   value={newRoleDescription}
                   onChange={(e) => setNewRoleDescription(e.target.value)}
                   placeholder="What can this role do?"
-                  className="w-full rounded-lg border border-stone-700 bg-stone-800 px-4 py-2 text-sm text-stone-200 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500"
+                  className="w-full rounded-lg border border bg-accent px-4 py-2 text-sm text-foreground focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500"
                 />
               </div>
               <div className="flex items-center gap-2">
@@ -72,7 +72,7 @@ export function RolesTab({ roles, onAddRole, onEditRole, onDeleteRole }: RolesTa
                 </Button>
                 <Button 
                   variant="ghost" 
-                  className="text-stone-400"
+                  className="text-muted-foreground"
                   onClick={() => setShowAddForm(false)}
                 >
                   Cancel
@@ -84,42 +84,42 @@ export function RolesTab({ roles, onAddRole, onEditRole, onDeleteRole }: RolesTa
       )}
 
       {/* Roles Table */}
-      <Card className="bg-stone-900 border-stone-800">
+      <Card className="bg-card border">
         <CardContent className="p-0">
           <table className="min-w-full divide-y divide-stone-800">
             <thead>
               <tr>
-                <th className="px-6 py-4 text-left text-xs font-medium text-stone-400 uppercase tracking-wider">
+                <th className="px-6 py-4 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                   Role
                 </th>
-                <th className="px-6 py-4 text-left text-xs font-medium text-stone-400 uppercase tracking-wider">
+                <th className="px-6 py-4 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                   Description
                 </th>
-                <th className="px-6 py-4 text-left text-xs font-medium text-stone-400 uppercase tracking-wider">
+                <th className="px-6 py-4 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                   Members
                 </th>
-                <th className="px-6 py-4 text-left text-xs font-medium text-stone-400 uppercase tracking-wider">
+                <th className="px-6 py-4 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                   Type
                 </th>
-                <th className="px-6 py-4 text-right text-xs font-medium text-stone-400 uppercase tracking-wider">
+                <th className="px-6 py-4 text-right text-xs font-medium text-muted-foreground uppercase tracking-wider">
                   Actions
                 </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-stone-800">
               {roles.map((role) => (
-                <tr key={role.id} className="hover:bg-stone-800/50 transition-colors">
+                <tr key={role.id} className="hover:bg-accent/50 transition-colors">
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <span className="text-sm font-medium text-stone-200">{role.name}</span>
+                    <span className="text-sm font-medium text-foreground">{role.name}</span>
                   </td>
                   <td className="px-6 py-4">
-                    <span className="text-sm text-stone-400">{role.description}</span>
+                    <span className="text-sm text-muted-foreground">{role.description}</span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <span className="text-sm text-stone-300">{role.memberCount}</span>
+                    <span className="text-sm text-muted-foreground">{role.memberCount}</span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <span className="text-sm text-stone-500">
+                    <span className="text-sm text-foreground0">
                       {role.isSystem ? "System" : role.isDefault ? "Default" : "Custom"}
                     </span>
                   </td>
@@ -129,7 +129,7 @@ export function RolesTab({ roles, onAddRole, onEditRole, onDeleteRole }: RolesTa
                         <Button 
                           variant="ghost" 
                           size="sm"
-                          className="text-stone-500 hover:text-stone-300"
+                          className="text-foreground0 hover:text-muted-foreground"
                           onClick={() => onEditRole?.(role.id)}
                         >
                           <Edit2 className="h-4 w-4" />

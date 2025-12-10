@@ -67,7 +67,7 @@ export default function HelpPage() {
               Coming Soon
             </div>
 
-            <p className="text-sm text-stone-400 mb-10 max-w-md mx-auto leading-relaxed">
+            <p className="text-sm text-muted-foreground mb-10 max-w-md mx-auto leading-relaxed">
               We&apos;re building a comprehensive help center to ensure you get the support you need, when you need it.
             </p>
 
@@ -76,18 +76,18 @@ export default function HelpPage() {
               {supportChannels.map((channel) => (
                 <div
                   key={channel.title}
-                  className="group relative p-4 rounded-lg bg-stone-900/40 border border-stone-800/60 hover:border-stone-700 transition-all text-left overflow-hidden"
+                  className="group relative p-4 rounded-lg bg-card/40 border border/60 hover:border transition-all text-left overflow-hidden"
                 >
                   <div className="absolute top-0 right-0 px-2 py-0.5 text-[10px] font-medium text-amber-500/60 bg-amber-500/5 rounded-bl-md">
                     {channel.eta}
                   </div>
                   <div className="flex items-start gap-3 mt-1">
-                    <div className="p-2 rounded-md bg-stone-800/50 group-hover:bg-amber-500/10 transition-all">
-                      <channel.icon className="w-4 h-4 text-stone-500 group-hover:text-amber-500 transition-colors" />
+                    <div className="p-2 rounded-md bg-accent/50 group-hover:bg-amber-500/10 transition-all">
+                      <channel.icon className="w-4 h-4 text-foreground0 group-hover:text-amber-500 transition-colors" />
                     </div>
                     <div>
-                      <h3 className="text-sm font-medium text-stone-300 mb-0.5">{channel.title}</h3>
-                      <p className="text-xs text-stone-500">{channel.description}</p>
+                      <h3 className="text-sm font-medium text-muted-foreground mb-0.5">{channel.title}</h3>
+                      <p className="text-xs text-foreground0">{channel.description}</p>
                     </div>
                   </div>
                 </div>
@@ -95,13 +95,13 @@ export default function HelpPage() {
             </div>
 
             {/* Contact options */}
-            <div className="flex flex-wrap items-center justify-center gap-4 mb-8 py-4 px-6 rounded-lg bg-stone-900/30 border border-stone-800/50">
-              <span className="text-xs text-stone-500">In the meantime, reach us at:</span>
+            <div className="flex flex-wrap items-center justify-center gap-4 mb-8 py-4 px-6 rounded-lg bg-card/30 border border/50">
+              <span className="text-xs text-foreground0">In the meantime, reach us at:</span>
               {contactOptions.map((option) => (
                 <a
                   key={option.label}
                   href={option.href}
-                  className="inline-flex items-center gap-1.5 text-xs text-stone-400 hover:text-amber-500 transition-colors"
+                  className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-amber-500 transition-colors"
                 >
                   <option.icon className="w-3 h-3" />
                   {option.label}
@@ -121,7 +121,7 @@ export default function HelpPage() {
               <Button 
                 size="sm"
                 variant="outline" 
-                className="border-stone-700 text-stone-400 hover:bg-stone-800 hover:text-stone-100 text-xs"
+                className="border text-muted-foreground hover:bg-accent hover:text-foreground text-xs"
                 asChild
               >
                 <Link href="/">
@@ -132,8 +132,8 @@ export default function HelpPage() {
             </div>
 
             {/* Timeline */}
-            <div className="mt-12 pt-6 border-t border-stone-800/50">
-              <p className="text-xs text-stone-500">
+            <div className="mt-12 pt-6">
+              <p className="text-xs text-foreground0">
                 Expected launch: <span className="text-amber-500 font-medium">Q1 2026</span>
               </p>
             </div>

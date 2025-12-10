@@ -62,30 +62,30 @@ export default function MCPRegistryPage() {
           {/* Search & Filters */}
           <div className="flex items-center gap-4 flex-wrap">
             <div className="relative flex-1 max-w-md">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-stone-500" />
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <input
                 type="text"
                 placeholder="Search servers or tools..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full rounded-lg border border-stone-700 bg-stone-900 py-2 pl-10 pr-4 text-sm text-stone-200 placeholder:text-stone-500 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500"
+                className="w-full rounded-lg border bg-card py-2 pl-10 pr-4 text-sm text-foreground placeholder:text-muted-foreground focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500"
               />
             </div>
 
-            <div className="flex items-center gap-1 p-1 rounded-lg bg-stone-900/50 border border-stone-800">
+            <div className="flex items-center gap-1 p-1 rounded-lg bg-card/50 border border">
               {filters.map((filter) => (
                 <button
                   key={filter.type}
                   onClick={() => setTypeFilter(filter.type)}
                   className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
                     typeFilter === filter.type
-                      ? "bg-stone-800 text-stone-100"
-                      : "text-stone-400 hover:text-stone-300"
+                      ? "bg-accent text-foreground"
+                      : "text-muted-foreground hover:text-muted-foreground"
                   }`}
                 >
                   {filter.icon}
                   {filter.label}
-                  <span className="text-stone-500 ml-1">{counts[filter.type]}</span>
+                  <span className="text-foreground0 ml-1">{counts[filter.type]}</span>
                 </button>
               ))}
             </div>
@@ -101,8 +101,8 @@ export default function MCPRegistryPage() {
           ) : (
             <div className="text-center py-16">
               <Server className="h-10 w-10 text-stone-700 mx-auto mb-3" />
-              <p className="text-sm text-stone-400">No servers found</p>
-              <p className="text-xs text-stone-500 mt-1">
+              <p className="text-sm text-muted-foreground">No servers found</p>
+              <p className="text-xs text-muted-foreground mt-1">
                 {searchQuery ? "Try adjusting your search" : "Create your first MCP server"}
               </p>
               {!searchQuery && (

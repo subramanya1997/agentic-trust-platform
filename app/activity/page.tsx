@@ -21,7 +21,8 @@ import {
   Timer,
 } from "lucide-react";
 import { ExecutionsTab, AuditLogTab, TriggersTab } from "@/components/activity";
-import { mockExecutionTraces } from "@/lib/data/activity-data";
+import { mockExecutionTraces, mockActivityEvents } from "@/lib/data/activity-data";
+import { mockTriggers } from "@/lib/data/triggers-data";
 
 type TabType = "executions" | "triggers" | "audit";
 type DateRange = "7d" | "14d" | "30d";
@@ -65,6 +66,13 @@ export default function ActivityPage() {
     new Set(mockExecutionTraces.map((t) => t.agentName))
   ).sort();
 
+  // Calculate counts for tabs
+  const tabCounts = {
+    executions: mockExecutionTraces.length,
+    triggers: mockTriggers.length,
+    audit: mockActivityEvents.length,
+  };
+
   const tabs = [
     { id: "executions" as const, label: "Executions", icon: Activity },
     { id: "triggers" as const, label: "Triggers", icon: Timer },
@@ -87,27 +95,42 @@ export default function ActivityPage() {
         subtitle="Monitor agent executions, traces, and audit logs"
         actionButton={
           <div className="flex items-center gap-2">
-            <Select value={dateRange} onValueChange={(value: DateRange) => setDateRange(value)}>
-              <SelectTrigger className="w-[140px] border-stone-700 bg-stone-900 text-stone-300 h-8">
-                <Calendar className="mr-2 h-3.5 w-3.5" />
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent className="border-stone-700 bg-stone-900">
-                <SelectItem value="7d" className="text-stone-300 focus:bg-stone-800 focus:text-stone-100">
-                  Last 7 days
-                </SelectItem>
-                <SelectItem value="14d" className="text-stone-300 focus:bg-stone-800 focus:text-stone-100">
-                  Last 14 days
-                </SelectItem>
-                <SelectItem value="30d" className="text-stone-300 focus:bg-stone-800 focus:text-stone-100">
-                  Last 30 days
-                </SelectItem>
-              </SelectContent>
-            </Select>
+            <div className="flex items-center gap-1 p-1 rounded-lg bg-card/50 border border">
+              <button
+                onClick={() => setDateRange("7d")}
+                className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
+                  dateRange === "7d"
+                    ? "bg-accent text-foreground"
+                    : "text-muted-foreground hover:text-muted-foreground"
+                }`}
+              >
+                7D
+              </button>
+              <button
+                onClick={() => setDateRange("14d")}
+                className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
+                  dateRange === "14d"
+                    ? "bg-accent text-foreground"
+                    : "text-muted-foreground hover:text-muted-foreground"
+                }`}
+              >
+                14D
+              </button>
+              <button
+                onClick={() => setDateRange("30d")}
+                className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
+                  dateRange === "30d"
+                    ? "bg-accent text-foreground"
+                    : "text-muted-foreground hover:text-muted-foreground"
+                }`}
+              >
+                30D
+              </button>
+            </div>
             <Button
               size="sm"
               variant="outline"
-              className="border-stone-700 text-stone-300 hover:bg-stone-800 h-8"
+              className="border text-muted-foreground hover:bg-accent h-8"
               onClick={handleRefresh}
               disabled={isRefreshing}
             >
@@ -123,19 +146,20 @@ export default function ActivityPage() {
           {/* Tab Navigation + Filters Row */}
           <div className="flex items-center justify-between gap-4 flex-wrap">
             {/* Tabs */}
-            <div className="flex items-center gap-1 bg-stone-900 p-1 rounded-lg border border-stone-800">
+            <div className="flex items-center gap-1 p-1 rounded-lg bg-card/50 border border">
               {tabs.map((tab) => (
                 <button
                   key={tab.id}
                   onClick={() => handleTabChange(tab.id)}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
                     activeTab === tab.id
-                      ? "bg-stone-800 text-stone-100"
-                      : "text-stone-400 hover:text-stone-200"
+                      ? "bg-accent text-foreground"
+                      : "text-muted-foreground hover:text-muted-foreground"
                   }`}
                 >
-                  <tab.icon className="h-4 w-4" />
+                  <tab.icon className="h-3.5 w-3.5" />
                   {tab.label}
+                  <span className="text-foreground0 ml-1">{tabCounts[tab.id]}</span>
                 </button>
               ))}
             </div>
@@ -144,7 +168,7 @@ export default function ActivityPage() {
             <div className="flex items-center gap-3 flex-1 justify-end">
               {/* Search */}
               <div className="relative w-[280px]">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-stone-500" />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-foreground0" />
                 <Input
                   placeholder={
                     activeTab === "executions" 
@@ -155,7 +179,7 @@ export default function ActivityPage() {
                   }
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-9 bg-stone-900 border-stone-700 text-stone-200 placeholder:text-stone-500"
+                  className="pl-9 bg-card border text-foreground placeholder:text-foreground0"
                 />
               </div>
 
@@ -163,38 +187,38 @@ export default function ActivityPage() {
               {activeTab === "executions" && (
                 <>
                   <Select value={statusFilter} onValueChange={setStatusFilter}>
-                    <SelectTrigger className="w-[130px] border-stone-700 bg-stone-900 text-stone-300">
+                    <SelectTrigger className="w-[130px] border bg-card text-muted-foreground">
                       <SelectValue placeholder="Status" />
                     </SelectTrigger>
-                    <SelectContent className="border-stone-700 bg-stone-900">
-                      <SelectItem value="all" className="text-stone-300 focus:bg-stone-800">
+                    <SelectContent className="border bg-card">
+                      <SelectItem value="all" className="text-muted-foreground focus:bg-accent">
                         All Status
                       </SelectItem>
-                      <SelectItem value="completed" className="text-stone-300 focus:bg-stone-800">
+                      <SelectItem value="completed" className="text-muted-foreground focus:bg-accent">
                         Completed
                       </SelectItem>
-                      <SelectItem value="failed" className="text-stone-300 focus:bg-stone-800">
+                      <SelectItem value="failed" className="text-muted-foreground focus:bg-accent">
                         Failed
                       </SelectItem>
-                      <SelectItem value="running" className="text-stone-300 focus:bg-stone-800">
+                      <SelectItem value="running" className="text-muted-foreground focus:bg-accent">
                         Running
                       </SelectItem>
                     </SelectContent>
                   </Select>
 
                   <Select value={agentFilter} onValueChange={setAgentFilter}>
-                    <SelectTrigger className="w-[180px] border-stone-700 bg-stone-900 text-stone-300">
+                    <SelectTrigger className="w-[180px] border bg-card text-muted-foreground">
                       <SelectValue placeholder="Agent" />
                     </SelectTrigger>
-                    <SelectContent className="border-stone-700 bg-stone-900">
-                      <SelectItem value="all" className="text-stone-300 focus:bg-stone-800">
+                    <SelectContent className="border bg-card">
+                      <SelectItem value="all" className="text-muted-foreground focus:bg-accent">
                         All Agents
                       </SelectItem>
                       {uniqueAgents.map((agent) => (
                         <SelectItem
                           key={agent}
                           value={agent}
-                          className="text-stone-300 focus:bg-stone-800"
+                          className="text-muted-foreground focus:bg-accent"
                         >
                           {agent}
                         </SelectItem>
@@ -208,37 +232,37 @@ export default function ActivityPage() {
               {activeTab === "triggers" && (
                 <>
                   <Select value={triggerTypeFilter} onValueChange={setTriggerTypeFilter}>
-                    <SelectTrigger className="w-[130px] border-stone-700 bg-stone-900 text-stone-300">
+                    <SelectTrigger className="w-[130px] border bg-card text-muted-foreground">
                       <SelectValue placeholder="Type" />
                     </SelectTrigger>
-                    <SelectContent className="border-stone-700 bg-stone-900">
-                      <SelectItem value="all" className="text-stone-300 focus:bg-stone-800">
+                    <SelectContent className="border bg-card">
+                      <SelectItem value="all" className="text-muted-foreground focus:bg-accent">
                         All Types
                       </SelectItem>
-                      <SelectItem value="webhook" className="text-stone-300 focus:bg-stone-800">
+                      <SelectItem value="webhook" className="text-muted-foreground focus:bg-accent">
                         Webhook
                       </SelectItem>
-                      <SelectItem value="scheduled" className="text-stone-300 focus:bg-stone-800">
+                      <SelectItem value="scheduled" className="text-muted-foreground focus:bg-accent">
                         Scheduled
                       </SelectItem>
-                      <SelectItem value="api" className="text-stone-300 focus:bg-stone-800">
+                      <SelectItem value="api" className="text-muted-foreground focus:bg-accent">
                         API
                       </SelectItem>
                     </SelectContent>
                   </Select>
 
                   <Select value={triggerStatusFilter} onValueChange={setTriggerStatusFilter}>
-                    <SelectTrigger className="w-[130px] border-stone-700 bg-stone-900 text-stone-300">
+                    <SelectTrigger className="w-[130px] border bg-card text-muted-foreground">
                       <SelectValue placeholder="Status" />
                     </SelectTrigger>
-                    <SelectContent className="border-stone-700 bg-stone-900">
-                      <SelectItem value="all" className="text-stone-300 focus:bg-stone-800">
+                    <SelectContent className="border bg-card">
+                      <SelectItem value="all" className="text-muted-foreground focus:bg-accent">
                         All Status
                       </SelectItem>
-                      <SelectItem value="active" className="text-stone-300 focus:bg-stone-800">
+                      <SelectItem value="active" className="text-muted-foreground focus:bg-accent">
                         Active
                       </SelectItem>
-                      <SelectItem value="inactive" className="text-stone-300 focus:bg-stone-800">
+                      <SelectItem value="inactive" className="text-muted-foreground focus:bg-accent">
                         Inactive
                       </SelectItem>
                     </SelectContent>
@@ -250,15 +274,15 @@ export default function ActivityPage() {
               {activeTab === "audit" && (
                 <>
                   <Select value={typeFilter} onValueChange={setTypeFilter}>
-                    <SelectTrigger className="w-[180px] border-stone-700 bg-stone-900 text-stone-300">
+                    <SelectTrigger className="w-[180px] border bg-card text-muted-foreground">
                       <SelectValue placeholder="Event Type" />
                     </SelectTrigger>
-                    <SelectContent className="border-stone-700 bg-stone-900 max-h-[300px]">
+                    <SelectContent className="border bg-card max-h-[300px]">
                       {eventTypeOptions.map((option) => (
                         <SelectItem
                           key={option.value}
                           value={option.value}
-                          className="text-stone-300 focus:bg-stone-800"
+                          className="text-muted-foreground focus:bg-accent"
                         >
                           {option.label}
                         </SelectItem>
@@ -269,7 +293,7 @@ export default function ActivityPage() {
                   <Button
                     variant="outline"
                     size="sm"
-                    className="border-stone-700 text-stone-300 hover:bg-stone-800"
+                    className="border text-muted-foreground hover:bg-accent"
                   >
                     <Download className="h-4 w-4 mr-2" />
                     Export

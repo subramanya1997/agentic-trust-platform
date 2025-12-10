@@ -70,9 +70,9 @@ export function CostsTab({
       {/* Charts Grid */}
       <div className="grid gap-6 lg:grid-cols-2">
         {/* Cost Trend */}
-        <Card className="bg-stone-900 border-stone-800">
+        <Card className="bg-card border">
           <CardHeader>
-            <CardTitle className="text-stone-100">Cost Trend</CardTitle>
+            <CardTitle className="text-foreground">Cost Trend</CardTitle>
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
@@ -113,9 +113,9 @@ export function CostsTab({
         </Card>
 
         {/* Execution Volume */}
-        <Card className="bg-stone-900 border-stone-800">
+        <Card className="bg-card border">
           <CardHeader>
-            <CardTitle className="text-stone-100">Execution Volume</CardTitle>
+            <CardTitle className="text-foreground">Execution Volume</CardTitle>
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
@@ -140,9 +140,9 @@ export function CostsTab({
 
       {/* Cost by Model */}
       <div className="grid gap-6 lg:grid-cols-2">
-        <Card className="bg-stone-900 border-stone-800">
+        <Card className="bg-card border">
           <CardHeader>
-            <CardTitle className="text-stone-100">Cost by Model</CardTitle>
+            <CardTitle className="text-foreground">Cost by Model</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
@@ -150,31 +150,31 @@ export function CostsTab({
                 <div key={item.name} className="flex items-center">
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between">
-                      <span className="text-sm font-medium text-stone-100 truncate">
+                      <span className="text-sm font-medium text-foreground truncate">
                         {item.name}
                       </span>
-                      <span className="text-sm font-semibold text-stone-100 ml-2">
+                      <span className="text-sm font-semibold text-foreground ml-2">
                         {formatCurrency(item.cost)}
                       </span>
                     </div>
                     <div className="mt-1 flex items-center justify-between">
-                      <div className="flex-1 bg-stone-800 rounded-full h-2 mr-3">
+                      <div className="flex-1 bg-accent rounded-full h-2 mr-3">
                         <div
                           className="h-2 rounded-full bg-amber-500"
                           style={{ width: `${item.percentage}%` }}
                         />
                       </div>
-                      <span className="text-xs text-stone-400 w-10 text-right">
+                      <span className="text-xs text-muted-foreground w-10 text-right">
                         {item.percentage}%
                       </span>
                     </div>
                   </div>
                 </div>
               ))}
-              <div className="mt-4 pt-4 border-t border-stone-800">
+              <div className="mt-4 pt-4">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm font-semibold text-stone-100">Total</span>
-                  <span className="text-lg font-bold text-stone-100">{formatCurrency(totalCost)}</span>
+                  <span className="text-sm font-semibold text-foreground">Total</span>
+                  <span className="text-lg font-bold text-foreground">{formatCurrency(totalCost)}</span>
                 </div>
               </div>
             </div>

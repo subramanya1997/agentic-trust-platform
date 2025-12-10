@@ -1,12 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Header } from "@/components/layout/header";
 import { AddIntegrationDialog } from "@/components/integrations/add-integration-dialog";
-import { getIntegrationIcon } from "@/lib/integration-icons";
+import { IntegrationIcon } from "@/components/integration-icon";
 import { Search, Check } from "lucide-react";
 
 interface Integration {
@@ -54,20 +53,20 @@ export default function IntegrationsPage() {
 
           {/* Search */}
           <div className="relative max-w-md">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-stone-500" />
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-foreground0" />
             <input
               type="text"
               placeholder="Search integrations..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full rounded-lg border border-stone-700 bg-stone-900 py-2 pl-10 pr-4 text-sm text-stone-200 placeholder:text-stone-500 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500"
+              className="w-full rounded-lg border border bg-card py-2 pl-10 pr-4 text-sm text-foreground placeholder:text-foreground0 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500"
             />
           </div>
 
           {/* Connected Integrations */}
           {connectedIntegrations.length > 0 && (
             <div>
-              <h2 className="text-sm font-medium text-stone-400 mb-3">Connected</h2>
+              <h2 className="text-sm font-medium text-muted-foreground mb-3">Connected</h2>
               <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 {connectedIntegrations.map((integration) => (
                   <IntegrationCard key={integration.id} integration={integration} />
@@ -79,7 +78,7 @@ export default function IntegrationsPage() {
           {/* Available Integrations */}
           {availableIntegrations.length > 0 && (
             <div>
-              <h2 className="text-sm font-medium text-stone-400 mb-3">Available</h2>
+              <h2 className="text-sm font-medium text-muted-foreground mb-3">Available</h2>
               <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 {availableIntegrations.map((integration) => (
                   <IntegrationCard key={integration.id} integration={integration} />
@@ -91,7 +90,7 @@ export default function IntegrationsPage() {
           {/* Empty State */}
           {filteredIntegrations.length === 0 && (
             <div className="text-center py-12">
-              <p className="text-stone-400">No integrations found</p>
+              <p className="text-muted-foreground">No integrations found</p>
               <button 
                 className="mt-4 text-sm text-amber-500 hover:text-amber-400"
                 onClick={() => setSearchQuery("")}
@@ -112,13 +111,13 @@ function IntegrationCard({ integration }: { integration: Integration }) {
       href={`/integrations/${integration.id}`}
       className={`flex items-center gap-3 p-3 rounded-lg border transition-all ${
         integration.connected 
-          ? 'bg-stone-900/50 border-stone-800 hover:border-stone-700 hover:bg-stone-800/50' 
-          : 'bg-stone-900/30 border-stone-800/50 hover:border-stone-700 hover:bg-stone-800/30'
+          ? 'bg-card/50 border hover:border hover:bg-accent/50' 
+          : 'bg-card/30 border/50 hover:border hover:bg-accent/30'
       }`}
     >
-      <div className="h-9 w-9 rounded-lg bg-stone-800 flex items-center justify-center overflow-hidden shrink-0">
-        <Image 
-          src={getIntegrationIcon(integration.id)} 
+      <div className="h-9 w-9 rounded-lg bg-accent flex items-center justify-center overflow-hidden shrink-0">
+        <IntegrationIcon 
+          integrationId={integration.id} 
           alt={integration.name} 
           width={24} 
           height={24}
@@ -127,15 +126,15 @@ function IntegrationCard({ integration }: { integration: Integration }) {
       </div>
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2">
-          <span className="text-sm font-medium text-stone-100 truncate">{integration.name}</span>
+          <span className="text-sm font-medium text-foreground truncate">{integration.name}</span>
           {integration.connected && (
             <Check className="h-3.5 w-3.5 text-green-500 shrink-0" />
           )}
         </div>
-        <p className="text-xs text-stone-500 truncate">{integration.description}</p>
+        <p className="text-xs text-foreground0 truncate">{integration.description}</p>
       </div>
       {integration.connected ? (
-        <Badge variant="outline" className="text-xs bg-stone-800/50 text-stone-400 border-stone-700 shrink-0">
+        <Badge variant="outline" className="text-xs bg-accent/50 text-muted-foreground border shrink-0">
           {integration.usageCount} agent{integration.usageCount !== 1 ? 's' : ''}
         </Badge>
       ) : (

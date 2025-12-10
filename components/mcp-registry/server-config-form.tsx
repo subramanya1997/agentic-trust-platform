@@ -35,8 +35,8 @@ export function ServerConfigForm({ config, onChange, errors }: ServerConfigFormP
     <div className="space-y-6">
       {/* Server Name */}
       <div className="space-y-2">
-        <Label htmlFor="name" className="text-stone-200 flex items-center gap-2">
-          <Server className="h-4 w-4 text-stone-400" />
+        <Label htmlFor="name" className="text-foreground flex items-center gap-2">
+          <Server className="h-4 w-4 text-muted-foreground" />
           Server Name
         </Label>
         <Input
@@ -44,20 +44,20 @@ export function ServerConfigForm({ config, onChange, errors }: ServerConfigFormP
           value={config.name}
           onChange={(e) => updateConfig("name", e.target.value)}
           placeholder="e.g., Sales Toolkit, DevOps Hub"
-          className={`bg-stone-800 border-stone-700 text-stone-200 placeholder:text-stone-500 focus:border-amber-500 ${
+          className={`bg-accent border text-foreground placeholder:text-foreground0 focus:border-amber-500 ${
             errors?.name ? "border-red-500" : ""
           }`}
         />
         {errors?.name && <p className="text-xs text-red-400">{errors.name}</p>}
-        <p className="text-xs text-stone-500">
+        <p className="text-xs text-foreground0">
           A descriptive name for your MCP server. This will be visible to clients.
         </p>
       </div>
 
       {/* Description */}
       <div className="space-y-2">
-        <Label htmlFor="description" className="text-stone-200 flex items-center gap-2">
-          <FileText className="h-4 w-4 text-stone-400" />
+        <Label htmlFor="description" className="text-foreground flex items-center gap-2">
+          <FileText className="h-4 w-4 text-muted-foreground" />
           Description
         </Label>
         <Textarea
@@ -66,20 +66,20 @@ export function ServerConfigForm({ config, onChange, errors }: ServerConfigFormP
           onChange={(e) => updateConfig("description", e.target.value)}
           placeholder="Describe what this MCP server does and what tools it provides..."
           rows={3}
-          className={`bg-stone-800 border-stone-700 text-stone-200 placeholder:text-stone-500 focus:border-amber-500 resize-none ${
+          className={`bg-accent border text-foreground placeholder:text-foreground0 focus:border-amber-500 resize-none ${
             errors?.description ? "border-red-500" : ""
           }`}
         />
         {errors?.description && <p className="text-xs text-red-400">{errors.description}</p>}
-        <p className="text-xs text-stone-500">
+        <p className="text-xs text-foreground0">
           Help users understand what tools are available and when to use this server.
         </p>
       </div>
 
       {/* Authentication Type */}
       <div className="space-y-2">
-        <Label htmlFor="authType" className="text-stone-200 flex items-center gap-2">
-          <Shield className="h-4 w-4 text-stone-400" />
+        <Label htmlFor="authType" className="text-foreground flex items-center gap-2">
+          <Shield className="h-4 w-4 text-muted-foreground" />
           Authentication
         </Label>
         <Select
@@ -87,35 +87,35 @@ export function ServerConfigForm({ config, onChange, errors }: ServerConfigFormP
           onValueChange={(value) => updateConfig("authType", value as MCPAuthType)}
         >
           <SelectTrigger
-            className={`bg-stone-800 border-stone-700 text-stone-200 focus:border-amber-500 ${
+            className={`bg-accent border text-foreground focus:border-amber-500 ${
               errors?.authType ? "border-red-500" : ""
             }`}
           >
             <SelectValue placeholder="Select authentication type" />
           </SelectTrigger>
-          <SelectContent className="bg-stone-800 border-stone-700">
-            <SelectItem value="api_key" className="text-stone-200 focus:bg-stone-700">
+          <SelectContent className="bg-accent border">
+            <SelectItem value="api_key" className="text-foreground focus:bg-muted">
               <div className="flex items-center gap-2">
                 <span>API Key</span>
-                <span className="text-xs text-stone-500">- Simple token-based auth</span>
+                <span className="text-xs text-foreground0">- Simple token-based auth</span>
               </div>
             </SelectItem>
-            <SelectItem value="oauth2" className="text-stone-200 focus:bg-stone-700">
+            <SelectItem value="oauth2" className="text-foreground focus:bg-muted">
               <div className="flex items-center gap-2">
                 <span>OAuth 2.0</span>
-                <span className="text-xs text-stone-500">- Delegated authorization</span>
+                <span className="text-xs text-foreground0">- Delegated authorization</span>
               </div>
             </SelectItem>
-            <SelectItem value="none" className="text-stone-200 focus:bg-stone-700">
+            <SelectItem value="none" className="text-foreground focus:bg-muted">
               <div className="flex items-center gap-2">
                 <span>None</span>
-                <span className="text-xs text-stone-500">- Public access (not recommended)</span>
+                <span className="text-xs text-foreground0">- Public access (not recommended)</span>
               </div>
             </SelectItem>
           </SelectContent>
         </Select>
         {errors?.authType && <p className="text-xs text-red-400">{errors.authType}</p>}
-        <p className="text-xs text-stone-500">
+        <p className="text-xs text-foreground0">
           {config.authType === "api_key" &&
             "Clients will need to provide an API key in the Authorization header."}
           {config.authType === "oauth2" &&
@@ -127,8 +127,8 @@ export function ServerConfigForm({ config, onChange, errors }: ServerConfigFormP
 
       {/* Rate Limit */}
       <div className="space-y-2">
-        <Label htmlFor="rateLimit" className="text-stone-200 flex items-center gap-2">
-          <Gauge className="h-4 w-4 text-stone-400" />
+        <Label htmlFor="rateLimit" className="text-foreground flex items-center gap-2">
+          <Gauge className="h-4 w-4 text-muted-foreground" />
           Rate Limit
         </Label>
         <div className="flex items-center gap-3">
@@ -141,25 +141,25 @@ export function ServerConfigForm({ config, onChange, errors }: ServerConfigFormP
             onChange={(e) =>
               updateConfig("rateLimitPerMinute", Math.max(1, parseInt(e.target.value) || 60))
             }
-            className={`w-32 bg-stone-800 border-stone-700 text-stone-200 focus:border-amber-500 ${
+            className={`w-32 bg-accent border text-foreground focus:border-amber-500 ${
               errors?.rateLimitPerMinute ? "border-red-500" : ""
             }`}
           />
-          <span className="text-sm text-stone-400">requests per minute</span>
+          <span className="text-sm text-muted-foreground">requests per minute</span>
         </div>
         {errors?.rateLimitPerMinute && (
           <p className="text-xs text-red-400">{errors.rateLimitPerMinute}</p>
         )}
-        <p className="text-xs text-stone-500">
+        <p className="text-xs text-foreground0">
           Maximum number of tool invocations allowed per minute per client.
         </p>
       </div>
 
       {/* Preview URL */}
       <div className="space-y-2">
-        <Label className="text-stone-200">Server URL Preview</Label>
-        <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-stone-800 border border-stone-700">
-          <code className="text-sm text-stone-300 font-mono">
+        <Label className="text-foreground">Server URL Preview</Label>
+        <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-accent border border">
+          <code className="text-sm text-muted-foreground font-mono">
             https://mcp.nexus.dev/servers/custom/
             <span className="text-amber-400">
               {config.name
@@ -168,7 +168,7 @@ export function ServerConfigForm({ config, onChange, errors }: ServerConfigFormP
             </span>
           </code>
         </div>
-        <p className="text-xs text-stone-500">
+        <p className="text-xs text-foreground0">
           This URL will be used by MCP clients to connect to your server.
         </p>
       </div>

@@ -43,48 +43,48 @@ export default function ApiKeysPage() {
       <main className="flex-1 overflow-y-auto overflow-x-hidden p-6">
         <div className="space-y-6 min-w-0">
 
-          <Card className="bg-stone-900 border-stone-800">
+          <Card className="bg-card border">
             <CardContent className="p-0">
               <table className="min-w-full divide-y divide-stone-800">
                 <thead>
                   <tr>
-                    <th className="px-6 py-4 text-left text-xs font-medium text-stone-400 uppercase tracking-wider">
+                    <th className="px-6 py-4 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                       Name
                     </th>
-                    <th className="px-6 py-4 text-left text-xs font-medium text-stone-400 uppercase tracking-wider">
+                    <th className="px-6 py-4 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                       Key
                     </th>
-                    <th className="px-6 py-4 text-left text-xs font-medium text-stone-400 uppercase tracking-wider">
+                    <th className="px-6 py-4 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                       Created
                     </th>
-                    <th className="px-6 py-4 text-left text-xs font-medium text-stone-400 uppercase tracking-wider">
+                    <th className="px-6 py-4 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                       Last Used
                     </th>
-                    <th className="px-6 py-4 text-right text-xs font-medium text-stone-400 uppercase tracking-wider">
+                    <th className="px-6 py-4 text-right text-xs font-medium text-muted-foreground uppercase tracking-wider">
                       Actions
                     </th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-stone-800">
                   {apiKeys.map((key) => (
-                    <tr key={key.id} className="hover:bg-stone-800/50 transition-colors">
+                    <tr key={key.id} className="hover:bg-accent/50 transition-colors">
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <span className="text-sm font-medium text-stone-100">{key.name}</span>
+                        <span className="text-sm font-medium text-foreground">{key.name}</span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="flex items-center gap-2">
-                          <code className="text-sm text-stone-400 font-mono">
+                          <code className="text-sm text-muted-foreground font-mono">
                             {showKey === key.id ? `${key.prefix}xxxxxxxxxxxx` : `${key.prefix}••••••••••••`}
                           </code>
                           <button
                             onClick={() => setShowKey(showKey === key.id ? null : key.id)}
-                            className="text-stone-500 hover:text-stone-300"
+                            className="text-foreground0 hover:text-muted-foreground"
                           >
                             {showKey === key.id ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                           </button>
                           <button
                             onClick={() => copyToClipboard(key.id)}
-                            className="text-stone-500 hover:text-stone-300"
+                            className="text-foreground0 hover:text-muted-foreground"
                           >
                             {copied === key.id ? (
                               <Check className="h-4 w-4 text-green-500" />
@@ -95,10 +95,10 @@ export default function ApiKeysPage() {
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <span className="text-sm text-stone-400">{key.created}</span>
+                        <span className="text-sm text-muted-foreground">{key.created}</span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <span className="text-sm text-stone-400">{key.lastUsed}</span>
+                        <span className="text-sm text-muted-foreground">{key.lastUsed}</span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right">
                         <Button variant="ghost" size="sm" className="text-red-400 hover:text-red-300 hover:bg-red-950">

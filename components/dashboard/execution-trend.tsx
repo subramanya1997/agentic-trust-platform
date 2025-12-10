@@ -38,24 +38,24 @@ export function ExecutionTrend({
   ];
 
   return (
-    <Card className="bg-stone-900 border-stone-800">
+    <Card>
       <CardHeader className="pb-2">
         <div className="flex items-center justify-between">
           <div>
-            <CardTitle className="text-stone-100 text-base">Execution Trend</CardTitle>
-            <p className="text-xs text-stone-400 mt-0.5">
+            <CardTitle className="text-base">Execution Trend</CardTitle>
+            <p className="text-xs text-muted-foreground mt-0.5">
               {totalExecutions.toLocaleString()} executions · {formatCurrency(totalCost)} total cost
             </p>
           </div>
-          <div className="flex items-center gap-1 p-1 rounded-lg bg-stone-800 border border-stone-700">
+          <div className="flex items-center gap-1 p-1 rounded-lg bg-card/50 border border">
             {dateRanges.map((range) => (
               <button
                 key={range.value}
                 onClick={() => onDateRangeChange(range.value)}
-                className={`px-2.5 py-1 rounded text-xs font-medium transition-colors ${
+                className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
                   dateRange === range.value
-                    ? "bg-stone-700 text-stone-100"
-                    : "text-stone-400 hover:text-stone-300"
+                    ? "bg-accent text-foreground"
+                    : "text-muted-foreground hover:text-muted-foreground"
                 }`}
               >
                 {range.label}
@@ -73,38 +73,41 @@ export function ExecutionTrend({
                 <stop offset="95%" stopColor={AMBER_COLOR} stopOpacity={0.05} />
               </linearGradient>
             </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke="#374151" vertical={false} />
+            <CartesianGrid strokeDasharray="3 3" className="stroke-muted" vertical={false} />
             <XAxis
               dataKey="date"
-              stroke="#9ca3af"
+              className="text-muted-foreground"
               fontSize={10}
               tickLine={false}
               axisLine={false}
               padding={{ left: 0, right: 0 }}
+              stroke="var(--muted-foreground)"
             />
             <YAxis
               yAxisId="left"
-              stroke="#9ca3af"
+              className="text-muted-foreground"
               fontSize={10}
               tickLine={false}
               axisLine={false}
               domain={[0, 'auto']}
+              stroke="var(--muted-foreground)"
             />
             <YAxis
               yAxisId="right"
               orientation="right"
-              stroke="#9ca3af"
+              className="text-muted-foreground"
               fontSize={10}
               tickLine={false}
               axisLine={false}
               tickFormatter={(value) => `$${value}`}
+              stroke="var(--muted-foreground)"
             />
             <Tooltip
               contentStyle={{
-                backgroundColor: "#1c1917",
-                border: "1px solid #374151",
+                backgroundColor: "var(--card)",
+                border: "1px solid var(--border)",
                 borderRadius: "8px",
-                color: "#f5f5f4",
+                color: "var(--card-foreground)",
                 fontSize: "12px",
               }}
               formatter={(value: number, name: string) => [
@@ -134,13 +137,13 @@ export function ExecutionTrend({
         <div className="flex items-center justify-center gap-6 mt-2">
           <div className="flex items-center gap-2">
             <div className="w-3 h-3 rounded-sm" style={{ backgroundColor: AMBER_COLOR }} />
-            <span className="text-xs text-stone-400">Executions</span>
+            <span className="text-xs text-muted-foreground">Executions</span>
           </div>
           <div className="flex items-center gap-2">
             <div className="w-3 h-3 rounded-sm" style={{ backgroundColor: GREEN_COLOR, opacity: 0.6 }} />
-            <span className="text-xs text-stone-400">Cost</span>
+            <span className="text-xs text-muted-foreground">Cost</span>
           </div>
-          <div className="text-xs text-stone-500">
+          <div className="text-xs text-muted-foreground/60">
             Avg: {avgExecutions}/day
           </div>
         </div>

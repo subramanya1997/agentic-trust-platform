@@ -329,13 +329,13 @@ export default function NewAgentPage() {
   const ProviderIcon = selectedProvider?.icon || Sparkles;
 
   return (
-    <div className="flex flex-col h-screen bg-stone-950">
+    <div className="flex flex-col h-screen bg-background">
       {/* Header */}
-      <header className="sticky top-0 z-10 flex h-14 shrink-0 items-center justify-between border-b border-stone-800 bg-stone-950 px-4">
+      <header className="sticky top-0 z-10 flex h-14 shrink-0 items-center justify-between border-b border-border bg-background px-4">
         <div className="flex items-center gap-4">
           <Link
             href="/agents"
-            className="flex items-center text-sm text-stone-400 hover:text-stone-200 transition-colors"
+            className="flex items-center text-sm text-muted-foreground hover:text-foreground transition-colors"
           >
             <ArrowLeft className="mr-2 h-4 w-4" />
             Agents
@@ -343,20 +343,20 @@ export default function NewAgentPage() {
           <span className="text-stone-600">/</span>
           <div className="flex items-center gap-2">
             <Sparkles className="h-4 w-4 text-amber-500" />
-            <span className="text-stone-100 font-medium">New Agent</span>
+            <span className="text-foreground font-medium">New Agent</span>
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <Button variant="ghost" size="icon" className="h-8 w-8 text-stone-400 hover:text-stone-200">
+          <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-foreground">
             <Clock className="h-4 w-4" />
           </Button>
-          <Button variant="ghost" size="icon" className="h-8 w-8 text-stone-400 hover:text-stone-200">
+          <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-foreground">
             <Copy className="h-4 w-4" />
           </Button>
           <Button 
             variant="ghost" 
             size="icon" 
-            className="h-8 w-8 text-stone-400 hover:text-stone-200"
+            className="h-8 w-8 text-muted-foreground hover:text-foreground"
             onClick={() => setIsBuilderOpen(!isBuilderOpen)}
           >
             {isBuilderOpen ? <PanelRightClose className="h-4 w-4" /> : <PanelRight className="h-4 w-4" />}
@@ -376,7 +376,7 @@ export default function NewAgentPage() {
                 value={agentName}
                 onChange={(e) => setAgentName(e.target.value)}
                 placeholder="Agent Name"
-                className="text-3xl font-bold text-stone-100 bg-transparent border-none focus:outline-none focus:ring-0 w-full"
+                className="text-3xl font-bold text-foreground bg-transparent border-none focus:outline-none focus:ring-0 w-full"
               />
               <Button className="bg-amber-600 hover:bg-amber-500 text-white shrink-0 ml-4">
                 <Play className="mr-2 h-4 w-4 fill-current" />
@@ -390,20 +390,20 @@ export default function NewAgentPage() {
               <div className="relative" ref={modelDropdownRef}>
                 <button 
                   onClick={() => setIsModelDropdownOpen(!isModelDropdownOpen)}
-                  className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-stone-700 bg-stone-800 text-sm text-stone-200 hover:border-stone-600 transition-colors"
+                  className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border bg-accent text-sm text-foreground hover:border-accent transition-colors"
                 >
                   <ProviderIcon className={`h-4 w-4 ${getProviderColor(selectedModel.provider)}`} />
                   {selectedModel.model.name}
-                  <ChevronDown className={`h-4 w-4 text-stone-400 transition-transform ${isModelDropdownOpen ? 'rotate-180' : ''}`} />
+                  <ChevronDown className={`h-4 w-4 text-muted-foreground transition-transform ${isModelDropdownOpen ? 'rotate-180' : ''}`} />
                 </button>
 
                 {isModelDropdownOpen && (
-                  <div className="absolute top-full left-0 mt-2 w-72 max-h-[400px] overflow-y-auto rounded-lg border border-stone-700 bg-stone-900 shadow-xl z-50">
+                  <div className="absolute top-full left-0 mt-2 w-72 max-h-[400px] overflow-y-auto rounded-lg border border bg-card shadow-xl z-50">
                     {llmProviders.map((provider) => (
                       <div key={provider.name}>
-                        <div className="sticky top-0 px-3 py-2 bg-stone-800 border-b border-stone-700 flex items-center gap-2">
+                        <div className="sticky top-0 px-3 py-2 bg-accent border-b border-border flex items-center gap-2">
                           <provider.icon className={`h-4 w-4 ${provider.color}`} />
-                          <span className="text-xs font-semibold text-stone-300 uppercase tracking-wide">
+                          <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
                             {provider.name}
                           </span>
                         </div>
@@ -411,11 +411,11 @@ export default function NewAgentPage() {
                           <button
                             key={model.id}
                             onClick={() => selectModel(provider.name, model)}
-                            className="w-full px-3 py-2 flex items-center justify-between hover:bg-stone-800 transition-colors text-left"
+                            className="w-full px-3 py-2 flex items-center justify-between hover:bg-accent transition-colors text-left"
                           >
                             <div>
-                              <span className="text-sm font-medium text-stone-200">{model.name}</span>
-                              <p className="text-xs text-stone-400">{model.description}</p>
+                              <span className="text-sm font-medium text-foreground">{model.name}</span>
+                              <p className="text-xs text-muted-foreground">{model.description}</p>
                             </div>
                             {selectedModel.model.id === model.id && (
                               <Check className="h-4 w-4 text-green-500" />
@@ -430,9 +430,9 @@ export default function NewAgentPage() {
             </div>
 
             {/* Triggers Section */}
-            <div className="mb-6 pb-6 border-b border-stone-800">
+            <div className="mb-6 pb-6 border-b border-border">
               <div className="flex items-center justify-between mb-3">
-                <h2 className="font-semibold text-stone-100">Triggers</h2>
+                <h2 className="font-semibold text-foreground">Triggers</h2>
                 <button 
                   onClick={() => setIsAddScheduleOpen(true)}
                   className="text-sm text-amber-500 hover:text-amber-400 flex items-center gap-1 transition-colors"
@@ -444,42 +444,42 @@ export default function NewAgentPage() {
 
               <div className="space-y-2">
                 {/* Manual API Trigger */}
-                <div className="flex items-center justify-between p-3 rounded-lg border border-stone-800 bg-stone-900/50">
+                <div className="flex items-center justify-between p-3 rounded-lg border border bg-card/50">
                   <div className="flex items-center gap-3">
                     <div className="h-8 w-8 rounded-lg bg-green-950 flex items-center justify-center">
                       <Code className="h-4 w-4 text-green-400" />
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-stone-200">Manual API</p>
-                      <p className="text-xs text-stone-500">Invoke via REST API</p>
+                      <p className="text-sm font-medium text-foreground">Manual API</p>
+                      <p className="text-xs text-foreground0">Invoke via REST API</p>
                     </div>
                   </div>
                   <Switch checked={apiEnabled} onCheckedChange={setApiEnabled} />
                 </div>
 
                 {/* MCP Server Trigger */}
-                <div className="flex items-center justify-between p-3 rounded-lg border border-stone-800 bg-stone-900/50">
+                <div className="flex items-center justify-between p-3 rounded-lg border border bg-card/50">
                   <div className="flex items-center gap-3">
                     <div className="h-8 w-8 rounded-lg bg-amber-950 flex items-center justify-center">
                       <Zap className="h-4 w-4 text-amber-400" />
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-stone-200">MCP Server</p>
-                      <p className="text-xs text-stone-500">Expose as MCP tool</p>
+                      <p className="text-sm font-medium text-foreground">MCP Server</p>
+                      <p className="text-xs text-foreground0">Expose as MCP tool</p>
                     </div>
                   </div>
                   <Switch checked={mcpEnabled} onCheckedChange={setMcpEnabled} />
                 </div>
 
                 {/* Webhook Trigger */}
-                <div className="flex items-center justify-between p-3 rounded-lg border border-stone-800 bg-stone-900/50">
+                <div className="flex items-center justify-between p-3 rounded-lg border border bg-card/50">
                   <div className="flex items-center gap-3">
                     <div className="h-8 w-8 rounded-lg bg-purple-950 flex items-center justify-center">
                       <Webhook className="h-4 w-4 text-purple-400" />
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-stone-200">Webhook</p>
-                      <p className="text-xs text-stone-500">Trigger via HTTP webhook</p>
+                      <p className="text-sm font-medium text-foreground">Webhook</p>
+                      <p className="text-xs text-foreground0">Trigger via HTTP webhook</p>
                     </div>
                   </div>
                   <Switch checked={webhookEnabled} onCheckedChange={setWebhookEnabled} />
@@ -489,15 +489,15 @@ export default function NewAgentPage() {
                 {scheduledTriggers.map((trigger) => (
                   <div 
                     key={trigger.id}
-                    className="flex items-center justify-between p-3 rounded-lg border border-stone-800 bg-stone-900/50"
+                    className="flex items-center justify-between p-3 rounded-lg border border bg-card/50"
                   >
                     <div className="flex items-center gap-3">
                       <div className="h-8 w-8 rounded-lg bg-blue-950 flex items-center justify-center">
                         <Calendar className="h-4 w-4 text-blue-400" />
                       </div>
                       <div>
-                        <p className="text-sm font-medium text-stone-200">{trigger.name}</p>
-                        <p className="text-xs text-stone-500 font-mono">{trigger.cron}</p>
+                        <p className="text-sm font-medium text-foreground">{trigger.name}</p>
+                        <p className="text-xs text-foreground0 font-mono">{trigger.cron}</p>
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
@@ -507,7 +507,7 @@ export default function NewAgentPage() {
                       />
                       <button 
                         onClick={() => removeScheduledTrigger(trigger.id)}
-                        className="p-1 text-stone-500 hover:text-red-400 transition-colors"
+                        className="p-1 text-foreground0 hover:text-red-400 transition-colors"
                       >
                         <X className="h-4 w-4" />
                       </button>
@@ -519,55 +519,55 @@ export default function NewAgentPage() {
 
             {/* Add Schedule Dialog */}
             <Dialog open={isAddScheduleOpen} onOpenChange={setIsAddScheduleOpen}>
-              <DialogContent className="bg-stone-900 border-stone-800 sm:max-w-[500px]">
+              <DialogContent className="bg-card border sm:max-w-[500px]">
                 <DialogHeader>
-                  <DialogTitle className="text-stone-100">Add Scheduled Trigger</DialogTitle>
-                  <DialogDescription className="text-stone-400">
+                  <DialogTitle className="text-foreground">Add Scheduled Trigger</DialogTitle>
+                  <DialogDescription className="text-muted-foreground">
                     Configure a cron-based schedule for this agent.
                   </DialogDescription>
                 </DialogHeader>
                 <div className="space-y-4 py-4">
                   <div className="space-y-2">
-                    <Label className="text-stone-200">Name</Label>
+                    <Label className="text-foreground">Name</Label>
                     <Input
                       value={newScheduleName}
                       onChange={(e) => setNewScheduleName(e.target.value)}
                       placeholder="e.g., Daily Report Generation"
-                      className="bg-stone-800 border-stone-700 text-stone-200 placeholder:text-stone-500"
+                      className="bg-accent border text-foreground placeholder:text-foreground0"
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label className="text-stone-200">Schedule (Cron Expression)</Label>
+                    <Label className="text-foreground">Schedule (Cron Expression)</Label>
                     <Input
                       value={newScheduleCron}
                       onChange={(e) => setNewScheduleCron(e.target.value)}
                       placeholder="0 8 * * 1"
-                      className="bg-stone-800 border-stone-700 text-stone-200 placeholder:text-stone-500 font-mono"
+                      className="bg-accent border text-foreground placeholder:text-foreground0 font-mono"
                     />
-                    <p className="text-xs text-stone-500">
+                    <p className="text-xs text-foreground0">
                       Example: &quot;0 8 * * 1&quot; = Every Monday at 8 AM
                     </p>
                   </div>
                   <div className="space-y-2">
-                    <Label className="text-stone-200">Timezone</Label>
+                    <Label className="text-foreground">Timezone</Label>
                     <Select value={newScheduleTimezone} onValueChange={setNewScheduleTimezone}>
-                      <SelectTrigger className="bg-stone-800 border-stone-700 text-stone-200">
+                      <SelectTrigger className="bg-accent border text-foreground">
                         <SelectValue />
                       </SelectTrigger>
-                      <SelectContent className="bg-stone-800 border-stone-700">
-                        <SelectItem value="utc" className="text-stone-200 focus:bg-stone-700">
+                      <SelectContent className="bg-accent border">
+                        <SelectItem value="utc" className="text-foreground focus:bg-muted">
                           UTC
                         </SelectItem>
-                        <SelectItem value="america_new_york" className="text-stone-200 focus:bg-stone-700">
+                        <SelectItem value="america_new_york" className="text-foreground focus:bg-muted">
                           America/New_York (EST)
                         </SelectItem>
-                        <SelectItem value="america_los_angeles" className="text-stone-200 focus:bg-stone-700">
+                        <SelectItem value="america_los_angeles" className="text-foreground focus:bg-muted">
                           America/Los_Angeles (PST)
                         </SelectItem>
-                        <SelectItem value="europe_london" className="text-stone-200 focus:bg-stone-700">
+                        <SelectItem value="europe_london" className="text-foreground focus:bg-muted">
                           Europe/London (GMT)
                         </SelectItem>
-                        <SelectItem value="asia_tokyo" className="text-stone-200 focus:bg-stone-700">
+                        <SelectItem value="asia_tokyo" className="text-foreground focus:bg-muted">
                           Asia/Tokyo (JST)
                         </SelectItem>
                       </SelectContent>
@@ -589,7 +589,7 @@ export default function NewAgentPage() {
                   <Button
                     variant="outline"
                     onClick={() => setIsAddScheduleOpen(false)}
-                    className="border-stone-700 text-stone-300"
+                    className="border text-muted-foreground"
                   >
                     Cancel
                   </Button>
@@ -605,12 +605,12 @@ export default function NewAgentPage() {
             </Dialog>
 
             {/* Connected Integrations Row */}
-            <div className="flex items-center gap-2 flex-wrap mb-6 pb-6 border-b border-stone-800">
+            <div className="flex items-center gap-2 flex-wrap mb-6 pb-6 border-b border-border">
               {connectedIntegrations.map((name) => (
                 <Badge 
                   key={name}
                   variant="outline" 
-                  className="px-3 py-1.5 bg-stone-800 border-stone-700 text-stone-200 flex items-center gap-2"
+                  className="px-3 py-1.5 bg-accent border text-foreground flex items-center gap-2"
                 >
                   <Image 
                     src={getIntegrationIcon(name.toLowerCase())} 
@@ -629,7 +629,7 @@ export default function NewAgentPage() {
                 </Badge>
               ))}
               {connectedIntegrations.length === 0 && (
-                <span className="text-sm text-stone-500">Type @ to add integrations</span>
+                <span className="text-sm text-foreground0">Type @ to add integrations</span>
               )}
             </div>
 
@@ -640,7 +640,7 @@ export default function NewAgentPage() {
                 contentEditable
                 onInput={handleInput}
                 onKeyDown={handleKeyDown}
-                className="w-full min-h-[400px] text-stone-300 leading-relaxed focus:outline-none text-sm"
+                className="w-full min-h-[400px] text-muted-foreground leading-relaxed focus:outline-none text-sm"
                 suppressContentEditableWarning
               >
                 <p><strong>Goal</strong></p>
@@ -659,14 +659,14 @@ export default function NewAgentPage() {
               {showMentionDropdown && filteredIntegrations.length > 0 && (
                 <div 
                   ref={mentionDropdownRef}
-                  className="absolute z-50 w-72 rounded-lg border border-stone-700 bg-stone-900 shadow-xl max-h-64 overflow-y-auto"
+                  className="absolute z-50 w-72 rounded-lg border border bg-card shadow-xl max-h-64 overflow-y-auto"
                   style={{ 
                     bottom: `calc(100% - ${mentionPosition.top}px + 20px)`,
                     left: mentionPosition.left 
                   }}
                 >
                   <div className="p-2">
-                    <div className="text-xs font-semibold text-stone-500 px-2 py-1 mb-1">
+                    <div className="text-xs font-semibold text-foreground0 px-2 py-1 mb-1">
                       Select Integration
                     </div>
                     {filteredIntegrations.map((integration, index) => (
@@ -675,8 +675,8 @@ export default function NewAgentPage() {
                         onClick={() => addIntegration(integration.name)}
                         className={`w-full text-left px-2 py-2 rounded flex items-center gap-3 transition-colors ${
                           index === selectedMentionIndex 
-                            ? 'bg-stone-700' 
-                            : 'hover:bg-stone-800'
+                            ? 'bg-muted' 
+                            : 'hover:bg-accent'
                         }`}
                       >
                         <Image 
@@ -688,19 +688,19 @@ export default function NewAgentPage() {
                         />
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2">
-                            <span className="text-sm font-medium text-stone-200">
+                            <span className="text-sm font-medium text-foreground">
                               @{integration.name.toLowerCase()}
                             </span>
-                            <Badge variant="outline" className="text-xs bg-stone-800 text-stone-400 border-stone-700">
+                            <Badge variant="outline" className="text-xs bg-accent text-muted-foreground border">
                               {integration.type}
                             </Badge>
                           </div>
-                          <p className="text-xs text-stone-500 truncate">
+                          <p className="text-xs text-foreground0 truncate">
                             {integration.description}
                           </p>
                         </div>
                         {index === selectedMentionIndex && (
-                          <span className="text-xs text-stone-500">Enter</span>
+                          <span className="text-xs text-foreground0">Enter</span>
                         )}
                       </button>
                     ))}
@@ -720,13 +720,13 @@ export default function NewAgentPage() {
               />
               {contexts.length > 0 && (
                 <div className="mb-4">
-                  <h2 className="font-semibold text-stone-100 mb-3">Context</h2>
+                  <h2 className="font-semibold text-foreground mb-3">Context</h2>
                   <div className="flex flex-wrap gap-2">
                     {contexts.map((ctx) => (
                       <Badge 
                         key={ctx.name}
                         variant="outline" 
-                        className="px-3 py-1.5 bg-stone-800 border-stone-700 text-stone-200 flex items-center gap-2"
+                        className="px-3 py-1.5 bg-accent border text-foreground flex items-center gap-2"
                       >
                         <Paperclip className="h-3 w-3" />
                         {ctx.name}
@@ -743,7 +743,7 @@ export default function NewAgentPage() {
               )}
               <button 
                 onClick={() => fileInputRef.current?.click()}
-                className="flex items-center gap-1.5 text-sm text-stone-500 hover:text-stone-300 transition-colors"
+                className="flex items-center gap-1.5 text-sm text-foreground0 hover:text-muted-foreground transition-colors"
               >
                 <Plus className="h-4 w-4" />
                 Add context
@@ -755,36 +755,36 @@ export default function NewAgentPage() {
 
         {/* Right Panel - Agent Builder Chat */}
         <div 
-          className={`flex flex-col border-l border-stone-800 bg-stone-900 transition-all duration-300 ease-in-out ${
+          className={`flex flex-col border-l border-border bg-card transition-all duration-300 ease-in-out ${
             isBuilderOpen ? 'w-[340px]' : 'w-0'
           } overflow-hidden`}
         >
           <div className="w-[340px] h-full flex flex-col">
-            <div className="p-5 border-b border-stone-800 shrink-0">
-              <h2 className="font-semibold text-stone-100">Agent builder</h2>
-              <p className="text-sm text-stone-400 mt-1">
+            <div className="p-5 border-b border-border shrink-0">
+              <h2 className="font-semibold text-foreground">Agent builder</h2>
+              <p className="text-sm text-muted-foreground mt-1">
                 I&apos;ll help you create {agentName || "your agent"}
               </p>
             </div>
 
-            <div className="p-4 border-b border-stone-800 space-y-2">
-              <Button variant="outline" size="sm" className="w-full justify-start border-stone-700 text-stone-300 hover:bg-stone-800">
+            <div className="p-4 border-b border-border space-y-2">
+              <Button variant="outline" size="sm" className="w-full justify-start border text-muted-foreground hover:bg-accent">
                 Suggest integrations
               </Button>
-              <Button variant="outline" size="sm" className="w-full justify-start border-stone-700 text-stone-300 hover:bg-stone-800">
+              <Button variant="outline" size="sm" className="w-full justify-start border text-muted-foreground hover:bg-accent">
                 Generate instructions
               </Button>
-              <Button variant="outline" size="sm" className="w-full justify-start border-stone-700 text-stone-300 hover:bg-stone-800">
+              <Button variant="outline" size="sm" className="w-full justify-start border text-muted-foreground hover:bg-accent">
                 Add error handling
               </Button>
             </div>
 
-            <div className="flex-1 overflow-y-auto p-4 bg-stone-950">
-              <div className="bg-stone-900 rounded-lg p-3 border border-stone-800">
-                <p className="text-sm text-stone-300">
+            <div className="flex-1 overflow-y-auto p-4 bg-background">
+              <div className="bg-card rounded-lg p-3 border border">
+                <p className="text-sm text-muted-foreground">
                   I can help you build this agent. Try:
                 </p>
-                <ul className="mt-2 space-y-1 text-sm text-stone-400">
+                <ul className="mt-2 space-y-1 text-sm text-muted-foreground">
                   <li>- &quot;Create an agent that monitors competitors&quot;</li>
                   <li>- &quot;Add Slack notifications&quot;</li>
                   <li>- &quot;What integrations should I use?&quot;</li>
@@ -792,21 +792,21 @@ export default function NewAgentPage() {
               </div>
             </div>
 
-            <div className="p-4 border-t border-stone-800 bg-stone-900 shrink-0">
+            <div className="p-4 bg-card shrink-0">
               <div className="relative">
                 <textarea
                   value={chatMessage}
                   onChange={(e) => setChatMessage(e.target.value)}
                   placeholder="Describe what you want to build..."
                   rows={2}
-                  className="w-full rounded-xl border border-stone-700 bg-stone-800 px-4 py-3 pr-20 text-sm text-stone-200 placeholder:text-stone-500 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500 resize-none"
+                  className="w-full rounded-xl border border bg-accent px-4 py-3 pr-20 text-sm text-foreground placeholder:text-foreground0 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500 resize-none"
                 />
                 <div className="absolute bottom-3 right-3 flex items-center gap-1">
-                  <button className="p-1.5 text-stone-400 hover:text-stone-300 rounded-lg transition-colors">
+                  <button className="p-1.5 text-muted-foreground hover:text-muted-foreground rounded-lg transition-colors">
                     <Paperclip className="h-4 w-4" />
                   </button>
                   <button 
-                    className="p-1.5 text-stone-400 hover:text-amber-500 rounded-lg transition-colors"
+                    className="p-1.5 text-muted-foreground hover:text-amber-500 rounded-lg transition-colors"
                     onClick={() => setChatMessage("")}
                   >
                     <Send className="h-4 w-4" />

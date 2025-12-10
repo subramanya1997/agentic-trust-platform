@@ -7,7 +7,7 @@ import { Plus, Activity, Download, Zap, Webhook } from "lucide-react";
 
 export function QuickActions() {
   return (
-    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 py-4 border-t border-stone-800">
+    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 py-4">
       <div className="flex flex-wrap items-center gap-2">
         <Link href="/agents/new">
           <Button
@@ -22,7 +22,7 @@ export function QuickActions() {
           <Button
             size="sm"
             variant="outline"
-            className="border-stone-700 text-stone-300 hover:bg-stone-800 hover:text-stone-100"
+            className="border text-muted-foreground hover:bg-accent hover:text-foreground"
           >
             <Zap className="h-4 w-4 sm:mr-2" />
             <span className="hidden sm:inline">Add Integration</span>
@@ -32,7 +32,7 @@ export function QuickActions() {
           <Button
             size="sm"
             variant="outline"
-            className="border-stone-700 text-stone-300 hover:bg-stone-800 hover:text-stone-100"
+            className="border text-muted-foreground hover:bg-accent hover:text-foreground"
           >
             <Webhook className="h-4 w-4 sm:mr-2" />
             <span className="hidden sm:inline">Create Webhook</span>
@@ -42,7 +42,7 @@ export function QuickActions() {
           <Button
             size="sm"
             variant="outline"
-            className="border-stone-700 text-stone-300 hover:bg-stone-800 hover:text-stone-100"
+            className="border text-muted-foreground hover:bg-accent hover:text-foreground"
           >
             <Image
               src="/icons/mcp.svg"
@@ -61,7 +61,7 @@ export function QuickActions() {
           <Button
             size="sm"
             variant="ghost"
-            className="text-stone-400 hover:text-stone-200"
+            className="text-muted-foreground hover:text-foreground"
           >
             <Activity className="h-4 w-4 sm:mr-2" />
             <span className="hidden sm:inline">View All Activity</span>
@@ -70,7 +70,7 @@ export function QuickActions() {
         <Button
           size="sm"
           variant="ghost"
-          className="text-stone-400 hover:text-stone-200"
+          className="text-muted-foreground hover:text-foreground"
         >
           <Download className="h-4 w-4 sm:mr-2" />
           <span className="hidden sm:inline">Export Report</span>

@@ -30,31 +30,31 @@ function formatRelativeTime(dateString: string) {
 
 export function InvocationsTable({ invocations }: InvocationsTableProps) {
   return (
-    <Card className="bg-stone-900 border-stone-800">
+    <Card className="bg-card border">
       <CardHeader className="pb-3">
-        <CardTitle className="text-sm text-stone-200">
+        <CardTitle className="text-sm text-foreground">
           Recent Invocations
         </CardTitle>
       </CardHeader>
       <CardContent className="pt-0">
         {invocations.length === 0 ? (
-          <p className="text-sm text-stone-500 text-center py-6">
+          <p className="text-sm text-foreground0 text-center py-6">
             No invocations yet
           </p>
         ) : (
           <Table>
             <TableHeader>
-              <TableRow className="border-stone-800 hover:bg-transparent">
-                <TableHead className="text-stone-400">Status</TableHead>
-                <TableHead className="text-stone-400">Tool Name</TableHead>
-                <TableHead className="text-stone-400">Client ID</TableHead>
-                <TableHead className="text-stone-400 text-right">Duration</TableHead>
-                <TableHead className="text-stone-400 text-right">Time</TableHead>
+              <TableRow className="border hover:bg-transparent">
+                <TableHead className="text-muted-foreground">Status</TableHead>
+                <TableHead className="text-muted-foreground">Tool Name</TableHead>
+                <TableHead className="text-muted-foreground">Client ID</TableHead>
+                <TableHead className="text-muted-foreground text-right">Duration</TableHead>
+                <TableHead className="text-muted-foreground text-right">Time</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {invocations.slice(0, 10).map((inv) => (
-                <TableRow key={inv.id} className="border-stone-800 hover:bg-stone-800/50">
+                <TableRow key={inv.id} className="border hover:bg-accent/50">
                   <TableCell>
                     <div className="flex items-center gap-2">
                       {inv.status === "success" ? (
@@ -68,11 +68,11 @@ export function InvocationsTable({ invocations }: InvocationsTableProps) {
                     </div>
                   </TableCell>
                   <TableCell>
-                    <code className="text-sm font-mono text-stone-200">{inv.toolName}</code>
+                    <code className="text-sm font-mono text-foreground">{inv.toolName}</code>
                   </TableCell>
-                  <TableCell className="text-sm text-stone-400">{inv.clientId}</TableCell>
-                  <TableCell className="text-right text-sm text-stone-400">{inv.duration}ms</TableCell>
-                  <TableCell className="text-right text-sm text-stone-500" suppressHydrationWarning>
+                  <TableCell className="text-sm text-muted-foreground">{inv.clientId}</TableCell>
+                  <TableCell className="text-right text-sm text-muted-foreground">{inv.duration}ms</TableCell>
+                  <TableCell className="text-right text-sm text-foreground0" suppressHydrationWarning>
                     {formatRelativeTime(inv.timestamp)}
                   </TableCell>
                 </TableRow>

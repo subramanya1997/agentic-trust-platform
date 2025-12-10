@@ -20,15 +20,15 @@ const auditLogs = [
 export function SecurityTab() {
   return (
     <div className="space-y-6 max-w-3xl">
-      <Card className="bg-stone-900 border-stone-800">
+      <Card className="bg-card border">
         <CardContent className="p-0">
           <table className="min-w-full">
             <tbody className="divide-y divide-stone-800">
               <tr>
                 <td className="px-6 py-4 w-1/2">
                   <div>
-                    <p className="text-sm font-medium text-stone-300">Two-Factor Authentication</p>
-                    <p className="text-xs text-stone-500 mt-0.5">Require 2FA for all team members</p>
+                    <p className="text-sm font-medium text-muted-foreground">Two-Factor Authentication</p>
+                    <p className="text-xs text-foreground0 mt-0.5">Require 2FA for all team members</p>
                   </div>
                 </td>
                 <td className="px-6 py-4 text-right">
@@ -40,26 +40,26 @@ export function SecurityTab() {
               <tr>
                 <td className="px-6 py-4 w-1/2">
                   <div>
-                    <p className="text-sm font-medium text-stone-300">Session timeout</p>
-                    <p className="text-xs text-stone-500 mt-0.5">Automatically log out after inactivity</p>
+                    <p className="text-sm font-medium text-muted-foreground">Session timeout</p>
+                    <p className="text-xs text-foreground0 mt-0.5">Automatically log out after inactivity</p>
                   </div>
                 </td>
                 <td className="px-6 py-4 text-right">
                   <Select defaultValue="1h">
-                    <SelectTrigger className="w-[130px] border-stone-700 bg-stone-800 text-stone-200" size="sm">
+                    <SelectTrigger className="w-[130px] border bg-accent text-foreground" size="sm">
                       <SelectValue />
                     </SelectTrigger>
-                    <SelectContent className="border-stone-700 bg-stone-900">
-                      <SelectItem value="30m" className="text-stone-300 focus:bg-stone-800 focus:text-stone-100">
+                    <SelectContent className="border bg-card">
+                      <SelectItem value="30m" className="text-muted-foreground focus:bg-accent focus:text-foreground">
                         30 minutes
                       </SelectItem>
-                      <SelectItem value="1h" className="text-stone-300 focus:bg-stone-800 focus:text-stone-100">
+                      <SelectItem value="1h" className="text-muted-foreground focus:bg-accent focus:text-foreground">
                         1 hour
                       </SelectItem>
-                      <SelectItem value="4h" className="text-stone-300 focus:bg-stone-800 focus:text-stone-100">
+                      <SelectItem value="4h" className="text-muted-foreground focus:bg-accent focus:text-foreground">
                         4 hours
                       </SelectItem>
-                      <SelectItem value="24h" className="text-stone-300 focus:bg-stone-800 focus:text-stone-100">
+                      <SelectItem value="24h" className="text-muted-foreground focus:bg-accent focus:text-foreground">
                         24 hours
                       </SelectItem>
                     </SelectContent>
@@ -69,8 +69,8 @@ export function SecurityTab() {
               <tr>
                 <td className="px-6 py-4 w-1/2">
                   <div>
-                    <p className="text-sm font-medium text-stone-300">Active sessions</p>
-                    <p className="text-xs text-stone-500 mt-0.5">Sign out from all other sessions</p>
+                    <p className="text-sm font-medium text-muted-foreground">Active sessions</p>
+                    <p className="text-xs text-foreground0 mt-0.5">Sign out from all other sessions</p>
                   </div>
                 </td>
                 <td className="px-6 py-4 text-right">
@@ -84,10 +84,10 @@ export function SecurityTab() {
         </CardContent>
       </Card>
 
-      <Card className="bg-stone-900 border-stone-800">
+      <Card className="bg-card border">
         <CardHeader className="pb-4">
-          <CardTitle className="text-stone-100 text-base">Audit Log</CardTitle>
-          <CardDescription className="text-stone-400">View recent security events</CardDescription>
+          <CardTitle className="text-foreground text-base">Audit Log</CardTitle>
+          <CardDescription className="text-muted-foreground">View recent security events</CardDescription>
         </CardHeader>
         <CardContent className="p-0">
           <table className="min-w-full">
@@ -96,12 +96,12 @@ export function SecurityTab() {
                 <tr key={index}>
                   <td className="px-6 py-4">
                     <div>
-                      <p className="text-sm text-stone-200">{log.event}</p>
-                      <p className="text-xs text-stone-500">{log.user}</p>
+                      <p className="text-sm text-foreground">{log.event}</p>
+                      <p className="text-xs text-foreground0">{log.user}</p>
                     </div>
                   </td>
                   <td className="px-6 py-4 text-right">
-                    <span className="text-xs text-stone-500 flex items-center justify-end gap-1">
+                    <span className="text-xs text-foreground0 flex items-center justify-end gap-1">
                       <Clock className="h-3 w-3" />
                       {log.time}
                     </span>
@@ -110,8 +110,8 @@ export function SecurityTab() {
               ))}
             </tbody>
           </table>
-          <div className="px-6 py-4 border-t border-stone-800">
-            <Button variant="outline" className="w-full border-stone-700 text-stone-300">
+          <div className="px-6 py-4">
+            <Button variant="outline" className="w-full border text-muted-foreground">
               View Full Audit Log
               <ChevronRight className="h-4 w-4 ml-2" />
             </Button>

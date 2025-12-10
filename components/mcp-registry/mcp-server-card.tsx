@@ -1,12 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { getIntegrationIcon } from "@/lib/integration-icons";
+import { IntegrationIcon } from "@/components/integration-icon";
 import type { CustomMCPServer } from "@/lib/types";
 import { Bot, Copy, Check } from "lucide-react";
 import { MCPIcon } from "./mcp-icon";
@@ -26,7 +25,7 @@ export function MCPServerCard({ server }: MCPServerCardProps) {
 
   return (
     <Link href={`/mcp-registry/${server.id}`}>
-      <Card className="bg-stone-900/50 border-stone-800 hover:border-stone-700 transition-colors h-full">
+      <Card className="bg-card/50 border hover:border transition-colors h-full">
         <CardContent className="px-4">
           {/* Header */}
           <div className="flex items-start justify-between mb-2">
@@ -43,39 +42,35 @@ export function MCPServerCard({ server }: MCPServerCardProps) {
                 )}
               </div>
               <div className="min-w-0">
-                <p className="text-sm font-medium text-stone-100 truncate">
+                <p className="text-sm font-medium text-foreground truncate">
                   {server.name}
                 </p>
-                <p className="text-xs text-stone-500">
+                <p className="text-xs text-muted-foreground">
                   {server.selectedTools.length} tools · {server.stats.totalCalls.toLocaleString()} calls
                 </p>
               </div>
             </div>
             <Badge
-              variant="outline"
-              className={`text-[10px] shrink-0 ${
-                server.type === "agent"
-                  ? "bg-amber-500/10 text-amber-500 border-amber-500/20"
-                  : "bg-blue-500/10 text-blue-500 border-blue-500/20"
-              }`}
+              variant={server.type === "agent" ? "warning" : "info"}
+              className="text-[10px] shrink-0"
             >
               {server.type}
             </Badge>
           </div>
 
           {/* Description */}
-          <p className="text-xs text-stone-400 mb-2 line-clamp-1">{server.description}</p>
+          <p className="text-xs text-muted-foreground mb-2 line-clamp-1">{server.description}</p>
 
           {/* Tools Preview */}
           <div className="flex flex-wrap gap-1 mb-2">
             {server.selectedTools.slice(0, 2).map((tool, idx) => (
               <div
                 key={idx}
-                className="flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-stone-800/50 border border-stone-700/50"
+                className="flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-accent/50 border border-border/50"
               >
                 {tool.sourceType === "integration" ? (
-                  <Image
-                    src={getIntegrationIcon(tool.sourceId)}
+                  <IntegrationIcon
+                    integrationId={tool.sourceId}
                     alt={tool.sourceName}
                     width={12}
                     height={12}
@@ -84,25 +79,25 @@ export function MCPServerCard({ server }: MCPServerCardProps) {
                 ) : (
                   <Bot className="h-3 w-3 text-amber-500" />
                 )}
-                <span className="text-[11px] text-stone-400">{tool.toolName}</span>
+                <span className="text-[11px] text-muted-foreground">{tool.toolName}</span>
               </div>
             ))}
             {server.selectedTools.length > 2 && (
-              <div className="flex items-center px-1.5 py-0.5 rounded-md bg-stone-800/50 border border-stone-700/50">
-                <span className="text-[11px] text-stone-500">+{server.selectedTools.length - 2}</span>
+              <div className="flex items-center px-1.5 py-0.5 rounded-md bg-accent/50 border border-border/50">
+                <span className="text-[11px] text-muted-foreground">+{server.selectedTools.length - 2}</span>
               </div>
             )}
           </div>
 
           {/* URL */}
           <div className="flex items-center gap-1" onClick={(e) => e.preventDefault()}>
-            <code className="flex-1 text-[11px] text-stone-500 font-mono bg-stone-800/50 px-2 py-1 rounded truncate">
+            <code className="flex-1 text-[11px] text-muted-foreground font-mono bg-accent/50 px-2 py-1 rounded truncate">
               {server.serverUrl}
             </code>
             <Button
               variant="ghost"
               size="icon"
-              className="h-6 w-6 text-stone-500 hover:text-stone-300 shrink-0"
+              className="h-6 w-6 text-muted-foreground hover:text-foreground shrink-0"
               onClick={(e) => {
                 e.preventDefault();
                 copyUrl();
@@ -117,7 +112,7 @@ export function MCPServerCard({ server }: MCPServerCardProps) {
           </div>
 
           {/* Footer */}
-          <div className="flex items-center gap-3 mt-2 pt-2 border-t border-stone-800/50 text-xs text-stone-500">
+          <div className="flex items-center gap-3 mt-2 pt-2 border-t border-border/50 text-xs text-muted-foreground">
             <span>{server.stats.successRate}% success</span>
             <span>{server.stats.avgLatency}ms avg</span>
           </div>

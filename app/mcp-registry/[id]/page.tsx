@@ -38,11 +38,11 @@ export default function MCPServerDetailPage({ params }: PageProps) {
 
   if (!server) {
     return (
-      <div className="flex flex-col h-screen bg-stone-950">
-        <header className="sticky top-0 z-10 flex h-14 shrink-0 items-center border-b border-stone-800 bg-stone-950 px-4">
+      <div className="flex flex-col h-screen bg-background">
+        <header className="sticky top-0 z-10 flex h-14 shrink-0 items-center border-b border-border bg-background px-4">
           <Link
             href="/mcp-registry"
-            className="flex items-center text-sm text-stone-400 hover:text-stone-200 transition-colors"
+            className="flex items-center text-sm text-muted-foreground hover:text-foreground transition-colors"
           >
             <ArrowLeft className="mr-2 h-4 w-4" />
             MCP Registry
@@ -51,8 +51,8 @@ export default function MCPServerDetailPage({ params }: PageProps) {
         <div className="flex-1 flex items-center justify-center">
           <div className="text-center">
             <Server className="h-12 w-12 text-stone-600 mx-auto mb-4" />
-            <p className="text-stone-400">MCP Server not found</p>
-            <p className="text-sm text-stone-500 mt-1">
+            <p className="text-muted-foreground">MCP Server not found</p>
+            <p className="text-sm text-foreground0 mt-1">
               The server you&apos;re looking for doesn&apos;t exist or has been deleted.
             </p>
             <Link href="/mcp-registry">
@@ -87,13 +87,13 @@ export default function MCPServerDetailPage({ params }: PageProps) {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-stone-950">
+    <div className="flex flex-col h-screen bg-background">
       {/* Page Header */}
-      <header className="sticky top-0 z-10 flex h-12 shrink-0 items-center justify-between border-b border-stone-800 bg-stone-950 px-4">
+      <header className="sticky top-0 z-10 flex h-12 shrink-0 items-center justify-between border-b border-border bg-background px-4">
         <div className="flex items-center gap-3">
           <Link
             href="/mcp-registry"
-            className="flex items-center text-sm text-stone-400 hover:text-stone-200 transition-colors"
+            className="flex items-center text-sm text-muted-foreground hover:text-foreground transition-colors"
           >
             <ArrowLeft className="mr-1.5 h-4 w-4" />
             MCP Registry
@@ -105,7 +105,7 @@ export default function MCPServerDetailPage({ params }: PageProps) {
             ) : (
               <MCPIcon className="h-4 w-4 text-blue-500" />
             )}
-            <span className="text-stone-100 font-medium text-sm">{server.name}</span>
+            <span className="text-foreground font-medium text-sm">{server.name}</span>
           </div>
           <Badge
             variant="outline"
@@ -119,23 +119,23 @@ export default function MCPServerDetailPage({ params }: PageProps) {
           </Badge>
         </div>
         <div className="flex items-center gap-2">
-          <span className="text-xs text-stone-500" suppressHydrationWarning>
+          <span className="text-xs text-foreground0" suppressHydrationWarning>
             Last called {server.stats.lastCalledAt ? formatRelativeTime(server.stats.lastCalledAt) : "Never"}
           </span>
           <Button
             variant="ghost"
             size="icon"
-            className="h-7 w-7 text-stone-400 hover:text-stone-200"
+            className="h-7 w-7 text-muted-foreground hover:text-foreground"
             onClick={copyUrl}
           >
             {copiedUrl ? <Check className="h-3.5 w-3.5 text-green-500" /> : <Copy className="h-3.5 w-3.5" />}
           </Button>
           {server.type === "custom" && (
             <>
-              <Button variant="ghost" size="icon" className="h-7 w-7 text-stone-400 hover:text-stone-200">
+              <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-foreground">
                 <Settings className="h-3.5 w-3.5" />
               </Button>
-              <Button variant="ghost" size="icon" className="h-7 w-7 text-stone-400 hover:text-red-400">
+              <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-red-400">
                 <Trash2 className="h-3.5 w-3.5" />
               </Button>
             </>

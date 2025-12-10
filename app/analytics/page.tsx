@@ -51,18 +51,18 @@ export default function AnalyticsPage() {
         actionButton={
           <div className="flex items-center gap-2">
             <Select value={dateRange} onValueChange={(value: DateRange) => setDateRange(value)}>
-              <SelectTrigger className="w-[140px] border-stone-700 bg-stone-900 text-stone-300 h-8">
+              <SelectTrigger className="w-[140px] border bg-card text-muted-foreground h-8">
                 <Calendar className="mr-2 h-3.5 w-3.5" />
                 <SelectValue />
               </SelectTrigger>
-              <SelectContent className="border-stone-700 bg-stone-900">
-                <SelectItem value="7d" className="text-stone-300 focus:bg-stone-800 focus:text-stone-100">
+              <SelectContent className="border bg-card">
+                <SelectItem value="7d" className="text-muted-foreground focus:bg-accent focus:text-foreground">
                   Last 7 days
                 </SelectItem>
-                <SelectItem value="14d" className="text-stone-300 focus:bg-stone-800 focus:text-stone-100">
+                <SelectItem value="14d" className="text-muted-foreground focus:bg-accent focus:text-foreground">
                   Last 14 days
                 </SelectItem>
-                <SelectItem value="30d" className="text-stone-300 focus:bg-stone-800 focus:text-stone-100">
+                <SelectItem value="30d" className="text-muted-foreground focus:bg-accent focus:text-foreground">
                   Last 30 days
                 </SelectItem>
               </SelectContent>
@@ -78,18 +78,18 @@ export default function AnalyticsPage() {
         <div className="space-y-6 min-w-0">
 
           {/* Tab Navigation */}
-          <div className="flex items-center gap-1 bg-stone-900 p-1 rounded-lg w-fit border border-stone-800">
+          <div className="flex items-center gap-1 p-1 rounded-lg bg-card/50 border border w-fit">
             {tabs.map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
                   activeTab === tab.id
-                    ? "bg-stone-800 text-stone-100"
-                    : "text-stone-400 hover:text-stone-200"
+                    ? "bg-accent text-foreground"
+                    : "text-muted-foreground hover:text-muted-foreground"
                 }`}
               >
-                <tab.icon className="h-4 w-4" />
+                <tab.icon className="h-3.5 w-3.5" />
                 {tab.label}
               </button>
             ))}

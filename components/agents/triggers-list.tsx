@@ -52,7 +52,7 @@ export function TriggersList({ agentId, agentName, triggers }: TriggersListProps
   return (
     <div className="mb-8">
       <div className="flex items-center justify-between mb-3">
-        <h2 className="font-semibold text-stone-100">Triggers</h2>
+        <h2 className="font-semibold text-foreground">Triggers</h2>
         <Dialog open={isAddTriggerOpen} onOpenChange={(open) => {
           if (!open) handleDialogClose();
           else setIsAddTriggerOpen(true);
@@ -63,32 +63,32 @@ export function TriggersList({ agentId, agentName, triggers }: TriggersListProps
               Add trigger
             </button>
           </DialogTrigger>
-          <DialogContent className="bg-stone-900 border-stone-800 sm:max-w-[500px]">
+          <DialogContent className="bg-card border sm:max-w-[500px]">
             <DialogHeader>
-              <DialogTitle className="text-stone-100">Add Trigger</DialogTitle>
-              <DialogDescription className="text-stone-400">
+              <DialogTitle className="text-foreground">Add Trigger</DialogTitle>
+              <DialogDescription className="text-muted-foreground">
                 Configure how this agent gets triggered.
               </DialogDescription>
             </DialogHeader>
             <div className="space-y-4 py-4">
               {/* Trigger Type Selector */}
               <div className="space-y-2">
-                <Label className="text-stone-200">Trigger Type</Label>
+                <Label className="text-foreground">Trigger Type</Label>
                 <Select 
                   value={selectedTriggerType} 
                   onValueChange={(value) => setSelectedTriggerType(value as TriggerType)}
                 >
-                  <SelectTrigger className="bg-stone-800 border-stone-700 text-stone-200">
+                  <SelectTrigger className="bg-accent border text-foreground">
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent className="bg-stone-800 border-stone-700">
-                    <SelectItem value="scheduled" className="text-stone-200 focus:bg-stone-700">
+                  <SelectContent className="bg-accent border">
+                    <SelectItem value="scheduled" className="text-foreground focus:bg-muted">
                       <div className="flex items-center gap-2">
                         <Calendar className="h-4 w-4 text-blue-400" />
                         Scheduled
                       </div>
                     </SelectItem>
-                    <SelectItem value="webhook" className="text-stone-200 focus:bg-stone-700">
+                    <SelectItem value="webhook" className="text-foreground focus:bg-muted">
                       <div className="flex items-center gap-2">
                         <Webhook className="h-4 w-4 text-purple-400" />
                         Webhook
@@ -102,42 +102,42 @@ export function TriggersList({ agentId, agentName, triggers }: TriggersListProps
               {selectedTriggerType === "scheduled" && (
                 <>
                   <div className="space-y-2">
-                    <Label className="text-stone-200">Name</Label>
+                    <Label className="text-foreground">Name</Label>
                     <Input
                       placeholder="e.g., Daily Report Generation"
-                      className="bg-stone-800 border-stone-700 text-stone-200 placeholder:text-stone-500"
+                      className="bg-accent border text-foreground placeholder:text-foreground0"
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label className="text-stone-200">Schedule (Cron Expression)</Label>
+                    <Label className="text-foreground">Schedule (Cron Expression)</Label>
                     <Input
                       placeholder="0 8 * * 1"
-                      className="bg-stone-800 border-stone-700 text-stone-200 placeholder:text-stone-500 font-mono"
+                      className="bg-accent border text-foreground placeholder:text-foreground0 font-mono"
                     />
-                    <p className="text-xs text-stone-500">
+                    <p className="text-xs text-foreground0">
                       Example: &quot;0 8 * * 1&quot; = Every Monday at 8 AM
                     </p>
                   </div>
                   <div className="space-y-2">
-                    <Label className="text-stone-200">Timezone</Label>
+                    <Label className="text-foreground">Timezone</Label>
                     <Select defaultValue="utc">
-                      <SelectTrigger className="bg-stone-800 border-stone-700 text-stone-200">
+                      <SelectTrigger className="bg-accent border text-foreground">
                         <SelectValue />
                       </SelectTrigger>
-                      <SelectContent className="bg-stone-800 border-stone-700">
-                        <SelectItem value="utc" className="text-stone-200 focus:bg-stone-700">
+                      <SelectContent className="bg-accent border">
+                        <SelectItem value="utc" className="text-foreground focus:bg-muted">
                           UTC
                         </SelectItem>
-                        <SelectItem value="america_new_york" className="text-stone-200 focus:bg-stone-700">
+                        <SelectItem value="america_new_york" className="text-foreground focus:bg-muted">
                           America/New_York (EST)
                         </SelectItem>
-                        <SelectItem value="america_los_angeles" className="text-stone-200 focus:bg-stone-700">
+                        <SelectItem value="america_los_angeles" className="text-foreground focus:bg-muted">
                           America/Los_Angeles (PST)
                         </SelectItem>
-                        <SelectItem value="europe_london" className="text-stone-200 focus:bg-stone-700">
+                        <SelectItem value="europe_london" className="text-foreground focus:bg-muted">
                           Europe/London (GMT)
                         </SelectItem>
-                        <SelectItem value="asia_tokyo" className="text-stone-200 focus:bg-stone-700">
+                        <SelectItem value="asia_tokyo" className="text-foreground focus:bg-muted">
                           Asia/Tokyo (JST)
                         </SelectItem>
                       </SelectContent>
@@ -161,36 +161,36 @@ export function TriggersList({ agentId, agentName, triggers }: TriggersListProps
               {selectedTriggerType === "webhook" && (
                 <>
                   <div className="space-y-2">
-                    <Label className="text-stone-200">Name</Label>
+                    <Label className="text-foreground">Name</Label>
                     <Input
                       placeholder="e.g., New Lead Created"
-                      className="bg-stone-800 border-stone-700 text-stone-200 placeholder:text-stone-500"
+                      className="bg-accent border text-foreground placeholder:text-foreground0"
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label className="text-stone-200">Description</Label>
+                    <Label className="text-foreground">Description</Label>
                     <Input
                       placeholder="Describe what triggers this webhook"
-                      className="bg-stone-800 border-stone-700 text-stone-200 placeholder:text-stone-500"
+                      className="bg-accent border text-foreground placeholder:text-foreground0"
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label className="text-stone-200">Authentication</Label>
+                    <Label className="text-foreground">Authentication</Label>
                     <Select defaultValue="hmac">
-                      <SelectTrigger className="bg-stone-800 border-stone-700 text-stone-200">
+                      <SelectTrigger className="bg-accent border text-foreground">
                         <SelectValue />
                       </SelectTrigger>
-                      <SelectContent className="bg-stone-800 border-stone-700">
-                        <SelectItem value="none" className="text-stone-200 focus:bg-stone-700">
+                      <SelectContent className="bg-accent border">
+                        <SelectItem value="none" className="text-foreground focus:bg-muted">
                           None
                         </SelectItem>
-                        <SelectItem value="hmac" className="text-stone-200 focus:bg-stone-700">
+                        <SelectItem value="hmac" className="text-foreground focus:bg-muted">
                           HMAC Signature
                         </SelectItem>
-                        <SelectItem value="bearer" className="text-stone-200 focus:bg-stone-700">
+                        <SelectItem value="bearer" className="text-foreground focus:bg-muted">
                           Bearer Token
                         </SelectItem>
-                        <SelectItem value="basic" className="text-stone-200 focus:bg-stone-700">
+                        <SelectItem value="basic" className="text-foreground focus:bg-muted">
                           Basic Auth
                         </SelectItem>
                       </SelectContent>
@@ -215,7 +215,7 @@ export function TriggersList({ agentId, agentName, triggers }: TriggersListProps
               <Button
                 variant="outline"
                 onClick={handleDialogClose}
-                className="border-stone-700 text-stone-300"
+                className="border text-muted-foreground"
               >
                 Cancel
               </Button>

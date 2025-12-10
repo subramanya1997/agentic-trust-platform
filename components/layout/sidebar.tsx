@@ -27,9 +27,9 @@ export function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <div className="flex h-screen w-64 flex-col bg-stone-950 text-stone-100 border-r border-stone-800">
+    <div className="flex h-screen w-64 flex-col bg-background text-foreground border-r border-border">
       {/* Logo */}
-      <div className="flex h-16 items-center px-6 border-b border-stone-800">
+      <div className="flex h-16 items-center px-6 border-b border-border">
         <div className="flex items-center gap-2">
           <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center">
             <Zap className="h-5 w-5 text-white" />
@@ -51,8 +51,8 @@ export function Sidebar() {
               className={cn(
                 "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
                 isActive
-                  ? "bg-stone-800 text-stone-50"
-                  : "text-stone-400 hover:bg-stone-900 hover:text-stone-50"
+                  ? "bg-accent text-foreground"
+                  : "text-muted-foreground hover:bg-card hover:text-foreground"
               )}
             >
               <Icon className="h-5 w-5" />
@@ -63,14 +63,14 @@ export function Sidebar() {
       </nav>
 
       {/* User Info */}
-      <div className="border-t border-stone-800 p-4">
+      <div className="p-4">
         <div className="flex items-center gap-3">
           <div className="h-10 w-10 rounded-full bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center text-sm font-semibold">
             SK
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium text-stone-50 truncate">Sara Klein</p>
-            <p className="text-xs text-stone-400 truncate">sara@company.com</p>
+            <p className="text-sm font-medium text-foreground truncate">Sara Klein</p>
+            <p className="text-xs text-muted-foreground truncate">sara@company.com</p>
           </div>
         </div>
       </div>

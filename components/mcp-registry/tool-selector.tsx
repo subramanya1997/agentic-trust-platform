@@ -191,10 +191,10 @@ export function ToolSelector({ selectedTools, onSelectionChange }: ToolSelectorP
       {/* Header with stats */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Badge variant="outline" className="bg-amber-950/50 text-amber-400 border-amber-800">
+          <Badge variant="warning">
             {selectedTools.length} selected
           </Badge>
-          <span className="text-xs text-stone-500">
+          <span className="text-xs text-foreground0">
             of {totalTools} available tools
           </span>
         </div>
@@ -203,7 +203,7 @@ export function ToolSelector({ selectedTools, onSelectionChange }: ToolSelectorP
             variant="ghost"
             size="sm"
             onClick={() => onSelectionChange([])}
-            className="text-xs text-stone-400 hover:text-stone-200"
+            className="text-xs text-muted-foreground hover:text-foreground"
           >
             Clear all
           </Button>
@@ -213,13 +213,13 @@ export function ToolSelector({ selectedTools, onSelectionChange }: ToolSelectorP
       {/* Search and Filters */}
       <div className="flex items-center gap-3">
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-stone-500" />
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-foreground0" />
           <input
             type="text"
             placeholder="Search tools..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full rounded-lg border border-stone-700 bg-stone-800 py-2 pl-10 pr-4 text-sm text-stone-200 placeholder:text-stone-500 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500"
+            className="w-full rounded-lg border border bg-accent py-2 pl-10 pr-4 text-sm text-foreground placeholder:text-foreground0 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500"
           />
         </div>
 
@@ -234,7 +234,7 @@ export function ToolSelector({ selectedTools, onSelectionChange }: ToolSelectorP
               className={
                 categoryFilter === cat
                   ? "bg-amber-600 hover:bg-amber-500 text-xs"
-                  : "border-stone-700 text-stone-400 hover:text-stone-200 text-xs"
+                  : "border text-muted-foreground hover:text-foreground text-xs"
               }
             >
               {cat.charAt(0).toUpperCase() + cat.slice(1)}
@@ -244,12 +244,12 @@ export function ToolSelector({ selectedTools, onSelectionChange }: ToolSelectorP
       </div>
 
       {/* Tools List */}
-      <div className="border border-stone-700 rounded-lg bg-stone-900 max-h-[500px] overflow-y-auto">
+      <div className="border border rounded-lg bg-card max-h-[500px] overflow-y-auto">
         {filteredGroups.length === 0 ? (
           <div className="p-8 text-center">
             <Search className="h-8 w-8 text-stone-600 mx-auto mb-2" />
-            <p className="text-sm text-stone-400">No tools found</p>
-            <p className="text-xs text-stone-500 mt-1">
+            <p className="text-sm text-muted-foreground">No tools found</p>
+            <p className="text-xs text-foreground0 mt-1">
               Try adjusting your search or filters
             </p>
           </div>
@@ -259,19 +259,19 @@ export function ToolSelector({ selectedTools, onSelectionChange }: ToolSelectorP
             const isExpanded = expandedGroups.has(group.id);
 
             return (
-              <div key={group.id} className="border-b border-stone-800 last:border-b-0">
+              <div key={group.id} className="border-b border-border last:border-b-0">
                 {/* Group Header */}
-                <div className="flex items-center justify-between px-4 py-3 bg-stone-850 hover:bg-stone-800/50 transition-colors">
+                <div className="flex items-center justify-between px-4 py-3 bg-stone-850 hover:bg-accent/50 transition-colors">
                   <button
                     onClick={() => toggleGroup(group.id)}
                     className="flex items-center gap-3 flex-1"
                   >
                     {isExpanded ? (
-                      <ChevronDown className="h-4 w-4 text-stone-400" />
+                      <ChevronDown className="h-4 w-4 text-muted-foreground" />
                     ) : (
-                      <ChevronRight className="h-4 w-4 text-stone-400" />
+                      <ChevronRight className="h-4 w-4 text-muted-foreground" />
                     )}
-                    <div className="h-7 w-7 rounded bg-stone-800 flex items-center justify-center">
+                    <div className="h-7 w-7 rounded bg-accent flex items-center justify-center">
                       {group.type === "integration" ? (
                         <Image
                           src={getIntegrationIcon(group.id)}
@@ -284,10 +284,10 @@ export function ToolSelector({ selectedTools, onSelectionChange }: ToolSelectorP
                         <Bot className="h-4 w-4 text-amber-400" />
                       )}
                     </div>
-                    <span className="text-sm font-medium text-stone-200">{group.name}</span>
+                    <span className="text-sm font-medium text-foreground">{group.name}</span>
                     <Badge
                       variant="outline"
-                      className="bg-stone-800 text-stone-400 border-stone-700 text-xs"
+                      className="bg-accent text-muted-foreground border text-xs"
                     >
                       {group.tools.length} tools
                     </Badge>
@@ -300,7 +300,7 @@ export function ToolSelector({ selectedTools, onSelectionChange }: ToolSelectorP
                         selectAllInGroup(group);
                       }
                     }}
-                    className="flex items-center gap-1.5 px-2 py-1 rounded text-xs text-stone-400 hover:text-stone-200 hover:bg-stone-700 transition-colors"
+                    className="flex items-center gap-1.5 px-2 py-1 rounded text-xs text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
                   >
                     {selectionState === "all" ? (
                       <>
@@ -327,7 +327,7 @@ export function ToolSelector({ selectedTools, onSelectionChange }: ToolSelectorP
                           className={`flex items-start gap-3 px-4 py-3 pl-12 cursor-pointer transition-colors ${
                             isSelected
                               ? "bg-amber-950/20 hover:bg-amber-950/30"
-                              : "hover:bg-stone-800/30"
+                              : "hover:bg-accent/30"
                           }`}
                           onClick={() => toggleTool(tool)}
                         >
@@ -338,23 +338,17 @@ export function ToolSelector({ selectedTools, onSelectionChange }: ToolSelectorP
                           />
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-2">
-                              <code className="text-sm font-mono text-stone-200">
+                              <code className="text-sm font-mono text-foreground">
                                 {tool.toolName}
                               </code>
                               <Badge
-                                variant="outline"
-                                className={`text-[10px] px-1.5 py-0 ${
-                                  tool.category === "read"
-                                    ? "bg-green-950/50 text-green-400 border-green-800"
-                                    : tool.category === "write"
-                                    ? "bg-blue-950/50 text-blue-400 border-blue-800"
-                                    : "bg-amber-950/50 text-amber-400 border-amber-800"
-                                }`}
+                                variant={tool.category === "read" ? "success" : tool.category === "write" ? "info" : "warning"}
+                                className="text-[10px] px-1.5 py-0"
                               >
                                 {tool.category}
                               </Badge>
                             </div>
-                            <p className="text-xs text-stone-500 mt-1 line-clamp-2">
+                            <p className="text-xs text-foreground0 mt-1 line-clamp-2">
                               {tool.toolDescription}
                             </p>
                             {tool.parameters.length > 0 && (
@@ -379,7 +373,7 @@ export function ToolSelector({ selectedTools, onSelectionChange }: ToolSelectorP
 
       {/* Footer info */}
       {searchQuery || categoryFilter !== "all" ? (
-        <p className="text-xs text-stone-500 text-center">
+        <p className="text-xs text-foreground0 text-center">
           Showing {filteredToolsCount} of {totalTools} tools
         </p>
       ) : null}

@@ -26,13 +26,14 @@ function McpIcon({ className }: { className?: string }) {
       alt="MCP"
       width={16}
       height={16}
-      className={`brightness-0 invert shrink-0 ${className || ""}`}
+      className={`brightness-0 dark:invert shrink-0 ${className || ""}`}
     />
   )
 }
 
 import { NavMain } from "@/components/nav-main"
 import { NavUser } from "@/components/nav-user"
+import { ThemeSwitcher } from "@/components/theme-switcher"
 import {
   Sidebar,
   SidebarContent,
@@ -132,7 +133,7 @@ function SidebarHeaderContent() {
       <SidebarMenu>
         <SidebarMenuItem>
           {isCollapsed ? (
-            <SidebarTrigger className="size-8 mx-auto text-stone-400 hover:text-stone-200 hover:bg-stone-800" />
+            <SidebarTrigger className="size-8 mx-auto text-muted-foreground hover:text-foreground hover:bg-accent" />
           ) : (
             <SidebarMenuButton
               asChild
@@ -140,7 +141,7 @@ function SidebarHeaderContent() {
               className="data-[slot=sidebar-menu-button]:!p-2 hover:bg-transparent"
             >
               <Link href="/" className="flex items-center gap-2">
-                <span className="text-base font-semibold text-stone-100">Agentic Trust</span>
+                <span className="text-base font-semibold text-foreground">Agentic Trust</span>
               </Link>
             </SidebarMenuButton>
           )}
@@ -162,6 +163,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavMain items={data.resources} label="Resources" />
       </SidebarContent>
       <SidebarFooter>
+        <ThemeSwitcher />
         <NavUser user={data.user} />
       </SidebarFooter>
     </Sidebar>
