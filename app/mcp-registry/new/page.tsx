@@ -99,7 +99,7 @@ export default function NewMCPServerPage() {
     router.push("/mcp-registry");
   };
 
-  const serverUrl = `https://mcp.nexus.dev/servers/custom/${config.name
+  const serverUrl = `https://mcp.agentictrust.com/servers/custom/${config.name
     .toLowerCase()
     .replace(/\s+/g, "-")
     .replace(/[^a-z0-9-]/g, "")}`;

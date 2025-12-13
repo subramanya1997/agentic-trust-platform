@@ -35,7 +35,7 @@ interface MCPTriggerProps {
 
 export function MCPTrigger({ agentId, agentName, enabled, onEnabledChange }: MCPTriggerProps) {
   const [copied, setCopied] = useState(false);
-  const serverUrl = `https://mcp.nexus.dev/servers/${agentId}`;
+  const serverUrl = `https://mcp.agentictrust.com/servers/${agentId}`;
 
   const copyUrl = () => {
     navigator.clipboard.writeText(serverUrl);

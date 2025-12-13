@@ -34,7 +34,7 @@ interface WebhookTriggerProps {
 
 export function WebhookTrigger({ agentId, enabled, onEnabledChange, callCount = 1234 }: WebhookTriggerProps) {
   const [copied, setCopied] = useState(false);
-  const webhookUrl = `https://api.nexus.dev/webhooks/${agentId}`;
+  const webhookUrl = `https://api.agentictrust.com/webhooks/${agentId}`;
 
   const copyUrl = () => {
     navigator.clipboard.writeText(webhookUrl);

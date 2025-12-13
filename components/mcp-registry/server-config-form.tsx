@@ -160,7 +160,7 @@ export function ServerConfigForm({ config, onChange, errors }: ServerConfigFormP
         <Label className="text-foreground">Server URL Preview</Label>
         <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-accent border border">
           <code className="text-sm text-muted-foreground font-mono">
-            https://mcp.nexus.dev/servers/custom/
+            https://mcp.agentictrust.com/servers/custom/
             <span className="text-amber-400">
               {config.name
                 ? config.name.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "")

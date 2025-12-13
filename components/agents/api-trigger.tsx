@@ -35,7 +35,7 @@ interface ApiTriggerProps {
 export function ApiTrigger({ agentId, enabled, onEnabledChange, callCount = 89 }: ApiTriggerProps) {
   const [copied, setCopied] = useState(false);
   const apiEndpoint = `/api/agents/${agentId}/run`;
-  const fullUrl = `https://api.nexus.dev${apiEndpoint}`;
+  const fullUrl = `https://api.agentictrust.com${apiEndpoint}`;
 
   const copyUrl = () => {
     navigator.clipboard.writeText(fullUrl);

@@ -1,5 +1,5 @@
 {
-  "name": "nexus-mockup",
+  "name": "agentic-trust",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -31,6 +31,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
+    "hugeicons-react": "^0.3.0",
     "lucide-react": "^0.555.0",
     "next": "^16.0.8",
     "next-themes": "^0.4.6",

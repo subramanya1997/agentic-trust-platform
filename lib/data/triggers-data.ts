@@ -13,7 +13,7 @@ export const mockTriggers: AgentTrigger[] = [
     createdAt: "2024-10-15T10:30:00Z",
     config: {
       webhookId: "wh-1",
-      webhookUrl: "https://api.nexus.dev/webhooks/wh-1",
+      webhookUrl: "https://api.agentictrust.com/webhooks/wh-1",
       authType: "hmac",
     },
     lastTriggered: new Date(Date.now() - 15 * 60 * 1000).toISOString(),
@@ -47,7 +47,7 @@ export const mockTriggers: AgentTrigger[] = [
     createdAt: "2024-08-10T09:00:00Z",
     config: {
       webhookId: "wh-3",
-      webhookUrl: "https://api.nexus.dev/webhooks/wh-3",
+      webhookUrl: "https://api.agentictrust.com/webhooks/wh-3",
       authType: "bearer",
     },
     lastTriggered: new Date(Date.now() - 2 * 60 * 1000).toISOString(),
@@ -84,7 +84,7 @@ export const mockTriggers: AgentTrigger[] = [
     createdAt: "2024-09-20T14:15:00Z",
     config: {
       webhookId: "wh-2",
-      webhookUrl: "https://api.nexus.dev/webhooks/wh-2",
+      webhookUrl: "https://api.agentictrust.com/webhooks/wh-2",
       authType: "hmac",
     },
     lastTriggered: new Date(Date.now() - 5 * 60 * 1000).toISOString(),
@@ -100,7 +100,7 @@ export const mockTriggers: AgentTrigger[] = [
     createdAt: "2024-11-10T16:45:00Z",
     config: {
       webhookId: "wh-6",
-      webhookUrl: "https://api.nexus.dev/webhooks/wh-6",
+      webhookUrl: "https://api.agentictrust.com/webhooks/wh-6",
       authType: "hmac",
     },
     lastTriggered: new Date(Date.now() - 30 * 60 * 1000).toISOString(),
@@ -118,7 +118,7 @@ export const mockTriggers: AgentTrigger[] = [
     createdAt: "2024-11-01T11:20:00Z",
     config: {
       webhookId: "wh-4",
-      webhookUrl: "https://api.nexus.dev/webhooks/wh-4",
+      webhookUrl: "https://api.agentictrust.com/webhooks/wh-4",
       authType: "hmac",
     },
     lastTriggered: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
@@ -153,7 +153,7 @@ export const mockTriggers: AgentTrigger[] = [
     createdAt: "2024-10-25T08:30:00Z",
     config: {
       webhookId: "wh-5",
-      webhookUrl: "https://api.nexus.dev/webhooks/wh-5",
+      webhookUrl: "https://api.agentictrust.com/webhooks/wh-5",
       authType: "bearer",
     },
     lastTriggered: new Date(Date.now() - 45 * 60 * 1000).toISOString(),

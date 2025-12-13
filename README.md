@@ -145,7 +145,7 @@ All data is mocked across multiple files in `/lib/data/`:
 ## Project Structure
 
 ```
-nexus-mockup/
+agentic-trust/
 ├── app/                      # Next.js App Router pages
 │   ├── agents/              # Agent management pages
 │   ├── activity/            # Activity tracking page
