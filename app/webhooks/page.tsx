@@ -1,12 +1,12 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
-import { Card, CardContent } from "@/components/ui/card";
+import { useState } from "react";
+import { DataTable, TableRow, TableCell } from "@/components/data-table";
+import { Header } from "@/components/layout/header";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Header } from "@/components/layout/header";
-import { DataTable, TableRow, TableCell } from "@/components/data-table";
+import { Card, CardContent } from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -25,9 +25,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { mockWebhooks } from "@/lib/data/webhooks-data";
 import { mockAgents } from "@/lib/data/mock-data";
-import { formatRelativeTime } from "@/lib/utils";
+import { mockWebhooks } from "@/lib/data/webhooks-data";
 import {
   Plus,
   Search,
@@ -40,8 +39,8 @@ import {
   ChevronRight,
   Circle,
   CheckCircle,
-  XCircle,
 } from "@/lib/icons";
+import { formatRelativeTime } from "@/lib/utils";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -95,8 +94,8 @@ export default function WebhooksPage() {
         actionButton={
           <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
             <DialogTrigger asChild>
-              <Button size="sm" className="bg-amber-600 hover:bg-amber-500 text-white">
-                <Plus className="h-4 w-4 mr-2" />
+              <Button size="sm" className="bg-amber-600 text-white hover:bg-amber-500">
+                <Plus className="mr-2 h-4 w-4" />
                 Create Webhook
               </Button>
             </DialogTrigger>
@@ -115,7 +114,7 @@ export default function WebhooksPage() {
                   <Input
                     id="name"
                     placeholder="e.g., Salesforce Lead Created"
-                    className="bg-accent border text-foreground placeholder:text-foreground0"
+                    className="bg-accent text-foreground placeholder:text-foreground0 border"
                   />
                 </div>
                 <div className="space-y-2">
@@ -125,7 +124,7 @@ export default function WebhooksPage() {
                   <Input
                     id="description"
                     placeholder="Describe what triggers this webhook"
-                    className="bg-accent border text-foreground placeholder:text-foreground0"
+                    className="bg-accent text-foreground placeholder:text-foreground0 border"
                   />
                 </div>
                 <div className="space-y-2">
@@ -133,7 +132,7 @@ export default function WebhooksPage() {
                     Target Agent
                   </Label>
                   <Select>
-                    <SelectTrigger className="bg-accent border text-foreground">
+                    <SelectTrigger className="bg-accent text-foreground border">
                       <SelectValue placeholder="Select an agent" />
                     </SelectTrigger>
                     <SelectContent className="bg-accent border">
@@ -154,7 +153,7 @@ export default function WebhooksPage() {
                     Authentication
                   </Label>
                   <Select defaultValue="hmac">
-                    <SelectTrigger className="bg-accent border text-foreground">
+                    <SelectTrigger className="bg-accent text-foreground border">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent className="bg-accent border">
@@ -178,12 +177,12 @@ export default function WebhooksPage() {
                 <Button
                   variant="outline"
                   onClick={() => setIsCreateOpen(false)}
-                  className="border text-muted-foreground"
+                  className="text-muted-foreground border"
                 >
                   Cancel
                 </Button>
                 <Button
-                  className="bg-amber-600 hover:bg-amber-500 text-white"
+                  className="bg-amber-600 text-white hover:bg-amber-500"
                   onClick={() => setIsCreateOpen(false)}
                 >
                   Create Webhook
@@ -193,14 +192,13 @@ export default function WebhooksPage() {
           </Dialog>
         }
       />
-      <main className="flex-1 overflow-y-auto overflow-x-hidden p-6">
-        <div className="space-y-6 min-w-0">
-
+      <main className="flex-1 overflow-x-hidden overflow-y-auto p-6">
+        <div className="min-w-0 space-y-6">
           {/* Filters Row */}
-          <div className="flex items-center gap-4 flex-wrap">
+          <div className="flex flex-wrap items-center gap-4">
             {/* Search */}
-            <div className="relative flex-1 max-w-md">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-foreground0" />
+            <div className="relative max-w-md flex-1">
+              <Search className="text-foreground0 absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
               <input
                 type="text"
                 placeholder="Search webhooks..."
@@ -209,12 +207,12 @@ export default function WebhooksPage() {
                   setSearchQuery(e.target.value);
                   setCurrentPage(1);
                 }}
-                className="w-full rounded-lg border border bg-card py-2 pl-10 pr-4 text-sm text-foreground placeholder:text-foreground0 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500"
+                className="bg-card text-foreground placeholder:text-foreground0 w-full rounded-lg border py-2 pr-4 pl-10 text-sm focus:border-amber-500 focus:ring-1 focus:ring-amber-500 focus:outline-none"
               />
             </div>
 
             {/* Status Filter */}
-            <div className="flex items-center gap-1 p-1 rounded-lg bg-card/50 border border">
+            <div className="bg-card/50 flex items-center gap-1 rounded-lg border p-1">
               {statusFilters.map((filter) => (
                 <button
                   key={filter.value}
@@ -222,7 +220,7 @@ export default function WebhooksPage() {
                     setStatusFilter(filter.value);
                     setCurrentPage(1);
                   }}
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
+                  className={`flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium transition-colors ${
                     statusFilter === filter.value
                       ? "bg-accent text-foreground"
                       : "text-muted-foreground hover:text-muted-foreground"
@@ -231,7 +229,7 @@ export default function WebhooksPage() {
                   {filter.icon}
                   {filter.label}
                   {statusCounts[filter.value as keyof typeof statusCounts] > 0 && (
-                    <span className="ml-1 text-[10px] bg-amber-600 text-white px-1.5 py-0.5 rounded">
+                    <span className="ml-1 rounded bg-amber-600 px-1.5 py-0.5 text-[10px] text-white">
                       {statusCounts[filter.value as keyof typeof statusCounts]}
                     </span>
                   )}
@@ -245,13 +243,13 @@ export default function WebhooksPage() {
             <CardContent className="p-0">
               <DataTable
                 headers={[
-                  { label: 'Webhook', align: 'left' },
-                  { label: 'Target Agent', align: 'left' },
-                  { label: 'Status', align: 'center' },
-                  { label: 'Deliveries', align: 'center' },
-                  { label: 'Success', align: 'center' },
-                  { label: 'Last Triggered', align: 'left' },
-                  { label: '', align: 'right' },
+                  { label: "Webhook", align: "left" },
+                  { label: "Target Agent", align: "left" },
+                  { label: "Status", align: "center" },
+                  { label: "Deliveries", align: "center" },
+                  { label: "Success", align: "center" },
+                  { label: "Last Triggered", align: "left" },
+                  { label: "", align: "right" },
                 ]}
               >
                 {paginatedWebhooks.map((webhook) => (
@@ -260,22 +258,22 @@ export default function WebhooksPage() {
                       <div className="flex items-start gap-3">
                         <Link
                           href={`/webhooks/${webhook.id}`}
-                          className="h-9 w-9 rounded-lg bg-purple-950 flex items-center justify-center shrink-0 mt-0.5"
+                          className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-purple-950"
                         >
                           <Webhook className="h-4 w-4 text-purple-400" />
                         </Link>
                         <div className="min-w-0">
                           <Link
                             href={`/webhooks/${webhook.id}`}
-                            className="text-sm font-medium text-foreground hover:text-amber-500 transition-colors block"
+                            className="text-foreground block text-sm font-medium transition-colors hover:text-amber-500"
                           >
                             {webhook.name}
                           </Link>
-                          <p className="text-xs text-foreground0 mt-0.5 truncate max-w-[280px]">
+                          <p className="text-foreground0 mt-0.5 max-w-[280px] truncate text-xs">
                             {webhook.description}
                           </p>
-                          <div className="flex items-center gap-1.5 mt-1.5">
-                            <code className="text-xs text-muted-foreground font-mono bg-accent px-2 py-0.5 rounded truncate max-w-[200px]">
+                          <div className="mt-1.5 flex items-center gap-1.5">
+                            <code className="text-muted-foreground bg-accent max-w-[200px] truncate rounded px-2 py-0.5 font-mono text-xs">
                               {webhook.url}
                             </code>
                             <button
@@ -283,7 +281,7 @@ export default function WebhooksPage() {
                                 e.preventDefault();
                                 copyToClipboard(webhook.id, webhook.url);
                               }}
-                              className="text-foreground0 hover:text-muted-foreground transition-colors shrink-0"
+                              className="text-foreground0 hover:text-muted-foreground shrink-0 transition-colors"
                             >
                               {copiedId === webhook.id ? (
                                 <Check className="h-3.5 w-3.5 text-green-500" />
@@ -298,71 +296,71 @@ export default function WebhooksPage() {
                     <TableCell className="px-4 py-3 whitespace-nowrap">
                       <Link
                         href={`/agents/${webhook.targetAgentId}`}
-                        className="text-sm text-muted-foreground hover:text-amber-500 transition-colors flex items-center gap-1"
+                        className="text-muted-foreground flex items-center gap-1 text-sm transition-colors hover:text-amber-500"
                       >
                         {webhook.targetAgentName}
                         <ExternalLink className="h-3 w-3" />
                       </Link>
                     </TableCell>
-                    <TableCell className="px-4 py-3 whitespace-nowrap text-center">
+                    <TableCell className="px-4 py-3 text-center whitespace-nowrap">
                       <Badge
                         variant="outline"
-                        className={webhook.status === "active" ? "bg-green-500/10 border-green-500 text-green-600 dark:text-green-400" : ""}
+                        className={
+                          webhook.status === "active"
+                            ? "border-green-500 bg-green-500/10 text-green-600 dark:text-green-400"
+                            : ""
+                        }
                       >
-                        {webhook.status === "active" && (
-                          <CheckCircle className="h-3 w-3 mr-1" />
-                        )}
-                        {webhook.status === "inactive" && (
-                          <Circle className="h-3 w-3 mr-1" />
-                        )}
+                        {webhook.status === "active" && <CheckCircle className="mr-1 h-3 w-3" />}
+                        {webhook.status === "inactive" && <Circle className="mr-1 h-3 w-3" />}
                         {webhook.status}
                       </Badge>
                     </TableCell>
-                    <TableCell className="px-4 py-3 whitespace-nowrap text-center">
-                      <span className="text-sm font-medium text-foreground">
+                    <TableCell className="px-4 py-3 text-center whitespace-nowrap">
+                      <span className="text-foreground text-sm font-medium">
                         {webhook.totalDeliveries.toLocaleString()}
                       </span>
                     </TableCell>
-                    <TableCell className="px-4 py-3 whitespace-nowrap text-center">
+                    <TableCell className="px-4 py-3 text-center whitespace-nowrap">
                       <span
                         className={`text-sm font-medium ${
                           webhook.successRate >= 98
                             ? "text-green-400"
                             : webhook.successRate >= 95
-                            ? "text-amber-400"
-                            : "text-red-400"
+                              ? "text-amber-400"
+                              : "text-red-400"
                         }`}
                       >
                         {webhook.successRate.toFixed(1)}%
                       </span>
                     </TableCell>
                     <TableCell className="px-4 py-3 whitespace-nowrap">
-                      <span className="text-sm text-muted-foreground" suppressHydrationWarning>
+                      <span className="text-muted-foreground text-sm" suppressHydrationWarning>
                         {webhook.lastTriggered
                           ? formatRelativeTime(webhook.lastTriggered)
                           : "Never"}
                       </span>
                     </TableCell>
-                    <TableCell className="px-4 py-3 whitespace-nowrap text-right">
-                          <div className="flex items-center justify-end gap-1">
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              className="h-8 w-8 text-muted-foreground hover:text-red-400"
-                              title="Delete"
-                            >
-                              <Trash2 className="h-4 w-4" />
-                            </Button>
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    ))}
+                    <TableCell className="px-4 py-3 text-right whitespace-nowrap">
+                      <div className="flex items-center justify-end gap-1">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="text-muted-foreground h-8 w-8 hover:text-red-400"
+                          title="Delete"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
               </DataTable>
 
               {/* Pagination */}
               {totalPages > 1 && (
                 <div className="flex items-center justify-between px-6 py-4">
-                  <div className="text-sm text-muted-foreground">
+                  <div className="text-muted-foreground text-sm">
                     Showing {startIndex + 1} to{" "}
                     {Math.min(startIndex + ITEMS_PER_PAGE, filteredWebhooks.length)} of{" "}
                     {filteredWebhooks.length} webhooks
@@ -373,9 +371,9 @@ export default function WebhooksPage() {
                       size="sm"
                       onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
                       disabled={currentPage === 1}
-                      className="border text-muted-foreground disabled:opacity-50"
+                      className="text-muted-foreground border disabled:opacity-50"
                     >
-                      <ChevronLeft className="h-4 w-4 mr-1" />
+                      <ChevronLeft className="mr-1 h-4 w-4" />
                       Previous
                     </Button>
 
@@ -389,7 +387,7 @@ export default function WebhooksPage() {
                           onClick={() => setCurrentPage(page)}
                           className={
                             currentPage === page
-                              ? "bg-amber-600 hover:bg-amber-500 text-white"
+                              ? "bg-amber-600 text-white hover:bg-amber-500"
                               : "text-muted-foreground hover:text-foreground"
                           }
                         >
@@ -403,10 +401,10 @@ export default function WebhooksPage() {
                       size="sm"
                       onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
                       disabled={currentPage === totalPages}
-                      className="border text-muted-foreground disabled:opacity-50"
+                      className="text-muted-foreground border disabled:opacity-50"
                     >
                       Next
-                      <ChevronRight className="h-4 w-4 ml-1" />
+                      <ChevronRight className="ml-1 h-4 w-4" />
                     </Button>
                   </div>
                 </div>
@@ -415,12 +413,12 @@ export default function WebhooksPage() {
               {/* Empty State */}
               {paginatedWebhooks.length === 0 && (
                 <div className="px-6 py-12 text-center">
-                  <Webhook className="h-12 w-12 text-stone-600 mx-auto mb-4" />
+                  <Webhook className="mx-auto mb-4 h-12 w-12 text-stone-600" />
                   <p className="text-muted-foreground">No webhooks found matching your criteria.</p>
                   <Button
                     variant="outline"
                     size="sm"
-                    className="mt-4 border text-muted-foreground"
+                    className="text-muted-foreground mt-4 border"
                     onClick={() => {
                       setSearchQuery("");
                       setStatusFilter("all");
@@ -433,10 +431,8 @@ export default function WebhooksPage() {
               )}
             </CardContent>
           </Card>
-
         </div>
       </main>
     </>
   );
 }
-

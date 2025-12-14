@@ -1,9 +1,7 @@
 "use client";
 
-import { useState, use } from "react";
 import Link from "next/link";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { useState, use } from "react";
 import {
   MCPIcon,
   ServerHeader,
@@ -12,19 +10,10 @@ import {
   InvocationsTable,
   TestConsole,
 } from "@/components/mcp-registry";
-import {
-  getMCPServerById,
-  getServerInvocations,
-} from "@/lib/data/mcp-servers-data";
-import {
-  ArrowLeft,
-  Copy,
-  Check,
-  Server,
-  Bot,
-  Trash2,
-  Settings,
-} from "@/lib/icons";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { getMCPServerById, getServerInvocations } from "@/lib/data/mcp-servers-data";
+import { ArrowLeft, Copy, Check, Server, Bot, Trash2, Settings } from "@/lib/icons";
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -38,25 +27,25 @@ export default function MCPServerDetailPage({ params }: PageProps) {
 
   if (!server) {
     return (
-      <div className="flex flex-col h-screen bg-background">
-        <header className="sticky top-0 z-10 flex h-14 shrink-0 items-center border-b border-border bg-background px-4">
+      <div className="bg-background flex h-screen flex-col">
+        <header className="border-border bg-background sticky top-0 z-10 flex h-14 shrink-0 items-center border-b px-4">
           <Link
             href="/mcp-registry"
-            className="flex items-center text-sm text-muted-foreground hover:text-foreground transition-colors"
+            className="text-muted-foreground hover:text-foreground flex items-center text-sm transition-colors"
           >
             <ArrowLeft className="mr-2 h-4 w-4" />
             MCP Registry
           </Link>
         </header>
-        <div className="flex-1 flex items-center justify-center">
+        <div className="flex flex-1 items-center justify-center">
           <div className="text-center">
-            <Server className="h-12 w-12 text-stone-600 mx-auto mb-4" />
+            <Server className="mx-auto mb-4 h-12 w-12 text-stone-600" />
             <p className="text-muted-foreground">MCP Server not found</p>
-            <p className="text-sm text-foreground0 mt-1">
+            <p className="text-foreground0 mt-1 text-sm">
               The server you&apos;re looking for doesn&apos;t exist or has been deleted.
             </p>
             <Link href="/mcp-registry">
-              <Button className="mt-4 bg-amber-600 hover:bg-amber-500 text-white">
+              <Button className="mt-4 bg-amber-600 text-white hover:bg-amber-500">
                 Back to Registry
               </Button>
             </Link>
@@ -80,20 +69,26 @@ export default function MCPServerDetailPage({ params }: PageProps) {
     const diffHours = Math.floor(diffMins / 60);
     const diffDays = Math.floor(diffHours / 24);
 
-    if (diffMins < 1) return "just now";
-    if (diffMins < 60) return `${diffMins}m ago`;
-    if (diffHours < 24) return `${diffHours}h ago`;
+    if (diffMins < 1) {
+      return "just now";
+    }
+    if (diffMins < 60) {
+      return `${diffMins}m ago`;
+    }
+    if (diffHours < 24) {
+      return `${diffHours}h ago`;
+    }
     return `${diffDays}d ago`;
   };
 
   return (
-    <div className="flex flex-col h-screen bg-background">
+    <div className="bg-background flex h-screen flex-col">
       {/* Page Header */}
-      <header className="sticky top-0 z-10 flex h-12 shrink-0 items-center justify-between border-b border-border bg-background px-4">
+      <header className="border-border bg-background sticky top-0 z-10 flex h-12 shrink-0 items-center justify-between border-b px-4">
         <div className="flex items-center gap-3">
           <Link
             href="/mcp-registry"
-            className="flex items-center text-sm text-muted-foreground hover:text-foreground transition-colors"
+            className="text-muted-foreground hover:text-foreground flex items-center text-sm transition-colors"
           >
             <ArrowLeft className="mr-1.5 h-4 w-4" />
             MCP Registry
@@ -105,37 +100,50 @@ export default function MCPServerDetailPage({ params }: PageProps) {
             ) : (
               <MCPIcon className="h-4 w-4 text-blue-500" />
             )}
-            <span className="text-foreground font-medium text-sm">{server.name}</span>
+            <span className="text-foreground text-sm font-medium">{server.name}</span>
           </div>
           <Badge
             variant="outline"
             className={`text-[10px] ${
               server.type === "agent"
-                ? "bg-amber-500/10 text-amber-500 border-amber-500/20"
-                : "bg-blue-500/10 text-blue-500 border-blue-500/20"
+                ? "border-amber-500/20 bg-amber-500/10 text-amber-500"
+                : "border-blue-500/20 bg-blue-500/10 text-blue-500"
             }`}
           >
             {server.type}
           </Badge>
         </div>
         <div className="flex items-center gap-2">
-          <span className="text-xs text-foreground0" suppressHydrationWarning>
-            Last called {server.stats.lastCalledAt ? formatRelativeTime(server.stats.lastCalledAt) : "Never"}
+          <span className="text-foreground0 text-xs" suppressHydrationWarning>
+            Last called{" "}
+            {server.stats.lastCalledAt ? formatRelativeTime(server.stats.lastCalledAt) : "Never"}
           </span>
           <Button
             variant="ghost"
             size="icon"
-            className="h-7 w-7 text-muted-foreground hover:text-foreground"
+            className="text-muted-foreground hover:text-foreground h-7 w-7"
             onClick={copyUrl}
           >
-            {copiedUrl ? <Check className="h-3.5 w-3.5 text-green-500" /> : <Copy className="h-3.5 w-3.5" />}
+            {copiedUrl ? (
+              <Check className="h-3.5 w-3.5 text-green-500" />
+            ) : (
+              <Copy className="h-3.5 w-3.5" />
+            )}
           </Button>
           {server.type === "custom" && (
             <>
-              <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-foreground">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="text-muted-foreground hover:text-foreground h-7 w-7"
+              >
                 <Settings className="h-3.5 w-3.5" />
               </Button>
-              <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-red-400">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="text-muted-foreground h-7 w-7 hover:text-red-400"
+              >
                 <Trash2 className="h-3.5 w-3.5" />
               </Button>
             </>
@@ -144,8 +152,8 @@ export default function MCPServerDetailPage({ params }: PageProps) {
       </header>
 
       {/* Main Content */}
-      <div className="flex-1 overflow-y-auto overflow-x-hidden p-4">
-        <div className="max-w-7xl mx-auto space-y-4">
+      <div className="flex-1 overflow-x-hidden overflow-y-auto p-4">
+        <div className="mx-auto max-w-7xl space-y-4">
           {/* Server Info */}
           <ServerHeader server={server} />
 
@@ -153,7 +161,7 @@ export default function MCPServerDetailPage({ params }: PageProps) {
           <ServerStats server={server} />
 
           {/* Tools & Test Console */}
-          <div className="grid gap-4 grid-cols-1 lg:grid-cols-[3fr_2fr]">
+          <div className="grid grid-cols-1 gap-4 lg:grid-cols-[3fr_2fr]">
             <ToolsTable server={server} />
             <TestConsole tools={server.selectedTools} serverUrl={server.serverUrl} />
           </div>

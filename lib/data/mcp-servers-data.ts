@@ -56,7 +56,12 @@ export const agentMCPServers: CustomMCPServer[] = [
         category: "action",
         parameters: [
           { name: "ticket_id", type: "string", description: "Zendesk ticket ID", required: true },
-          { name: "content", type: "string", description: "Ticket content for analysis", required: true },
+          {
+            name: "content",
+            type: "string",
+            description: "Ticket content for analysis",
+            required: true,
+          },
         ],
       },
     ],
@@ -155,7 +160,12 @@ export const customMCPServers: CustomMCPServer[] = [
         category: "read",
         parameters: [
           { name: "query", type: "string", description: "Search query string", required: true },
-          { name: "limit", type: "number", description: "Maximum number of results", required: false },
+          {
+            name: "limit",
+            type: "number",
+            description: "Maximum number of results",
+            required: false,
+          },
         ],
       },
       {
@@ -264,7 +274,12 @@ export const customMCPServers: CustomMCPServer[] = [
         parameters: [
           { name: "team_id", type: "string", description: "Team ID", required: true },
           { name: "title", type: "string", description: "Issue title", required: true },
-          { name: "description", type: "string", description: "Issue description", required: false },
+          {
+            name: "description",
+            type: "string",
+            description: "Issue description",
+            required: false,
+          },
         ],
       },
       {
@@ -413,7 +428,7 @@ export const mockToolInvocations: MCPToolInvocation[] = [
 // Helper function to get available tools from integrations
 export function getAvailableIntegrationTools(): SelectedTool[] {
   const tools: SelectedTool[] = [];
-  
+
   for (const integration of integrationsWithTools) {
     for (const tool of integration.tools) {
       tools.push({
@@ -427,14 +442,14 @@ export function getAvailableIntegrationTools(): SelectedTool[] {
       });
     }
   }
-  
+
   return tools;
 }
 
 // Helper function to get available tools from agents
 export function getAvailableAgentTools(): SelectedTool[] {
   const tools: SelectedTool[] = [];
-  
+
   for (const agent of mockAgents) {
     if (agent.status === "active") {
       // Each agent exposes itself as a single callable tool
@@ -451,7 +466,7 @@ export function getAvailableAgentTools(): SelectedTool[] {
       });
     }
   }
-  
+
   return tools;
 }
 
@@ -469,4 +484,3 @@ export function getMCPServerById(id: string): CustomMCPServer | undefined {
 export function getServerInvocations(serverId: string): MCPToolInvocation[] {
   return mockToolInvocations.filter((inv) => inv.serverId === serverId);
 }
-

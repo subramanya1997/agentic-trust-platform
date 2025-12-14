@@ -1,9 +1,9 @@
 "use client";
 
-import { useTheme } from "next-themes";
 import Image from "next/image";
-import { getIntegrationIcon } from "@/lib/integration-icons";
+import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
+import { getIntegrationIcon } from "@/lib/integration-icons";
 
 interface IntegrationIconProps {
   integrationId: string;
@@ -29,6 +29,7 @@ export function IntegrationIcon({
 
   // Avoid hydration mismatch by only rendering after mount
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
   }, []);
 
@@ -36,14 +37,5 @@ export function IntegrationIcon({
   const theme = mounted && resolvedTheme === "dark" ? "dark" : "light";
   const iconSrc = getIntegrationIcon(integrationId, theme);
 
-  return (
-    <Image
-      src={iconSrc}
-      alt={alt}
-      width={width}
-      height={height}
-      className={className}
-    />
-  );
+  return <Image src={iconSrc} alt={alt} width={width} height={height} className={className} />;
 }
-

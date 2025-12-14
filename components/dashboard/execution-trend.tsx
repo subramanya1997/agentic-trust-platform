@@ -1,7 +1,5 @@
 "use client";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { formatCurrency } from "@/lib/utils";
 import {
   Area,
   XAxis,
@@ -12,6 +10,8 @@ import {
   Bar,
   ComposedChart,
 } from "recharts";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { formatCurrency } from "@/lib/utils";
 
 const AMBER_COLOR = "#f59e0b";
 const GREEN_COLOR = "#22c55e";
@@ -22,11 +22,7 @@ interface ExecutionTrendProps {
   onDateRangeChange: (range: "7d" | "14d" | "30d") => void;
 }
 
-export function ExecutionTrend({
-  data,
-  dateRange,
-  onDateRangeChange,
-}: ExecutionTrendProps) {
+export function ExecutionTrend({ data, dateRange, onDateRangeChange }: ExecutionTrendProps) {
   const totalExecutions = data.reduce((sum, d) => sum + d.executions, 0);
   const totalCost = data.reduce((sum, d) => sum + d.cost, 0);
   const avgExecutions = Math.round(totalExecutions / data.length);
@@ -43,16 +39,16 @@ export function ExecutionTrend({
         <div className="flex items-center justify-between">
           <div>
             <CardTitle className="text-base">Execution Trend</CardTitle>
-            <p className="text-xs text-muted-foreground mt-0.5">
+            <p className="text-muted-foreground mt-0.5 text-xs">
               {totalExecutions.toLocaleString()} executions · {formatCurrency(totalCost)} total cost
             </p>
           </div>
-          <div className="flex items-center gap-1 p-1 rounded-lg bg-card/50 border border">
+          <div className="bg-card/50 flex items-center gap-1 rounded-lg border p-1">
             {dateRanges.map((range) => (
               <button
                 key={range.value}
                 onClick={() => onDateRangeChange(range.value)}
-                className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
+                className={`rounded-md px-3 py-1.5 text-xs font-medium transition-colors ${
                   dateRange === range.value
                     ? "bg-accent text-foreground"
                     : "text-muted-foreground hover:text-muted-foreground"
@@ -89,7 +85,7 @@ export function ExecutionTrend({
               fontSize={10}
               tickLine={false}
               axisLine={false}
-              domain={[0, 'auto']}
+              domain={[0, "auto"]}
               stroke="var(--muted-foreground)"
             />
             <YAxis
@@ -132,24 +128,23 @@ export function ExecutionTrend({
             />
           </ComposedChart>
         </ResponsiveContainer>
-        
+
         {/* Legend */}
-        <div className="flex items-center justify-center gap-6 mt-2">
+        <div className="mt-2 flex items-center justify-center gap-6">
           <div className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded-sm" style={{ backgroundColor: AMBER_COLOR }} />
-            <span className="text-xs text-muted-foreground">Executions</span>
+            <div className="h-3 w-3 rounded-sm" style={{ backgroundColor: AMBER_COLOR }} />
+            <span className="text-muted-foreground text-xs">Executions</span>
           </div>
           <div className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded-sm" style={{ backgroundColor: GREEN_COLOR, opacity: 0.6 }} />
-            <span className="text-xs text-muted-foreground">Cost</span>
+            <div
+              className="h-3 w-3 rounded-sm"
+              style={{ backgroundColor: GREEN_COLOR, opacity: 0.6 }}
+            />
+            <span className="text-muted-foreground text-xs">Cost</span>
           </div>
-          <div className="text-xs text-muted-foreground/60">
-            Avg: {avgExecutions}/day
-          </div>
+          <div className="text-muted-foreground/60 text-xs">Avg: {avgExecutions}/day</div>
         </div>
       </CardContent>
     </Card>
   );
 }
-
-

@@ -1,28 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { StatsCard } from "@/components/dashboard/stats-card";
 import { DataTable, TableRow, TableCell } from "@/components/data-table";
-import {
-  getAgentPerformance,
-  getAnalyticsSummary,
-} from "@/lib/data/analytics-data";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { getAgentPerformance, getAnalyticsSummary } from "@/lib/data/analytics-data";
+import { TrendingDown, TrendingUp, Minus } from "@/lib/icons";
 import { formatCurrency, formatDuration } from "@/lib/utils";
-import {
-  TrendingDown,
-  TrendingUp,
-  Minus,
-} from "@/lib/icons";
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-} from "recharts";
 
 const PRIMARY_COLOR = "#f59e0b";
 
@@ -34,7 +19,8 @@ export function PerformanceTab({ dateRange }: PerformanceTabProps) {
   const agentPerformance = getAgentPerformance(dateRange);
   const summary = getAnalyticsSummary(dateRange);
   const sortedByExecutions = [...agentPerformance].sort((a, b) => b.executions - a.executions);
-  const avgSuccessRate = agentPerformance.reduce((sum, a) => sum + a.successRate, 0) / agentPerformance.length;
+  const avgSuccessRate =
+    agentPerformance.reduce((sum, a) => sum + a.successRate, 0) / agentPerformance.length;
 
   return (
     <div className="space-y-6">
@@ -71,12 +57,12 @@ export function PerformanceTab({ dateRange }: PerformanceTabProps) {
         <CardContent className="p-0">
           <DataTable
             headers={[
-              { label: 'Agent', align: 'left' },
-              { label: 'Executions', align: 'right' },
-              { label: 'Success Rate', align: 'right' },
-              { label: 'Avg Duration', align: 'right' },
-              { label: 'Avg Cost', align: 'right' },
-              { label: 'Trend', align: 'right' },
+              { label: "Agent", align: "left" },
+              { label: "Executions", align: "right" },
+              { label: "Success Rate", align: "right" },
+              { label: "Avg Duration", align: "right" },
+              { label: "Avg Cost", align: "right" },
+              { label: "Trend", align: "right" },
             ]}
           >
             {sortedByExecutions.map((agent) => (
@@ -84,36 +70,40 @@ export function PerformanceTab({ dateRange }: PerformanceTabProps) {
                 <TableCell className="px-4 py-3 whitespace-nowrap">
                   <Link
                     href={`/agents/${agent.agentId}`}
-                    className="text-sm font-medium text-foreground hover:text-amber-500 transition-colors"
+                    className="text-foreground text-sm font-medium transition-colors hover:text-amber-500"
                   >
                     {agent.agentName}
                   </Link>
                 </TableCell>
-                <TableCell className="px-4 py-3 whitespace-nowrap text-right">
-                  <span className="text-sm text-foreground">
+                <TableCell className="px-4 py-3 text-right whitespace-nowrap">
+                  <span className="text-foreground text-sm">
                     {agent.executions.toLocaleString()}
                   </span>
                 </TableCell>
-                <TableCell className="px-4 py-3 whitespace-nowrap text-right">
+                <TableCell className="px-4 py-3 text-right whitespace-nowrap">
                   <span
                     className={`text-sm font-medium ${
                       agent.successRate >= 95
                         ? "text-foreground"
                         : agent.successRate >= 90
-                        ? "text-amber-400"
-                        : "text-red-400"
+                          ? "text-amber-400"
+                          : "text-red-400"
                     }`}
                   >
                     {agent.successRate.toFixed(1)}%
                   </span>
                 </TableCell>
-                <TableCell className="px-4 py-3 whitespace-nowrap text-right">
-                  <span className="text-sm text-muted-foreground">{formatDuration(agent.avgDuration)}</span>
+                <TableCell className="px-4 py-3 text-right whitespace-nowrap">
+                  <span className="text-muted-foreground text-sm">
+                    {formatDuration(agent.avgDuration)}
+                  </span>
                 </TableCell>
-                <TableCell className="px-4 py-3 whitespace-nowrap text-right">
-                  <span className="text-sm text-muted-foreground">{formatCurrency(agent.avgCost)}</span>
+                <TableCell className="px-4 py-3 text-right whitespace-nowrap">
+                  <span className="text-muted-foreground text-sm">
+                    {formatCurrency(agent.avgCost)}
+                  </span>
                 </TableCell>
-                <TableCell className="px-4 py-3 whitespace-nowrap text-right">
+                <TableCell className="px-4 py-3 text-right whitespace-nowrap">
                   <div className="flex items-center justify-end gap-1">
                     {agent.trend === "up" && (
                       <>
@@ -129,8 +119,8 @@ export function PerformanceTab({ dateRange }: PerformanceTabProps) {
                     )}
                     {agent.trend === "stable" && (
                       <>
-                        <Minus className="h-4 w-4 text-foreground0" />
-                        <span className="text-sm text-foreground0">0%</span>
+                        <Minus className="text-foreground0 h-4 w-4" />
+                        <span className="text-foreground0 text-sm">0%</span>
                       </>
                     )}
                   </div>
@@ -149,13 +139,15 @@ export function PerformanceTab({ dateRange }: PerformanceTabProps) {
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
-              <BarChart
-                data={sortedByExecutions}
-                layout="vertical"
-                margin={{ left: 120 }}
-              >
+              <BarChart data={sortedByExecutions} layout="vertical" margin={{ left: 120 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#374151" horizontal={false} />
-                <XAxis type="number" domain={[90, 100]} stroke="#9ca3af" fontSize={12} tickLine={false} />
+                <XAxis
+                  type="number"
+                  domain={[90, 100]}
+                  stroke="#9ca3af"
+                  fontSize={12}
+                  tickLine={false}
+                />
                 <YAxis
                   type="category"
                   dataKey="agentName"

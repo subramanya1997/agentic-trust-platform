@@ -1,12 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
 import { Header } from "@/components/layout/header";
-import { MembersTab, TeamMember } from "@/components/team/members-tab";
 import { InvitedTab, Invitation } from "@/components/team/invited-tab";
-import { RolesTab, Role } from "@/components/team/roles-tab";
+import { MembersTab, TeamMember } from "@/components/team/members-tab";
 import { PermissionsTab, Permission, RolePermission } from "@/components/team/permissions-tab";
+import { RolesTab, Role } from "@/components/team/roles-tab";
+import { Button } from "@/components/ui/button";
 import { Users, Mail, Shield, Lock, Plus, RotateCcw } from "@/lib/icons";
 
 type TabType = "members" | "invited" | "roles" | "permissions";
@@ -20,101 +20,279 @@ const tabs = [
 
 // Mock data
 const mockMembers: TeamMember[] = [
-  { id: "1", name: "Sara Klein", email: "sara@company.com", role: "Admin", status: "active", avatar: "SK", lastActive: "Just now", joinedAt: "Oct 15, 2024" },
-  { id: "2", name: "Taylor Chen", email: "taylor@company.com", role: "Editor", status: "active", avatar: "TC", lastActive: "2 hours ago", joinedAt: "Nov 1, 2024" },
-  { id: "3", name: "Maya Rodriguez", email: "maya@company.com", role: "Editor", status: "active", avatar: "MR", lastActive: "1 day ago", joinedAt: "Nov 10, 2024" },
-  { id: "4", name: "Alex Park", email: "alex@company.com", role: "Viewer", status: "active", avatar: "AP", lastActive: "3 days ago", joinedAt: "Nov 20, 2024" },
+  {
+    id: "1",
+    name: "Sara Klein",
+    email: "sara@company.com",
+    role: "Admin",
+    status: "active",
+    avatar: "SK",
+    lastActive: "Just now",
+    joinedAt: "Oct 15, 2024",
+  },
+  {
+    id: "2",
+    name: "Taylor Chen",
+    email: "taylor@company.com",
+    role: "Editor",
+    status: "active",
+    avatar: "TC",
+    lastActive: "2 hours ago",
+    joinedAt: "Nov 1, 2024",
+  },
+  {
+    id: "3",
+    name: "Maya Rodriguez",
+    email: "maya@company.com",
+    role: "Editor",
+    status: "active",
+    avatar: "MR",
+    lastActive: "1 day ago",
+    joinedAt: "Nov 10, 2024",
+  },
+  {
+    id: "4",
+    name: "Alex Park",
+    email: "alex@company.com",
+    role: "Viewer",
+    status: "active",
+    avatar: "AP",
+    lastActive: "3 days ago",
+    joinedAt: "Nov 20, 2024",
+  },
 ];
 
 const mockInvitations: Invitation[] = [
-  { id: "1", email: "john@company.com", role: "Editor", invitedBy: "Sara Klein", invitedAt: "2 days ago", expiresAt: "in 5 days", status: "pending" },
-  { id: "2", email: "lisa@company.com", role: "Viewer", invitedBy: "Taylor Chen", invitedAt: "1 week ago", expiresAt: "in 1 day", status: "pending" },
+  {
+    id: "1",
+    email: "john@company.com",
+    role: "Editor",
+    invitedBy: "Sara Klein",
+    invitedAt: "2 days ago",
+    expiresAt: "in 5 days",
+    status: "pending",
+  },
+  {
+    id: "2",
+    email: "lisa@company.com",
+    role: "Viewer",
+    invitedBy: "Taylor Chen",
+    invitedAt: "1 week ago",
+    expiresAt: "in 1 day",
+    status: "pending",
+  },
 ];
 
 const mockRoles: Role[] = [
-  { id: "admin", name: "Admin", description: "Full access to all features and settings", color: "bg-amber-950 text-amber-400 border-amber-800", memberCount: 1, isSystem: true },
-  { id: "editor", name: "Editor", description: "Can create and edit agents and integrations", color: "bg-blue-950 text-blue-400 border-blue-800", memberCount: 2, isDefault: true },
-  { id: "viewer", name: "Viewer", description: "Read-only access to view agents and analytics", color: "bg-accent text-muted-foreground border", memberCount: 1 },
-  { id: "developer", name: "Developer", description: "Can create agents and manage API keys", color: "bg-purple-950 text-purple-400 border-purple-800", memberCount: 0 },
+  {
+    id: "admin",
+    name: "Admin",
+    description: "Full access to all features and settings",
+    color: "bg-amber-950 text-amber-400 border-amber-800",
+    memberCount: 1,
+    isSystem: true,
+  },
+  {
+    id: "editor",
+    name: "Editor",
+    description: "Can create and edit agents and integrations",
+    color: "bg-blue-950 text-blue-400 border-blue-800",
+    memberCount: 2,
+    isDefault: true,
+  },
+  {
+    id: "viewer",
+    name: "Viewer",
+    description: "Read-only access to view agents and analytics",
+    color: "bg-accent text-muted-foreground border",
+    memberCount: 1,
+  },
+  {
+    id: "developer",
+    name: "Developer",
+    description: "Can create agents and manage API keys",
+    color: "bg-purple-950 text-purple-400 border-purple-800",
+    memberCount: 0,
+  },
 ];
 
 const mockPermissions: Permission[] = [
   // Agents
-  { id: "agents.view", name: "View agents", description: "View agent list and details", category: "Agents" },
-  { id: "agents.create", name: "Create agents", description: "Create new agents", category: "Agents" },
-  { id: "agents.edit", name: "Edit agents", description: "Modify existing agents", category: "Agents" },
-  { id: "agents.delete", name: "Delete agents", description: "Remove agents permanently", category: "Agents" },
+  {
+    id: "agents.view",
+    name: "View agents",
+    description: "View agent list and details",
+    category: "Agents",
+  },
+  {
+    id: "agents.create",
+    name: "Create agents",
+    description: "Create new agents",
+    category: "Agents",
+  },
+  {
+    id: "agents.edit",
+    name: "Edit agents",
+    description: "Modify existing agents",
+    category: "Agents",
+  },
+  {
+    id: "agents.delete",
+    name: "Delete agents",
+    description: "Remove agents permanently",
+    category: "Agents",
+  },
   { id: "agents.run", name: "Run agents", description: "Execute agent runs", category: "Agents" },
   // Integrations
-  { id: "integrations.view", name: "View integrations", description: "View connected integrations", category: "Integrations" },
-  { id: "integrations.add", name: "Add integrations", description: "Connect new integrations", category: "Integrations" },
-  { id: "integrations.configure", name: "Configure integrations", description: "Modify integration settings", category: "Integrations" },
-  { id: "integrations.remove", name: "Remove integrations", description: "Disconnect integrations", category: "Integrations" },
+  {
+    id: "integrations.view",
+    name: "View integrations",
+    description: "View connected integrations",
+    category: "Integrations",
+  },
+  {
+    id: "integrations.add",
+    name: "Add integrations",
+    description: "Connect new integrations",
+    category: "Integrations",
+  },
+  {
+    id: "integrations.configure",
+    name: "Configure integrations",
+    description: "Modify integration settings",
+    category: "Integrations",
+  },
+  {
+    id: "integrations.remove",
+    name: "Remove integrations",
+    description: "Disconnect integrations",
+    category: "Integrations",
+  },
   // Analytics
-  { id: "analytics.view", name: "View analytics", description: "Access analytics dashboard", category: "Analytics" },
-  { id: "analytics.export", name: "Export data", description: "Download analytics reports", category: "Analytics" },
+  {
+    id: "analytics.view",
+    name: "View analytics",
+    description: "Access analytics dashboard",
+    category: "Analytics",
+  },
+  {
+    id: "analytics.export",
+    name: "Export data",
+    description: "Download analytics reports",
+    category: "Analytics",
+  },
   // Team
   { id: "team.view", name: "View team", description: "View team members", category: "Team" },
-  { id: "team.invite", name: "Invite members", description: "Send team invitations", category: "Team" },
+  {
+    id: "team.invite",
+    name: "Invite members",
+    description: "Send team invitations",
+    category: "Team",
+  },
   { id: "team.manage", name: "Manage roles", description: "Change member roles", category: "Team" },
-  { id: "team.remove", name: "Remove members", description: "Remove team members", category: "Team" },
+  {
+    id: "team.remove",
+    name: "Remove members",
+    description: "Remove team members",
+    category: "Team",
+  },
   // API Keys
-  { id: "apikeys.view", name: "View API keys", description: "View API key list", category: "API Keys" },
-  { id: "apikeys.create", name: "Create API keys", description: "Generate new API keys", category: "API Keys" },
-  { id: "apikeys.revoke", name: "Revoke API keys", description: "Revoke existing keys", category: "API Keys" },
+  {
+    id: "apikeys.view",
+    name: "View API keys",
+    description: "View API key list",
+    category: "API Keys",
+  },
+  {
+    id: "apikeys.create",
+    name: "Create API keys",
+    description: "Generate new API keys",
+    category: "API Keys",
+  },
+  {
+    id: "apikeys.revoke",
+    name: "Revoke API keys",
+    description: "Revoke existing keys",
+    category: "API Keys",
+  },
   // Settings
-  { id: "settings.view", name: "View settings", description: "View organization settings", category: "Settings" },
-  { id: "settings.edit", name: "Edit settings", description: "Modify organization settings", category: "Settings" },
-  { id: "settings.billing", name: "Manage billing", description: "Access billing and payments", category: "Settings" },
+  {
+    id: "settings.view",
+    name: "View settings",
+    description: "View organization settings",
+    category: "Settings",
+  },
+  {
+    id: "settings.edit",
+    name: "Edit settings",
+    description: "Modify organization settings",
+    category: "Settings",
+  },
+  {
+    id: "settings.billing",
+    name: "Manage billing",
+    description: "Access billing and payments",
+    category: "Settings",
+  },
 ];
 
 const mockRolePermissions: RolePermission[] = [
-  { 
-    roleId: "admin", 
-    roleName: "Admin", 
-    permissions: mockPermissions.map(p => p.id) // Admin has all permissions
+  {
+    roleId: "admin",
+    roleName: "Admin",
+    permissions: mockPermissions.map((p) => p.id), // Admin has all permissions
   },
-  { 
-    roleId: "editor", 
-    roleName: "Editor", 
+  {
+    roleId: "editor",
+    roleName: "Editor",
     permissions: [
-      "agents.view", "agents.create", "agents.edit", "agents.run",
-      "integrations.view", "integrations.add", "integrations.configure",
-      "analytics.view", "analytics.export",
+      "agents.view",
+      "agents.create",
+      "agents.edit",
+      "agents.run",
+      "integrations.view",
+      "integrations.add",
+      "integrations.configure",
+      "analytics.view",
+      "analytics.export",
       "team.view",
       "apikeys.view",
-      "settings.view"
-    ]
+      "settings.view",
+    ],
   },
-  { 
-    roleId: "viewer", 
-    roleName: "Viewer", 
+  {
+    roleId: "viewer",
+    roleName: "Viewer",
     permissions: [
       "agents.view",
       "integrations.view",
       "analytics.view",
       "team.view",
-      "settings.view"
-    ]
+      "settings.view",
+    ],
   },
-  { 
-    roleId: "developer", 
-    roleName: "Developer", 
+  {
+    roleId: "developer",
+    roleName: "Developer",
     permissions: [
-      "agents.view", "agents.create", "agents.edit", "agents.run",
+      "agents.view",
+      "agents.create",
+      "agents.edit",
+      "agents.run",
       "integrations.view",
       "analytics.view",
       "team.view",
-      "apikeys.view", "apikeys.create"
-    ]
+      "apikeys.view",
+      "apikeys.create",
+    ],
   },
 ];
 
 export default function TeamPage() {
   const [activeTab, setActiveTab] = useState<TabType>("members");
 
-  const rolesForSelect = mockRoles.map(r => ({ id: r.id, name: r.name }));
-  const rolesForPermissions = mockRoles.map(r => ({ id: r.id, name: r.name, color: r.color }));
+  const rolesForSelect = mockRoles.map((r) => ({ id: r.id, name: r.name }));
+  const rolesForPermissions = mockRoles.map((r) => ({ id: r.id, name: r.name, color: r.color }));
 
   // Determine action button based on active tab
   const getActionButton = () => {
@@ -122,22 +300,22 @@ export default function TeamPage() {
       case "members":
       case "invited":
         return (
-          <Button size="sm" className="bg-amber-600 hover:bg-amber-500 text-white">
-            <Plus className="h-4 w-4 mr-2" />
+          <Button size="sm" className="bg-amber-600 text-white hover:bg-amber-500">
+            <Plus className="mr-2 h-4 w-4" />
             Invite Member
           </Button>
         );
       case "roles":
         return (
-          <Button size="sm" className="bg-amber-600 hover:bg-amber-500 text-white">
-            <Plus className="h-4 w-4 mr-2" />
+          <Button size="sm" className="bg-amber-600 text-white hover:bg-amber-500">
+            <Plus className="mr-2 h-4 w-4" />
             Add Role
           </Button>
         );
       case "permissions":
         return (
-          <Button size="sm" variant="outline" className="border text-muted-foreground">
-            <RotateCcw className="h-4 w-4 mr-2" />
+          <Button size="sm" variant="outline" className="text-muted-foreground border">
+            <RotateCcw className="mr-2 h-4 w-4" />
             Reset to Defaults
           </Button>
         );
@@ -149,17 +327,16 @@ export default function TeamPage() {
   return (
     <>
       <Header subtitle="Manage team members, roles, and permissions" />
-      <main className="flex-1 overflow-y-auto overflow-x-hidden p-6">
-        <div className="space-y-6 min-w-0">
-
+      <main className="flex-1 overflow-x-hidden overflow-y-auto p-6">
+        <div className="min-w-0 space-y-6">
           {/* Tab Navigation - Analytics style */}
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-1 bg-card/50 p-1 rounded-lg border border">
+            <div className="bg-card/50 flex items-center gap-1 rounded-lg border p-1">
               {tabs.map((tab) => (
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
+                  className={`flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium transition-colors ${
                     activeTab === tab.id
                       ? "bg-accent text-foreground"
                       : "text-muted-foreground hover:text-muted-foreground"
@@ -168,7 +345,7 @@ export default function TeamPage() {
                   <tab.icon className="h-3.5 w-3.5" />
                   {tab.label}
                   {tab.id === "invited" && mockInvitations.length > 0 && (
-                    <span className="ml-1 text-[10px] bg-amber-600 text-white px-1.5 py-0.5 rounded">
+                    <span className="ml-1 rounded bg-amber-600 px-1.5 py-0.5 text-[10px] text-white">
                       {mockInvitations.length}
                     </span>
                   )}
@@ -180,23 +357,13 @@ export default function TeamPage() {
 
           {/* Tab Content */}
           <div>
-            {activeTab === "members" && (
-              <MembersTab 
-                members={mockMembers} 
-                roles={rolesForSelect}
-              />
-            )}
+            {activeTab === "members" && <MembersTab members={mockMembers} roles={rolesForSelect} />}
             {activeTab === "invited" && (
-              <InvitedTab 
-                invitations={mockInvitations} 
-                roles={rolesForSelect}
-              />
+              <InvitedTab invitations={mockInvitations} roles={rolesForSelect} />
             )}
-            {activeTab === "roles" && (
-              <RolesTab roles={mockRoles} />
-            )}
+            {activeTab === "roles" && <RolesTab roles={mockRoles} />}
             {activeTab === "permissions" && (
-              <PermissionsTab 
+              <PermissionsTab
                 permissions={mockPermissions}
                 roles={rolesForPermissions}
                 rolePermissions={mockRolePermissions}

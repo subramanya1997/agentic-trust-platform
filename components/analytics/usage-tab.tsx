@@ -1,13 +1,5 @@
 "use client";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { StatsCard } from "@/components/dashboard/stats-card";
-import { DataTable, TableRow, TableCell } from "@/components/data-table";
-import {
-  getHourlyUsage,
-  getUsageByDay,
-  getAnalyticsSummary,
-} from "@/lib/data/analytics-data";
 import {
   BarChart,
   Bar,
@@ -19,6 +11,10 @@ import {
   AreaChart,
   Area,
 } from "recharts";
+import { StatsCard } from "@/components/dashboard/stats-card";
+import { DataTable, TableRow, TableCell } from "@/components/data-table";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { getHourlyUsage, getUsageByDay, getAnalyticsSummary } from "@/lib/data/analytics-data";
 
 const PRIMARY_COLOR = "#f59e0b";
 
@@ -138,11 +134,11 @@ export function UsageTab({ dateRange }: UsageTabProps) {
         <CardContent className="p-0">
           <DataTable
             headers={[
-              { label: 'Day', align: 'left' },
-              { label: 'Executions', align: 'right' },
-              { label: 'Unique Agents', align: 'right' },
-              { label: 'Unique Users', align: 'right' },
-              { label: 'Activity Level', align: 'center' },
+              { label: "Day", align: "left" },
+              { label: "Executions", align: "right" },
+              { label: "Unique Agents", align: "right" },
+              { label: "Unique Users", align: "right" },
+              { label: "Activity Level", align: "center" },
             ]}
           >
             {usageByDay.map((day) => {
@@ -151,20 +147,22 @@ export function UsageTab({ dateRange }: UsageTabProps) {
               return (
                 <TableRow key={day.day}>
                   <TableCell className="px-4 py-3 whitespace-nowrap">
-                    <span className="text-sm font-medium text-foreground">{day.day}</span>
+                    <span className="text-foreground text-sm font-medium">{day.day}</span>
                   </TableCell>
-                  <TableCell className="px-4 py-3 whitespace-nowrap text-right">
-                    <span className="text-sm text-foreground">{day.executions.toLocaleString()}</span>
+                  <TableCell className="px-4 py-3 text-right whitespace-nowrap">
+                    <span className="text-foreground text-sm">
+                      {day.executions.toLocaleString()}
+                    </span>
                   </TableCell>
-                  <TableCell className="px-4 py-3 whitespace-nowrap text-right">
-                    <span className="text-sm text-muted-foreground">{day.uniqueAgents}</span>
+                  <TableCell className="px-4 py-3 text-right whitespace-nowrap">
+                    <span className="text-muted-foreground text-sm">{day.uniqueAgents}</span>
                   </TableCell>
-                  <TableCell className="px-4 py-3 whitespace-nowrap text-right">
-                    <span className="text-sm text-muted-foreground">{day.uniqueUsers}</span>
+                  <TableCell className="px-4 py-3 text-right whitespace-nowrap">
+                    <span className="text-muted-foreground text-sm">{day.uniqueUsers}</span>
                   </TableCell>
                   <TableCell className="px-4 py-3 whitespace-nowrap">
                     <div className="flex items-center justify-center">
-                      <div className="w-24 bg-accent rounded-full h-2">
+                      <div className="bg-accent h-2 w-24 rounded-full">
                         <div
                           className="h-2 rounded-full bg-amber-500"
                           style={{ width: `${activityLevel}%` }}

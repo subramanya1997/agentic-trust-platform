@@ -2,9 +2,9 @@
 
 import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { formatRelativeTime, formatDuration, formatCurrency } from "@/lib/utils";
 import { CheckCircle2, XCircle, Loader2, Bot } from "@/lib/icons";
 import type { ExecutionTrace } from "@/lib/types";
+import { formatRelativeTime, formatDuration, formatCurrency } from "@/lib/utils";
 
 interface RecentActivityProps {
   executions: ExecutionTrace[];
@@ -12,7 +12,7 @@ interface RecentActivityProps {
 
 export function RecentActivity({ executions }: RecentActivityProps) {
   const displayedExecutions = executions.slice(0, 5);
-  
+
   return (
     <Card className="h-full">
       <CardHeader className="pb-3">
@@ -32,7 +32,7 @@ export function RecentActivity({ executions }: RecentActivityProps) {
             <Link
               key={execution.id}
               href={`/activity?execution=${execution.id}`}
-              className="flex items-center gap-3 p-2 -mx-2 rounded-lg hover:bg-accent transition-colors"
+              className="hover:bg-accent -mx-2 flex items-center gap-3 rounded-lg p-2 transition-colors"
             >
               {/* Status Icon */}
               <div
@@ -40,30 +40,26 @@ export function RecentActivity({ executions }: RecentActivityProps) {
                   execution.status === "completed"
                     ? "bg-green-500/10"
                     : execution.status === "failed"
-                    ? "bg-red-500/10"
-                    : "bg-amber-500/10"
+                      ? "bg-red-500/10"
+                      : "bg-amber-500/10"
                 }`}
               >
                 {execution.status === "completed" && (
                   <CheckCircle2 className="h-4 w-4 text-green-500" />
                 )}
-                {execution.status === "failed" && (
-                  <XCircle className="h-4 w-4 text-red-500" />
-                )}
+                {execution.status === "failed" && <XCircle className="h-4 w-4 text-red-500" />}
                 {execution.status === "running" && (
-                  <Loader2 className="h-4 w-4 text-amber-500 animate-spin" />
+                  <Loader2 className="h-4 w-4 animate-spin text-amber-500" />
                 )}
               </div>
 
               {/* Execution Info */}
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-foreground truncate">
+              <div className="min-w-0 flex-1">
+                <p className="text-foreground truncate text-sm font-medium">
                   {execution.agentName}
                 </p>
-                <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                  <span suppressHydrationWarning>
-                    {formatRelativeTime(execution.startedAt)}
-                  </span>
+                <div className="text-muted-foreground flex items-center gap-2 text-xs">
+                  <span suppressHydrationWarning>{formatRelativeTime(execution.startedAt)}</span>
                   <span>·</span>
                   <span>{formatDuration(execution.duration)}</span>
                 </div>
@@ -71,10 +67,10 @@ export function RecentActivity({ executions }: RecentActivityProps) {
 
               {/* Cost */}
               <div className="text-right">
-                <p className="text-sm font-medium text-foreground">
+                <p className="text-foreground text-sm font-medium">
                   {formatCurrency(execution.totalCost)}
                 </p>
-                <p className="text-xs text-muted-foreground">
+                <p className="text-muted-foreground text-xs">
                   {execution.successfulSteps}/{execution.totalSteps} steps
                 </p>
               </div>
@@ -83,8 +79,8 @@ export function RecentActivity({ executions }: RecentActivityProps) {
 
           {displayedExecutions.length === 0 && (
             <div className="py-8 text-center">
-              <Bot className="h-8 w-8 text-muted mx-auto mb-2" />
-              <p className="text-sm text-muted-foreground">No recent executions</p>
+              <Bot className="text-muted mx-auto mb-2 h-8 w-8" />
+              <p className="text-muted-foreground text-sm">No recent executions</p>
             </div>
           )}
         </div>
@@ -92,4 +88,3 @@ export function RecentActivity({ executions }: RecentActivityProps) {
     </Card>
   );
 }
-

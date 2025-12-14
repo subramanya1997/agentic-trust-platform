@@ -2,12 +2,12 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { Card, CardContent } from "@/components/ui/card";
+import { IntegrationIcon } from "@/components/integration-icon";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { IntegrationIcon } from "@/components/integration-icon";
-import type { CustomMCPServer } from "@/lib/types";
+import { Card, CardContent } from "@/components/ui/card";
 import { Bot, Copy, Check } from "@/lib/icons";
+import type { CustomMCPServer } from "@/lib/types";
 import { MCPIcon } from "./mcp-icon";
 
 interface MCPServerCardProps {
@@ -25,13 +25,13 @@ export function MCPServerCard({ server }: MCPServerCardProps) {
 
   return (
     <Link href={`/mcp-registry/${server.id}`}>
-      <Card className="bg-card border hover:border transition-colors h-full">
+      <Card className="bg-card h-full border transition-colors hover:border">
         <CardContent className="px-4">
           {/* Header */}
-          <div className="flex items-start justify-between mb-2">
-            <div className="flex items-center gap-2 min-w-0">
+          <div className="mb-2 flex items-start justify-between">
+            <div className="flex min-w-0 items-center gap-2">
               <div
-                className={`h-8 w-8 rounded-lg flex items-center justify-center shrink-0 ${
+                className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg ${
                   server.type === "agent" ? "bg-amber-500/10" : "bg-blue-500/10"
                 }`}
               >
@@ -42,20 +42,19 @@ export function MCPServerCard({ server }: MCPServerCardProps) {
                 )}
               </div>
               <div className="min-w-0">
-                <p className="text-sm font-medium text-foreground truncate">
-                  {server.name}
-                </p>
-                <p className="text-xs text-muted-foreground">
-                  {server.selectedTools.length} tools · {server.stats.totalCalls.toLocaleString()} calls
+                <p className="text-foreground truncate text-sm font-medium">{server.name}</p>
+                <p className="text-muted-foreground text-xs">
+                  {server.selectedTools.length} tools · {server.stats.totalCalls.toLocaleString()}{" "}
+                  calls
                 </p>
               </div>
             </div>
             <Badge
               variant="outline"
-              className={`text-[10px] shrink-0 ${
-                server.type === "agent" 
-                  ? "bg-yellow-500/10 border-yellow-500 text-yellow-600 dark:text-yellow-400"
-                  : "bg-blue-500/10 border-blue-500 text-blue-600 dark:text-blue-400"
+              className={`shrink-0 text-[10px] ${
+                server.type === "agent"
+                  ? "border-yellow-500 bg-yellow-500/10 text-yellow-600 dark:text-yellow-400"
+                  : "border-blue-500 bg-blue-500/10 text-blue-600 dark:text-blue-400"
               }`}
             >
               {server.type}
@@ -63,14 +62,14 @@ export function MCPServerCard({ server }: MCPServerCardProps) {
           </div>
 
           {/* Description */}
-          <p className="text-xs text-muted-foreground mb-2 line-clamp-1">{server.description}</p>
+          <p className="text-muted-foreground mb-2 line-clamp-1 text-xs">{server.description}</p>
 
           {/* Tools Preview */}
-          <div className="flex flex-wrap gap-1 mb-2">
+          <div className="mb-2 flex flex-wrap gap-1">
             {server.selectedTools.slice(0, 2).map((tool, idx) => (
               <div
                 key={idx}
-                className="flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-accent/50 border border-border/50"
+                className="bg-accent/50 border-border/50 flex items-center gap-1 rounded-md border px-1.5 py-0.5"
               >
                 {tool.sourceType === "integration" ? (
                   <IntegrationIcon
@@ -83,25 +82,27 @@ export function MCPServerCard({ server }: MCPServerCardProps) {
                 ) : (
                   <Bot className="h-3 w-3 text-amber-500" />
                 )}
-                <span className="text-[11px] text-muted-foreground">{tool.toolName}</span>
+                <span className="text-muted-foreground text-[11px]">{tool.toolName}</span>
               </div>
             ))}
             {server.selectedTools.length > 2 && (
-              <div className="flex items-center px-1.5 py-0.5 rounded-md bg-accent/50 border border-border/50">
-                <span className="text-[11px] text-muted-foreground">+{server.selectedTools.length - 2}</span>
+              <div className="bg-accent/50 border-border/50 flex items-center rounded-md border px-1.5 py-0.5">
+                <span className="text-muted-foreground text-[11px]">
+                  +{server.selectedTools.length - 2}
+                </span>
               </div>
             )}
           </div>
 
           {/* URL */}
           <div className="flex items-center gap-1" onClick={(e) => e.preventDefault()}>
-            <code className="flex-1 text-[11px] text-muted-foreground font-mono bg-accent/50 px-2 py-1 rounded truncate">
+            <code className="text-muted-foreground bg-accent/50 flex-1 truncate rounded px-2 py-1 font-mono text-[11px]">
               {server.serverUrl}
             </code>
             <Button
               variant="ghost"
               size="icon"
-              className="h-6 w-6 text-muted-foreground hover:text-foreground shrink-0"
+              className="text-muted-foreground hover:text-foreground h-6 w-6 shrink-0"
               onClick={(e) => {
                 e.preventDefault();
                 copyUrl();
@@ -116,7 +117,7 @@ export function MCPServerCard({ server }: MCPServerCardProps) {
           </div>
 
           {/* Footer */}
-          <div className="flex items-center gap-3 mt-2 pt-2 border-t border-border/50 text-xs text-muted-foreground">
+          <div className="border-border/50 text-muted-foreground mt-2 flex items-center gap-3 border-t pt-2 text-xs">
             <span>{server.stats.successRate}% success</span>
             <span>{server.stats.avgLatency}ms avg</span>
           </div>

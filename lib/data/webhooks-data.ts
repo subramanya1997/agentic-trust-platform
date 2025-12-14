@@ -236,7 +236,11 @@ export const mockWebhooks: Webhook[] = [
       rateLimitPerMinute: 20,
     },
     transformRules: [
-      { id: "tr-11", sourcePath: "$.payload.object.recording_files[0].download_url", targetPath: "$.input.recording_url" },
+      {
+        id: "tr-11",
+        sourcePath: "$.payload.object.recording_files[0].download_url",
+        targetPath: "$.input.recording_url",
+      },
       { id: "tr-12", sourcePath: "$.payload.object.topic", targetPath: "$.input.meeting_title" },
     ],
     routingConditions: [],
@@ -482,4 +486,3 @@ export function getRecentDeliveries(limit: number = 10): WebhookDelivery[] {
     .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
     .slice(0, limit);
 }
-

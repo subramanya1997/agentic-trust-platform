@@ -51,13 +51,11 @@ export const integrationIcons: Record<string, { light: string; dark: string }> =
 export function getIntegrationIcon(name: string, theme: "light" | "dark" = "light"): string {
   const key = name.toLowerCase();
   const icon = integrationIcons[key];
-  
+
   if (!icon) {
-    return theme === "dark" 
-      ? "/integrations/dark/notion.svg" 
-      : "/integrations/light/notion.svg";
+    return theme === "dark" ? "/integrations/dark/notion.svg" : "/integrations/light/notion.svg";
   }
-  
+
   return icon[theme];
 }
 
@@ -68,9 +66,10 @@ export function getIntegrationIcon(name: string, theme: "light" | "dark" = "ligh
  */
 export function getIntegrationIcons(name: string): { light: string; dark: string } {
   const key = name.toLowerCase();
-  return integrationIcons[key] || {
-    light: "/integrations/light/notion.svg",
-    dark: "/integrations/dark/notion.svg",
-  };
+  return (
+    integrationIcons[key] || {
+      light: "/integrations/light/notion.svg",
+      dark: "/integrations/dark/notion.svg",
+    }
+  );
 }
-

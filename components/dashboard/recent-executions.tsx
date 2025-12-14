@@ -1,10 +1,10 @@
 import Link from "next/link";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { DataTable, TableRow, TableCell } from "@/components/data-table";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Execution } from "@/lib/data/mock-data";
-import { formatCurrency, formatDuration, formatRelativeTime } from "@/lib/utils";
 import { CheckCircle2, XCircle, Clock, AlertCircle } from "@/lib/icons";
+import { formatCurrency, formatDuration, formatRelativeTime } from "@/lib/utils";
 
 interface RecentExecutionsProps {
   executions: Execution[];
@@ -19,25 +19,25 @@ export function RecentExecutions({ executions }: RecentExecutionsProps) {
       <CardContent>
         <DataTable
           headers={[
-            { label: 'Time', align: 'left' },
-            { label: 'Agent', align: 'left' },
-            { label: 'Status', align: 'left' },
-            { label: 'Duration', align: 'right' },
-            { label: 'Cost', align: 'right' },
+            { label: "Time", align: "left" },
+            { label: "Agent", align: "left" },
+            { label: "Status", align: "left" },
+            { label: "Duration", align: "right" },
+            { label: "Cost", align: "right" },
           ]}
         >
           {executions.map((execution) => (
-            <TableRow
-              key={execution.id}
-              className="cursor-pointer"
-            >
-              <TableCell className="px-4 py-3 text-sm text-muted-foreground" suppressHydrationWarning>
+            <TableRow key={execution.id} className="cursor-pointer">
+              <TableCell
+                className="text-muted-foreground px-4 py-3 text-sm"
+                suppressHydrationWarning
+              >
                 {formatRelativeTime(execution.startedAt)}
               </TableCell>
               <TableCell className="px-4 py-3">
                 <Link
                   href={`/agents/${execution.agentId}`}
-                  className="text-sm font-medium text-foreground hover:text-amber-500"
+                  className="text-foreground text-sm font-medium hover:text-amber-500"
                 >
                   {execution.agentName}
                 </Link>
@@ -45,10 +45,10 @@ export function RecentExecutions({ executions }: RecentExecutionsProps) {
               <TableCell className="px-4 py-3">
                 <ExecutionStatusBadge status={execution.status} />
               </TableCell>
-              <TableCell className="px-4 py-3 text-right text-sm text-muted-foreground">
+              <TableCell className="text-muted-foreground px-4 py-3 text-right text-sm">
                 {formatDuration(execution.duration)}
               </TableCell>
-              <TableCell className="px-4 py-3 text-right text-sm text-foreground font-medium">
+              <TableCell className="text-foreground px-4 py-3 text-right text-sm font-medium">
                 {formatCurrency(execution.cost)}
               </TableCell>
             </TableRow>
@@ -86,13 +86,9 @@ function ExecutionStatusBadge({ status }: { status: Execution["status"] }) {
   const { className, icon: Icon, label } = config[status];
 
   return (
-    <Badge 
-      variant="outline"
-      className={className}
-    >
+    <Badge variant="outline" className={className}>
       <Icon className="mr-1 h-3 w-3" />
       {label}
     </Badge>
   );
 }
-

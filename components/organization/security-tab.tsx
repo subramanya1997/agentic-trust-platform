@@ -1,7 +1,7 @@
 "use client";
 
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import {
   Select,
   SelectContent,
@@ -19,47 +19,65 @@ const auditLogs = [
 
 export function SecurityTab() {
   return (
-    <div className="space-y-6 max-w-3xl">
+    <div className="max-w-3xl space-y-6">
       <Card className="bg-card border">
         <CardContent className="p-0">
-          <table className="min-w-full divide-y divide-border rounded-lg overflow-hidden">
-            <tbody className="bg-card divide-y divide-border">
+          <table className="divide-border min-w-full divide-y overflow-hidden rounded-lg">
+            <tbody className="bg-card divide-border divide-y">
               <tr className="bg-card">
-                <td className="px-4 py-3 w-1/2">
+                <td className="w-1/2 px-4 py-3">
                   <div>
-                    <p className="text-sm font-medium text-muted-foreground">Two-Factor Authentication</p>
-                    <p className="text-xs text-foreground0 mt-0.5">Require 2FA for all team members</p>
+                    <p className="text-muted-foreground text-sm font-medium">
+                      Two-Factor Authentication
+                    </p>
+                    <p className="text-foreground0 mt-0.5 text-xs">
+                      Require 2FA for all team members
+                    </p>
                   </div>
                 </td>
                 <td className="px-4 py-3 text-right">
                   <button className="relative inline-flex h-6 w-11 items-center rounded-full bg-amber-600 transition-colors">
-                    <span className="inline-block h-4 w-4 transform rounded-full bg-white transition-transform translate-x-6" />
+                    <span className="inline-block h-4 w-4 translate-x-6 transform rounded-full bg-white transition-transform" />
                   </button>
                 </td>
               </tr>
               <tr className="bg-card">
-                <td className="px-4 py-3 w-1/2">
+                <td className="w-1/2 px-4 py-3">
                   <div>
-                    <p className="text-sm font-medium text-muted-foreground">Session timeout</p>
-                    <p className="text-xs text-foreground0 mt-0.5">Automatically log out after inactivity</p>
+                    <p className="text-muted-foreground text-sm font-medium">Session timeout</p>
+                    <p className="text-foreground0 mt-0.5 text-xs">
+                      Automatically log out after inactivity
+                    </p>
                   </div>
                 </td>
                 <td className="px-4 py-3 text-right">
                   <Select defaultValue="1h">
-                    <SelectTrigger className="w-[130px] border bg-accent text-foreground" size="sm">
+                    <SelectTrigger className="bg-accent text-foreground w-[130px] border" size="sm">
                       <SelectValue />
                     </SelectTrigger>
-                    <SelectContent className="border bg-card">
-                      <SelectItem value="30m" className="text-muted-foreground focus:bg-accent focus:text-foreground">
+                    <SelectContent className="bg-card border">
+                      <SelectItem
+                        value="30m"
+                        className="text-muted-foreground focus:bg-accent focus:text-foreground"
+                      >
                         30 minutes
                       </SelectItem>
-                      <SelectItem value="1h" className="text-muted-foreground focus:bg-accent focus:text-foreground">
+                      <SelectItem
+                        value="1h"
+                        className="text-muted-foreground focus:bg-accent focus:text-foreground"
+                      >
                         1 hour
                       </SelectItem>
-                      <SelectItem value="4h" className="text-muted-foreground focus:bg-accent focus:text-foreground">
+                      <SelectItem
+                        value="4h"
+                        className="text-muted-foreground focus:bg-accent focus:text-foreground"
+                      >
                         4 hours
                       </SelectItem>
-                      <SelectItem value="24h" className="text-muted-foreground focus:bg-accent focus:text-foreground">
+                      <SelectItem
+                        value="24h"
+                        className="text-muted-foreground focus:bg-accent focus:text-foreground"
+                      >
                         24 hours
                       </SelectItem>
                     </SelectContent>
@@ -67,14 +85,20 @@ export function SecurityTab() {
                 </td>
               </tr>
               <tr className="bg-card">
-                <td className="px-4 py-3 w-1/2">
+                <td className="w-1/2 px-4 py-3">
                   <div>
-                    <p className="text-sm font-medium text-muted-foreground">Active sessions</p>
-                    <p className="text-xs text-foreground0 mt-0.5">Sign out from all other sessions</p>
+                    <p className="text-muted-foreground text-sm font-medium">Active sessions</p>
+                    <p className="text-foreground0 mt-0.5 text-xs">
+                      Sign out from all other sessions
+                    </p>
                   </div>
                 </td>
                 <td className="px-4 py-3 text-right">
-                  <Button variant="outline" size="sm" className="border-red-800 text-red-400 hover:bg-red-950">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="border-red-800 text-red-400 hover:bg-red-950"
+                  >
                     Sign Out All
                   </Button>
                 </td>
@@ -87,21 +111,23 @@ export function SecurityTab() {
       <Card className="bg-card border">
         <CardHeader className="pb-4">
           <CardTitle className="text-foreground text-base">Audit Log</CardTitle>
-          <CardDescription className="text-muted-foreground">View recent security events</CardDescription>
+          <CardDescription className="text-muted-foreground">
+            View recent security events
+          </CardDescription>
         </CardHeader>
         <CardContent className="p-0">
-          <table className="min-w-full divide-y divide-border rounded-lg overflow-hidden">
-            <tbody className="bg-card divide-y divide-border">
+          <table className="divide-border min-w-full divide-y overflow-hidden rounded-lg">
+            <tbody className="bg-card divide-border divide-y">
               {auditLogs.map((log, index) => (
                 <tr key={index} className="bg-card">
                   <td className="px-4 py-3">
                     <div>
-                      <p className="text-sm text-foreground">{log.event}</p>
-                      <p className="text-xs text-foreground0">{log.user}</p>
+                      <p className="text-foreground text-sm">{log.event}</p>
+                      <p className="text-foreground0 text-xs">{log.user}</p>
                     </div>
                   </td>
                   <td className="px-4 py-3 text-right">
-                    <span className="text-xs text-foreground0 flex items-center justify-end gap-1">
+                    <span className="text-foreground0 flex items-center justify-end gap-1 text-xs">
                       <Clock className="h-3 w-3" />
                       {log.time}
                     </span>
@@ -111,9 +137,9 @@ export function SecurityTab() {
             </tbody>
           </table>
           <div className="px-6 py-4">
-            <Button variant="outline" className="w-full border text-muted-foreground">
+            <Button variant="outline" className="text-muted-foreground w-full border">
               View Full Audit Log
-              <ChevronRight className="h-4 w-4 ml-2" />
+              <ChevronRight className="ml-2 h-4 w-4" />
             </Button>
           </div>
         </CardContent>
@@ -121,4 +147,3 @@ export function SecurityTab() {
     </div>
   );
 }
-

@@ -1,10 +1,10 @@
-import type { Metadata } from "next";
 import { Raleway } from "next/font/google";
 import { cookies } from "next/headers";
 import "./globals.css";
 import { AppSidebar } from "@/components/app-sidebar";
-import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { ThemeProvider } from "@/components/theme-provider";
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import type { Metadata } from "next";
 
 const raleway = Raleway({
   subsets: ["latin"],
@@ -36,9 +36,7 @@ export default async function RootLayout({
         >
           <SidebarProvider defaultOpen={defaultOpen}>
             <AppSidebar />
-            <SidebarInset>
-          {children}
-            </SidebarInset>
+            <SidebarInset>{children}</SidebarInset>
           </SidebarProvider>
         </ThemeProvider>
       </body>

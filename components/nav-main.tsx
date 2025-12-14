@@ -1,13 +1,7 @@
-"use client"
+"use client";
 
-import { usePathname } from "next/navigation"
-import { ChevronRight, type LucideIcon } from "@/lib/icons"
-
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible"
+import { usePathname } from "next/navigation";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import {
   SidebarGroup,
   SidebarGroupContent,
@@ -19,25 +13,26 @@ import {
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
-} from "@/components/ui/sidebar"
+} from "@/components/ui/sidebar";
+import { ChevronRight, type LucideIcon } from "@/lib/icons";
 
 export function NavMain({
   items,
   label,
 }: {
   items: {
-    title: string
-    url: string
-    icon?: LucideIcon | React.FC
-    isActive?: boolean
+    title: string;
+    url: string;
+    icon?: LucideIcon | React.FC;
+    isActive?: boolean;
     items?: {
-      title: string
-      url: string
-    }[]
-  }[]
-  label?: string
+      title: string;
+      url: string;
+    }[];
+  }[];
+  label?: string;
 }) {
-  const pathname = usePathname()
+  const pathname = usePathname();
 
   return (
     <SidebarGroup>
@@ -45,17 +40,13 @@ export function NavMain({
       <SidebarGroupContent>
         <SidebarMenu>
           {items.map((item) => (
-            <Collapsible 
-              key={item.title} 
-              asChild 
+            <Collapsible
+              key={item.title}
+              asChild
               defaultOpen={item.isActive || pathname === item.url}
             >
               <SidebarMenuItem>
-                <SidebarMenuButton 
-                  asChild 
-                  tooltip={item.title}
-                  isActive={pathname === item.url}
-                >
+                <SidebarMenuButton asChild tooltip={item.title} isActive={pathname === item.url}>
                   <a href={item.url}>
                     {item.icon && <item.icon />}
                     <span>{item.title}</span>
@@ -90,5 +81,5 @@ export function NavMain({
         </SidebarMenu>
       </SidebarGroupContent>
     </SidebarGroup>
-  )
+  );
 }

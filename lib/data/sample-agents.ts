@@ -101,4 +101,3 @@ Automatically enrich new leads from Salesforce with company data from Clearbit
 export function getAgentConfigById(id: string): AgentConfiguration | undefined {
   return sampleAgentConfigs.find((config) => config.id === id);
 }
-

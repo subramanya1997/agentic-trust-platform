@@ -2,26 +2,15 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { StatsCard } from "@/components/dashboard/stats-card";
 import { DataTable, TableRow, TableCell } from "@/components/data-table";
-import { getIntegrationIcon } from "@/lib/integration-icons";
-import {
-  getIntegrationUsage,
-  getAnalyticsSummary,
-} from "@/lib/data/analytics-data";
-import { formatCurrency } from "@/lib/utils";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { getIntegrationUsage, getAnalyticsSummary } from "@/lib/data/analytics-data";
 import { AlertTriangle } from "@/lib/icons";
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-} from "recharts";
+import { getIntegrationIcon } from "@/lib/integration-icons";
+import { formatCurrency } from "@/lib/utils";
 
 const PRIMARY_COLOR = "#f59e0b";
 
@@ -69,12 +58,12 @@ export function IntegrationsTab({ dateRange }: IntegrationsTabProps) {
         <CardContent className="p-0">
           <DataTable
             headers={[
-              { label: 'Integration', align: 'left' },
-              { label: 'API Calls', align: 'right' },
-              { label: 'Avg Latency', align: 'right' },
-              { label: 'Error Rate', align: 'right' },
-              { label: 'Cost', align: 'right' },
-              { label: 'Agents', align: 'right' },
+              { label: "Integration", align: "left" },
+              { label: "API Calls", align: "right" },
+              { label: "Avg Latency", align: "right" },
+              { label: "Error Rate", align: "right" },
+              { label: "Cost", align: "right" },
+              { label: "Agents", align: "right" },
             ]}
           >
             {sortedByUsage.map((integration) => (
@@ -82,9 +71,9 @@ export function IntegrationsTab({ dateRange }: IntegrationsTabProps) {
                 <TableCell className="px-4 py-3 whitespace-nowrap">
                   <Link
                     href={`/integrations/${integration.integrationId}`}
-                    className="flex items-center gap-3 hover:opacity-80 transition-opacity"
+                    className="flex items-center gap-3 transition-opacity hover:opacity-80"
                   >
-                    <div className="h-8 w-8 rounded-lg bg-accent flex items-center justify-center overflow-hidden">
+                    <div className="bg-accent flex h-8 w-8 items-center justify-center overflow-hidden rounded-lg">
                       <Image
                         src={getIntegrationIcon(integration.integrationId)}
                         alt={integration.integrationName}
@@ -93,30 +82,30 @@ export function IntegrationsTab({ dateRange }: IntegrationsTabProps) {
                         className="rounded"
                       />
                     </div>
-                    <span className="text-sm font-medium text-foreground">
+                    <span className="text-foreground text-sm font-medium">
                       {integration.integrationName}
                     </span>
                   </Link>
                 </TableCell>
-                <TableCell className="px-4 py-3 whitespace-nowrap text-right">
-                  <span className="text-sm text-foreground">
+                <TableCell className="px-4 py-3 text-right whitespace-nowrap">
+                  <span className="text-foreground text-sm">
                     {integration.callCount.toLocaleString()}
                   </span>
                 </TableCell>
-                <TableCell className="px-4 py-3 whitespace-nowrap text-right">
+                <TableCell className="px-4 py-3 text-right whitespace-nowrap">
                   <span
                     className={`text-sm ${
                       integration.avgLatency < 400
                         ? "text-foreground"
                         : integration.avgLatency < 600
-                        ? "text-amber-400"
-                        : "text-red-400"
+                          ? "text-amber-400"
+                          : "text-red-400"
                     }`}
                   >
                     {integration.avgLatency}ms
                   </span>
                 </TableCell>
-                <TableCell className="px-4 py-3 whitespace-nowrap text-right">
+                <TableCell className="px-4 py-3 text-right whitespace-nowrap">
                   <div className="flex items-center justify-end gap-1">
                     {integration.errorRate > 1 && (
                       <AlertTriangle className="h-3.5 w-3.5 text-amber-400" />
@@ -126,18 +115,20 @@ export function IntegrationsTab({ dateRange }: IntegrationsTabProps) {
                         integration.errorRate < 1
                           ? "text-foreground"
                           : integration.errorRate < 2
-                          ? "text-amber-400"
-                          : "text-red-400"
+                            ? "text-amber-400"
+                            : "text-red-400"
                       }`}
                     >
                       {integration.errorRate}%
                     </span>
                   </div>
                 </TableCell>
-                <TableCell className="px-4 py-3 whitespace-nowrap text-right">
-                  <span className="text-sm text-muted-foreground">{formatCurrency(integration.cost)}</span>
+                <TableCell className="px-4 py-3 text-right whitespace-nowrap">
+                  <span className="text-muted-foreground text-sm">
+                    {formatCurrency(integration.cost)}
+                  </span>
                 </TableCell>
-                <TableCell className="px-4 py-3 whitespace-nowrap text-right">
+                <TableCell className="px-4 py-3 text-right whitespace-nowrap">
                   <Badge variant="outline" className="bg-accent text-muted-foreground border">
                     {integration.agentsUsing}
                   </Badge>

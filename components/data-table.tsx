@@ -1,6 +1,6 @@
-"use client"
+"use client";
 
-import * as React from "react"
+import * as React from "react";
 import {
   Table,
   TableBody,
@@ -8,8 +8,8 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
-import { cn } from "@/lib/utils"
+} from "@/components/ui/table";
+import { cn } from "@/lib/utils";
 
 // ============================================================================
 // Simple DataTable Wrapper Component
@@ -17,7 +17,7 @@ import { cn } from "@/lib/utils"
 
 interface DataTableHeader {
   label: string | React.ReactNode;
-  align?: 'left' | 'center' | 'right';
+  align?: "left" | "center" | "right";
   className?: string;
 }
 
@@ -37,10 +37,10 @@ export function DataTable({ headers, children, className }: DataTableProps) {
               <TableHead
                 key={index}
                 className={cn(
-                  "px-4 py-2.5 text-xs font-medium uppercase tracking-wider text-white bg-card",
-                  header.align === 'center' && "text-center",
-                  header.align === 'right' && "text-right",
-                  header.align === 'left' && "text-left",
+                  "bg-card px-4 py-2.5 text-xs font-medium tracking-wider text-white uppercase",
+                  header.align === "center" && "text-center",
+                  header.align === "right" && "text-right",
+                  header.align === "left" && "text-left",
                   !header.align && "text-left",
                   header.className
                 )}
@@ -55,8 +55,8 @@ export function DataTable({ headers, children, className }: DataTableProps) {
         </TableBody>
       </Table>
     </div>
-  )
+  );
 }
 
 // Re-export TableRow and TableCell for use with DataTable
-export { TableRow, TableCell }
+export { TableRow, TableCell };

@@ -14,47 +14,47 @@ export function AgentBuilderPanel({ agentName, isOpen }: AgentBuilderPanelProps)
 
   return (
     <div
-      className={`flex flex-col border-l border-border bg-card transition-all duration-300 ease-in-out ${
+      className={`border-border bg-card flex flex-col border-l transition-all duration-300 ease-in-out ${
         isOpen ? "w-[340px]" : "w-0"
       } overflow-hidden`}
     >
-      <div className="w-[340px] h-full flex flex-col">
+      <div className="flex h-full w-[340px] flex-col">
         {/* Chat Header */}
-        <div className="p-5 border-b border-border shrink-0">
-          <h2 className="font-semibold text-foreground">Agent builder</h2>
-          <p className="text-sm text-muted-foreground mt-1">How can I improve {agentName}?</p>
+        <div className="border-border shrink-0 border-b p-5">
+          <h2 className="text-foreground font-semibold">Agent builder</h2>
+          <p className="text-muted-foreground mt-1 text-sm">How can I improve {agentName}?</p>
         </div>
 
         {/* Quick Actions */}
-        <div className="p-4 border-b border-border space-y-2">
+        <div className="border-border space-y-2 border-b p-4">
           <Button
             variant="outline"
             size="sm"
-            className="w-full justify-start border text-muted-foreground hover:bg-accent"
+            className="text-muted-foreground hover:bg-accent w-full justify-start border"
           >
             Add error handling
           </Button>
           <Button
             variant="outline"
             size="sm"
-            className="w-full justify-start border text-muted-foreground hover:bg-accent"
+            className="text-muted-foreground hover:bg-accent w-full justify-start border"
           >
             Suggest optimizations
           </Button>
           <Button
             variant="outline"
             size="sm"
-            className="w-full justify-start border text-muted-foreground hover:bg-accent"
+            className="text-muted-foreground hover:bg-accent w-full justify-start border"
           >
             Add more integrations
           </Button>
         </div>
 
         {/* Chat Messages Area */}
-        <div className="flex-1 overflow-y-auto p-4 bg-background">
-          <div className="bg-card rounded-lg p-3 border border">
-            <p className="text-sm text-muted-foreground">I can help you improve this agent. Try:</p>
-            <ul className="mt-2 space-y-1 text-sm text-muted-foreground">
+        <div className="bg-background flex-1 overflow-y-auto p-4">
+          <div className="bg-card rounded-lg border p-3">
+            <p className="text-muted-foreground text-sm">I can help you improve this agent. Try:</p>
+            <ul className="text-muted-foreground mt-2 space-y-1 text-sm">
               <li>- &quot;Add retry logic for failed API calls&quot;</li>
               <li>- &quot;What integrations would improve this?&quot;</li>
               <li>- &quot;Add logging for debugging&quot;</li>
@@ -63,21 +63,21 @@ export function AgentBuilderPanel({ agentName, isOpen }: AgentBuilderPanelProps)
         </div>
 
         {/* Chat Input */}
-        <div className="p-4 bg-card shrink-0">
+        <div className="bg-card shrink-0 p-4">
           <div className="relative">
             <textarea
               value={chatMessage}
               onChange={(e) => setChatMessage(e.target.value)}
               placeholder="Ask me anything..."
               rows={2}
-              className="w-full rounded-xl border border bg-accent px-4 py-3 pr-20 text-sm text-foreground placeholder:text-foreground0 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500 resize-none"
+              className="bg-accent text-foreground placeholder:text-foreground0 w-full resize-none rounded-xl border px-4 py-3 pr-20 text-sm focus:border-amber-500 focus:ring-1 focus:ring-amber-500 focus:outline-none"
             />
-            <div className="absolute bottom-3 right-3 flex items-center gap-1">
-              <button className="p-1.5 text-muted-foreground hover:text-muted-foreground rounded-lg transition-colors">
+            <div className="absolute right-3 bottom-3 flex items-center gap-1">
+              <button className="text-muted-foreground hover:text-muted-foreground rounded-lg p-1.5 transition-colors">
                 <Paperclip className="h-4 w-4" />
               </button>
               <button
-                className="p-1.5 text-muted-foreground hover:text-amber-500 rounded-lg transition-colors"
+                className="text-muted-foreground rounded-lg p-1.5 transition-colors hover:text-amber-500"
                 onClick={() => setChatMessage("")}
               >
                 <Send className="h-4 w-4" />
@@ -89,4 +89,3 @@ export function AgentBuilderPanel({ agentName, isOpen }: AgentBuilderPanelProps)
     </div>
   );
 }
-

@@ -12,7 +12,7 @@ import type {
 
 // Helper to format date as "Mon DD"
 function formatDate(date: Date): string {
-  const month = date.toLocaleString('en-US', { month: 'short' });
+  const month = date.toLocaleString("en-US", { month: "short" });
   const day = date.getDate();
   return `${month} ${day}`;
 }
@@ -27,29 +27,29 @@ function seededRandom(seed: number): number {
 function generateCostData(days: number): DailyCostData[] {
   const data: DailyCostData[] = [];
   const today = new Date();
-  
+
   for (let i = days - 1; i >= 0; i--) {
     const date = new Date(today);
     date.setDate(today.getDate() - i);
     const dateStr = formatDate(date);
     const seed = date.getFullYear() * 10000 + (date.getMonth() + 1) * 100 + date.getDate();
-    
+
     // Base values with day-of-week variation (weekends are lower)
     const dayOfWeek = date.getDay();
     const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
     const baseExec = isWeekend ? 500 : 850;
     const baseCost = isWeekend ? 28 : 45;
-    
+
     // Add randomness
     const randomFactor = 0.8 + seededRandom(seed) * 0.4;
-    
+
     data.push({
       date: dateStr,
       cost: Math.round(baseCost * randomFactor * 10) / 10,
       executions: Math.round(baseExec * randomFactor),
     });
   }
-  
+
   return data;
 }
 
@@ -63,29 +63,36 @@ export const mockCostData = mockCostData7Days;
 
 // Cost breakdown by model - scales with date range and has random variation
 export function getCostBreakdown(range: "7d" | "14d" | "30d"): CostBreakdownItem[] {
-  const costData = range === "7d" ? mockCostData7Days : range === "14d" ? mockCostData14Days : mockCostData30Days;
+  const costData =
+    range === "7d" ? mockCostData7Days : range === "14d" ? mockCostData14Days : mockCostData30Days;
   const totalCost = costData.reduce((sum, d) => sum + d.cost, 0);
-  
+
   // Base percentages with random variation per range
   const seed = range === "7d" ? 200 : range === "14d" ? 210 : 220;
-  
+
   // Generate random percentages that sum to 100
   const basePercentages = [40, 25, 15, 10, 10];
   const randomizedPercentages = basePercentages.map((base, idx) => {
     const variation = (seededRandom(seed + idx) - 0.5) * 10; // ±5% variation
     return Math.max(5, base + variation);
   });
-  
+
   // Normalize to sum to 100
   const sum = randomizedPercentages.reduce((a, b) => a + b, 0);
-  const normalizedPercentages = randomizedPercentages.map(p => Math.round((p / sum) * 100));
-  
+  const normalizedPercentages = randomizedPercentages.map((p) => Math.round((p / sum) * 100));
+
   // Adjust last one to ensure exact 100
   const currentSum = normalizedPercentages.slice(0, -1).reduce((a, b) => a + b, 0);
   normalizedPercentages[normalizedPercentages.length - 1] = 100 - currentSum;
-  
-  const models = ["Claude Sonnet 4.5", "GPT-5.1", "Claude Opus 4.5", "Gemini 3 Pro", "Other Models"];
-  
+
+  const models = [
+    "Claude Sonnet 4.5",
+    "GPT-5.1",
+    "Claude Opus 4.5",
+    "Gemini 3 Pro",
+    "Other Models",
+  ];
+
   return models.map((name, idx) => ({
     name,
     cost: Math.round(totalCost * (normalizedPercentages[idx] / 100) * 10) / 10,
@@ -184,7 +191,7 @@ const baseAgentPerformance: AgentPerformanceData[] = [
 export function getAgentPerformance(range: "7d" | "14d" | "30d"): AgentPerformanceData[] {
   const multiplier = range === "7d" ? 1 : range === "14d" ? 2.1 : 4.5;
   const seed = range === "7d" ? 1 : range === "14d" ? 2 : 3;
-  
+
   return baseAgentPerformance.map((agent, idx) => ({
     ...agent,
     executions: Math.round(agent.executions * multiplier * (0.9 + seededRandom(seed + idx) * 0.2)),
@@ -212,7 +219,7 @@ export const mockAgentDailyMetrics: Record<string, DailyAgentMetric[]> = {
     { date: "Nov 25", executions: 498, success: 494, failed: 4, avgDuration: 1880, cost: 16.93 },
     { date: "Nov 26", executions: 467, success: 464, failed: 3, avgDuration: 1790, cost: 15.88 },
     { date: "Nov 27", executions: 523, success: 519, failed: 4, avgDuration: 1920, cost: 17.78 },
-    { date: "Nov 28", executions: 444, success: 440, failed: 4, avgDuration: 1750, cost: 15.10 },
+    { date: "Nov 28", executions: 444, success: 440, failed: 4, avgDuration: 1750, cost: 15.1 },
   ],
 };
 
@@ -231,28 +238,29 @@ const baseHourlyUsage: HourlyUsageData[] = [
   { hour: 9, executions: 234, cost: 12.17 },
   { hour: 10, executions: 312, cost: 16.22 },
   { hour: 11, executions: 287, cost: 14.92 },
-  { hour: 12, executions: 198, cost: 10.30 },
+  { hour: 12, executions: 198, cost: 10.3 },
   { hour: 13, executions: 267, cost: 13.88 },
-  { hour: 14, executions: 298, cost: 15.50 },
+  { hour: 14, executions: 298, cost: 15.5 },
   { hour: 15, executions: 276, cost: 14.35 },
   { hour: 16, executions: 243, cost: 12.64 },
   { hour: 17, executions: 187, cost: 9.72 },
   { hour: 18, executions: 134, cost: 6.97 },
-  { hour: 19, executions: 98, cost: 5.10 },
+  { hour: 19, executions: 98, cost: 5.1 },
   { hour: 20, executions: 76, cost: 3.95 },
   { hour: 21, executions: 67, cost: 3.48 },
   { hour: 22, executions: 54, cost: 2.81 },
-  { hour: 23, executions: 48, cost: 2.50 },
+  { hour: 23, executions: 48, cost: 2.5 },
 ];
 
 export function getHourlyUsage(range: "7d" | "14d" | "30d"): HourlyUsageData[] {
   const multiplier = range === "7d" ? 1 : range === "14d" ? 2.1 : 4.5;
   const seed = range === "7d" ? 10 : range === "14d" ? 20 : 30;
-  
+
   return baseHourlyUsage.map((item, idx) => ({
     ...item,
     executions: Math.round(item.executions * multiplier * (0.9 + seededRandom(seed + idx) * 0.2)),
-    cost: Math.round(item.cost * multiplier * (0.9 + seededRandom(seed + idx + 100) * 0.2) * 100) / 100,
+    cost:
+      Math.round(item.cost * multiplier * (0.9 + seededRandom(seed + idx + 100) * 0.2) * 100) / 100,
   }));
 }
 
@@ -272,7 +280,7 @@ const baseUsageByDay: UsageByDayData[] = [
 export function getUsageByDay(range: "7d" | "14d" | "30d"): UsageByDayData[] {
   const multiplier = range === "7d" ? 1 : range === "14d" ? 2.1 : 4.5;
   const seed = range === "7d" ? 50 : range === "14d" ? 60 : 70;
-  
+
   return baseUsageByDay.map((item, idx) => ({
     ...item,
     executions: Math.round(item.executions * multiplier * (0.9 + seededRandom(seed + idx) * 0.2)),
@@ -361,11 +369,12 @@ const baseIntegrationUsage: IntegrationUsageData[] = [
 export function getIntegrationUsage(range: "7d" | "14d" | "30d"): IntegrationUsageData[] {
   const multiplier = range === "7d" ? 1 : range === "14d" ? 2.1 : 4.5;
   const seed = range === "7d" ? 80 : range === "14d" ? 90 : 100;
-  
+
   return baseIntegrationUsage.map((item, idx) => ({
     ...item,
     callCount: Math.round(item.callCount * multiplier * (0.9 + seededRandom(seed + idx) * 0.2)),
-    cost: Math.round(item.cost * multiplier * (0.9 + seededRandom(seed + idx + 50) * 0.2) * 10) / 10,
+    cost:
+      Math.round(item.cost * multiplier * (0.9 + seededRandom(seed + idx + 50) * 0.2) * 10) / 10,
   }));
 }
 
@@ -373,32 +382,34 @@ export const mockIntegrationUsage = baseIntegrationUsage;
 
 // ============ Summary Statistics ============
 export function getAnalyticsSummary(range: "7d" | "14d" | "30d") {
-  const costData = range === "7d" ? mockCostData7Days : range === "14d" ? mockCostData14Days : mockCostData30Days;
+  const costData =
+    range === "7d" ? mockCostData7Days : range === "14d" ? mockCostData14Days : mockCostData30Days;
   const totalCost = costData.reduce((sum, d) => sum + d.cost, 0);
   const totalExecutions = costData.reduce((sum, d) => sum + d.executions, 0);
-  
+
   const integrationUsage = getIntegrationUsage(range);
   const totalApiCalls = integrationUsage.reduce((sum, i) => sum + i.callCount, 0);
-  
+
   return {
     // Cost summary
     totalCost: Math.round(totalCost * 10) / 10,
     costChange: -5.2,
     costPerExecution: Math.round((totalCost / totalExecutions) * 1000) / 1000,
-    projectedMonthly: Math.round((totalCost / (range === "7d" ? 7 : range === "14d" ? 14 : 30)) * 30 * 10) / 10,
-    
+    projectedMonthly:
+      Math.round((totalCost / (range === "7d" ? 7 : range === "14d" ? 14 : 30)) * 30 * 10) / 10,
+
     // Performance summary
     avgSuccessRate: 97.4,
     avgDuration: 3890,
     totalExecutions,
     executionChange: 8.3,
-    
+
     // Usage summary
     peakHour: 10,
     peakDay: "Wednesday",
     activeAgents: 6,
     totalAgents: 7,
-    
+
     // Integration summary
     totalApiCalls,
     avgLatency: 178,

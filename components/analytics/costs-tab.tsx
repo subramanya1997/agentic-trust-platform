@@ -1,12 +1,5 @@
 "use client";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { StatsCard } from "@/components/dashboard/stats-card";
-import {
-  getCostBreakdown,
-  getAnalyticsSummary,
-} from "@/lib/data/analytics-data";
-import { formatCurrency } from "@/lib/utils";
 import {
   BarChart,
   Bar,
@@ -18,6 +11,10 @@ import {
   AreaChart,
   Area,
 } from "recharts";
+import { StatsCard } from "@/components/dashboard/stats-card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { getCostBreakdown, getAnalyticsSummary } from "@/lib/data/analytics-data";
+import { formatCurrency } from "@/lib/utils";
 
 const PRIMARY_COLOR = "#f59e0b";
 
@@ -28,12 +25,7 @@ interface CostsTabProps {
   dateRange: "7d" | "14d" | "30d";
 }
 
-export function CostsTab({
-  costData,
-  totalCost,
-  totalExecutions,
-  dateRange,
-}: CostsTabProps) {
+export function CostsTab({ costData, totalCost, totalExecutions, dateRange }: CostsTabProps) {
   const summary = getAnalyticsSummary(dateRange);
   const costBreakdown = getCostBreakdown(dateRange);
 
@@ -148,23 +140,23 @@ export function CostsTab({
             <div className="space-y-3">
               {costBreakdown.map((item) => (
                 <div key={item.name} className="flex items-center">
-                  <div className="flex-1 min-w-0">
+                  <div className="min-w-0 flex-1">
                     <div className="flex items-center justify-between">
-                      <span className="text-sm font-medium text-foreground truncate">
+                      <span className="text-foreground truncate text-sm font-medium">
                         {item.name}
                       </span>
-                      <span className="text-sm font-semibold text-foreground ml-2">
+                      <span className="text-foreground ml-2 text-sm font-semibold">
                         {formatCurrency(item.cost)}
                       </span>
                     </div>
                     <div className="mt-1 flex items-center justify-between">
-                      <div className="flex-1 bg-accent rounded-full h-2 mr-3">
+                      <div className="bg-accent mr-3 h-2 flex-1 rounded-full">
                         <div
                           className="h-2 rounded-full bg-amber-500"
                           style={{ width: `${item.percentage}%` }}
                         />
                       </div>
-                      <span className="text-xs text-muted-foreground w-10 text-right">
+                      <span className="text-muted-foreground w-10 text-right text-xs">
                         {item.percentage}%
                       </span>
                     </div>
@@ -173,8 +165,10 @@ export function CostsTab({
               ))}
               <div className="mt-4 pt-4">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm font-semibold text-foreground">Total</span>
-                  <span className="text-lg font-bold text-foreground">{formatCurrency(totalCost)}</span>
+                  <span className="text-foreground text-sm font-semibold">Total</span>
+                  <span className="text-foreground text-lg font-bold">
+                    {formatCurrency(totalCost)}
+                  </span>
                 </div>
               </div>
             </div>

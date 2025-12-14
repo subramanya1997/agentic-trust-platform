@@ -1,6 +1,6 @@
 import Image from "next/image";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Table,
   TableBody,
@@ -9,8 +9,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { getIntegrationIcon } from "@/lib/integration-icons";
 import { Shield, Bot } from "@/lib/icons";
+import { getIntegrationIcon } from "@/lib/integration-icons";
 import type { CustomMCPServer } from "@/lib/types";
 
 interface ToolsTableProps {
@@ -21,13 +21,13 @@ export function ToolsTable({ server }: ToolsTableProps) {
   return (
     <Card className="bg-card border">
       <CardHeader className="pb-3">
-        <CardTitle className="text-sm text-foreground flex items-center justify-between">
+        <CardTitle className="text-foreground flex items-center justify-between text-sm">
           <span>Tools ({server.selectedTools.length})</span>
           <Badge
             variant="outline"
-            className="bg-purple-500/10 border-purple-500 text-purple-600 dark:text-purple-400 text-xs"
+            className="border-purple-500 bg-purple-500/10 text-xs text-purple-600 dark:text-purple-400"
           >
-            <Shield className="h-3 w-3 mr-1" />
+            <Shield className="mr-1 h-3 w-3" />
             {server.authType}
           </Badge>
         </CardTitle>
@@ -35,12 +35,22 @@ export function ToolsTable({ server }: ToolsTableProps) {
       <CardContent className="pt-0">
         <Table className="rounded-none">
           <TableHeader className="!bg-card">
-            <TableRow className="hover:bg-transparent border-b border-border">
-              <TableHead className="px-4 py-2.5 text-white text-xs font-medium uppercase tracking-wider">Source</TableHead>
-              <TableHead className="px-4 py-2.5 text-white text-xs font-medium uppercase tracking-wider">Tool Name</TableHead>
-              <TableHead className="px-4 py-2.5 text-white text-xs font-medium uppercase tracking-wider">Description</TableHead>
-              <TableHead className="px-4 py-2.5 text-white text-xs font-medium uppercase tracking-wider">Category</TableHead>
-              <TableHead className="px-4 py-2.5 text-white text-xs font-medium uppercase tracking-wider text-right">Parameters</TableHead>
+            <TableRow className="border-border border-b hover:bg-transparent">
+              <TableHead className="px-4 py-2.5 text-xs font-medium tracking-wider text-white uppercase">
+                Source
+              </TableHead>
+              <TableHead className="px-4 py-2.5 text-xs font-medium tracking-wider text-white uppercase">
+                Tool Name
+              </TableHead>
+              <TableHead className="px-4 py-2.5 text-xs font-medium tracking-wider text-white uppercase">
+                Description
+              </TableHead>
+              <TableHead className="px-4 py-2.5 text-xs font-medium tracking-wider text-white uppercase">
+                Category
+              </TableHead>
+              <TableHead className="px-4 py-2.5 text-right text-xs font-medium tracking-wider text-white uppercase">
+                Parameters
+              </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody className="!bg-card [&_tr]:!bg-card [&_tr:hover]:!bg-muted">
@@ -59,30 +69,30 @@ export function ToolsTable({ server }: ToolsTableProps) {
                     ) : (
                       <Bot className="h-4 w-4 text-amber-400" />
                     )}
-                    <span className="text-sm text-muted-foreground">{tool.sourceName}</span>
+                    <span className="text-muted-foreground text-sm">{tool.sourceName}</span>
                   </div>
                 </TableCell>
                 <TableCell className="px-4 py-3">
-                  <code className="text-sm font-mono text-foreground">{tool.toolName}</code>
+                  <code className="text-foreground font-mono text-sm">{tool.toolName}</code>
                 </TableCell>
-                <TableCell className="px-4 py-3 text-sm text-muted-foreground max-w-xs truncate">
+                <TableCell className="text-muted-foreground max-w-xs truncate px-4 py-3 text-sm">
                   {tool.toolDescription}
                 </TableCell>
                 <TableCell className="px-4 py-3">
                   <Badge
                     variant="outline"
                     className={`text-xs ${
-                      tool.category === "read" 
-                        ? "bg-green-500/10 border-green-500 text-green-600 dark:text-green-400"
+                      tool.category === "read"
+                        ? "border-green-500 bg-green-500/10 text-green-600 dark:text-green-400"
                         : tool.category === "write"
-                        ? "bg-blue-500/10 border-blue-500 text-blue-600 dark:text-blue-400"
-                        : "bg-yellow-500/10 border-yellow-500 text-yellow-600 dark:text-yellow-400"
+                          ? "border-blue-500 bg-blue-500/10 text-blue-600 dark:text-blue-400"
+                          : "border-yellow-500 bg-yellow-500/10 text-yellow-600 dark:text-yellow-400"
                     }`}
                   >
                     {tool.category}
                   </Badge>
                 </TableCell>
-                <TableCell className="px-4 py-3 text-right text-xs text-foreground0">
+                <TableCell className="text-foreground0 px-4 py-3 text-right text-xs">
                   {tool.parameters.filter((p) => p.required).length} required,{" "}
                   {tool.parameters.filter((p) => !p.required).length} optional
                 </TableCell>
@@ -94,4 +104,3 @@ export function ToolsTable({ server }: ToolsTableProps) {
     </Card>
   );
 }
-

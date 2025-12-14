@@ -178,7 +178,6 @@ export const mockTriggers: AgentTrigger[] = [
     lastTriggered: new Date(Date.now() - 12 * 60 * 60 * 1000).toISOString(),
     triggerCount: 180,
   },
-
 ];
 
 // Helper functions
@@ -223,7 +222,9 @@ export function getActiveTriggers(): AgentTrigger[] {
 export function parseCronExpression(cron: string): string {
   // Simple cron parser for common patterns
   const parts = cron.split(" ");
-  if (parts.length !== 5) return cron;
+  if (parts.length !== 5) {
+    return cron;
+  }
 
   const [minute, hour, dayOfMonth, month, dayOfWeek] = parts;
 
@@ -246,4 +247,3 @@ export function parseCronExpression(cron: string): string {
 
   return cron;
 }
-

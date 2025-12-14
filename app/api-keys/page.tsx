@@ -1,24 +1,34 @@
 "use client";
 
 import { useState } from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Header } from "@/components/layout/header";
 import { DataTable, TableRow, TableCell } from "@/components/data-table";
-import {
-  Copy,
-  Eye,
-  EyeOff,
-  Check,
-  Plus,
-  Shield,
-  Trash2,
-} from "@/lib/icons";
+import { Header } from "@/components/layout/header";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Copy, Eye, EyeOff, Check, Plus, Shield, Trash2 } from "@/lib/icons";
 
 const apiKeys = [
-  { id: "1", name: "Production API Key", prefix: "nx_prod_", created: "Oct 15, 2024", lastUsed: "2 hours ago" },
-  { id: "2", name: "Development API Key", prefix: "nx_dev_", created: "Nov 1, 2024", lastUsed: "1 day ago" },
-  { id: "3", name: "CI/CD Pipeline", prefix: "nx_ci_", created: "Nov 20, 2024", lastUsed: "5 mins ago" },
+  {
+    id: "1",
+    name: "Production API Key",
+    prefix: "nx_prod_",
+    created: "Oct 15, 2024",
+    lastUsed: "2 hours ago",
+  },
+  {
+    id: "2",
+    name: "Development API Key",
+    prefix: "nx_dev_",
+    created: "Nov 1, 2024",
+    lastUsed: "1 day ago",
+  },
+  {
+    id: "3",
+    name: "CI/CD Pipeline",
+    prefix: "nx_ci_",
+    created: "Nov 20, 2024",
+    lastUsed: "5 mins ago",
+  },
 ];
 
 export default function ApiKeysPage() {
@@ -35,41 +45,46 @@ export default function ApiKeysPage() {
       <Header
         subtitle="Manage API keys for programmatic access"
         actionButton={
-          <Button size="sm" className="bg-amber-600 hover:bg-amber-500 text-white">
-            <Plus className="h-4 w-4 mr-2" />
+          <Button size="sm" className="bg-amber-600 text-white hover:bg-amber-500">
+            <Plus className="mr-2 h-4 w-4" />
             Create Key
           </Button>
         }
       />
-      <main className="flex-1 overflow-y-auto overflow-x-hidden p-6">
-        <div className="space-y-6 min-w-0">
-
+      <main className="flex-1 overflow-x-hidden overflow-y-auto p-6">
+        <div className="min-w-0 space-y-6">
           <Card className="bg-card border">
             <CardContent className="p-0">
               <DataTable
                 headers={[
-                  { label: 'Name', align: 'left' },
-                  { label: 'Key', align: 'left' },
-                  { label: 'Created', align: 'left' },
-                  { label: 'Last Used', align: 'left' },
-                  { label: 'Actions', align: 'right' },
+                  { label: "Name", align: "left" },
+                  { label: "Key", align: "left" },
+                  { label: "Created", align: "left" },
+                  { label: "Last Used", align: "left" },
+                  { label: "Actions", align: "right" },
                 ]}
               >
                 {apiKeys.map((key) => (
                   <TableRow key={key.id}>
                     <TableCell className="px-4 py-3 whitespace-nowrap">
-                      <span className="text-sm font-medium text-foreground">{key.name}</span>
+                      <span className="text-foreground text-sm font-medium">{key.name}</span>
                     </TableCell>
                     <TableCell className="px-4 py-3 whitespace-nowrap">
                       <div className="flex items-center gap-2">
-                        <code className="text-sm text-muted-foreground font-mono">
-                          {showKey === key.id ? `${key.prefix}xxxxxxxxxxxx` : `${key.prefix}••••••••••••`}
+                        <code className="text-muted-foreground font-mono text-sm">
+                          {showKey === key.id
+                            ? `${key.prefix}xxxxxxxxxxxx`
+                            : `${key.prefix}••••••••••••`}
                         </code>
                         <button
                           onClick={() => setShowKey(showKey === key.id ? null : key.id)}
                           className="text-foreground0 hover:text-muted-foreground"
                         >
-                          {showKey === key.id ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                          {showKey === key.id ? (
+                            <EyeOff className="h-4 w-4" />
+                          ) : (
+                            <Eye className="h-4 w-4" />
+                          )}
                         </button>
                         <button
                           onClick={() => copyToClipboard(key.id)}
@@ -84,13 +99,17 @@ export default function ApiKeysPage() {
                       </div>
                     </TableCell>
                     <TableCell className="px-4 py-3 whitespace-nowrap">
-                      <span className="text-sm text-muted-foreground">{key.created}</span>
+                      <span className="text-muted-foreground text-sm">{key.created}</span>
                     </TableCell>
                     <TableCell className="px-4 py-3 whitespace-nowrap">
-                      <span className="text-sm text-muted-foreground">{key.lastUsed}</span>
+                      <span className="text-muted-foreground text-sm">{key.lastUsed}</span>
                     </TableCell>
-                    <TableCell className="px-4 py-3 whitespace-nowrap text-right">
-                      <Button variant="ghost" size="sm" className="text-red-400 hover:text-red-300 hover:bg-red-950">
+                    <TableCell className="px-4 py-3 text-right whitespace-nowrap">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="text-red-400 hover:bg-red-950 hover:text-red-300"
+                      >
                         <Trash2 className="h-4 w-4" />
                       </Button>
                     </TableCell>
@@ -100,13 +119,16 @@ export default function ApiKeysPage() {
             </CardContent>
           </Card>
 
-          <Card className="bg-blue-500/10 border-blue-500/20">
-            <CardContent className="p-4 flex items-start gap-3">
-              <Shield className="h-5 w-5 text-blue-500 shrink-0 mt-0.5" />
+          <Card className="border-blue-500/20 bg-blue-500/10">
+            <CardContent className="flex items-start gap-3 p-4">
+              <Shield className="mt-0.5 h-5 w-5 shrink-0 text-blue-500" />
               <div>
-                <p className="text-sm font-medium text-blue-600 dark:text-blue-400">Keep your API keys secure</p>
-                <p className="text-xs text-muted-foreground mt-1">
-                  Never share your API keys in public repositories or client-side code. Rotate keys regularly.
+                <p className="text-sm font-medium text-blue-600 dark:text-blue-400">
+                  Keep your API keys secure
+                </p>
+                <p className="text-muted-foreground mt-1 text-xs">
+                  Never share your API keys in public repositories or client-side code. Rotate keys
+                  regularly.
                 </p>
               </div>
             </CardContent>

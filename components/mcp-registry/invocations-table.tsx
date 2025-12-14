@@ -22,9 +22,15 @@ function formatRelativeTime(dateString: string) {
   const diffHours = Math.floor(diffMins / 60);
   const diffDays = Math.floor(diffHours / 24);
 
-  if (diffMins < 1) return "just now";
-  if (diffMins < 60) return `${diffMins}m ago`;
-  if (diffHours < 24) return `${diffHours}h ago`;
+  if (diffMins < 1) {
+    return "just now";
+  }
+  if (diffMins < 60) {
+    return `${diffMins}m ago`;
+  }
+  if (diffHours < 24) {
+    return `${diffHours}h ago`;
+  }
   return `${diffDays}d ago`;
 }
 
@@ -32,24 +38,30 @@ export function InvocationsTable({ invocations }: InvocationsTableProps) {
   return (
     <Card className="bg-card border">
       <CardHeader className="pb-3">
-        <CardTitle className="text-sm text-foreground">
-          Recent Invocations
-        </CardTitle>
+        <CardTitle className="text-foreground text-sm">Recent Invocations</CardTitle>
       </CardHeader>
       <CardContent className="pt-0">
         {invocations.length === 0 ? (
-          <p className="text-sm text-foreground0 text-center py-6">
-            No invocations yet
-          </p>
+          <p className="text-foreground0 py-6 text-center text-sm">No invocations yet</p>
         ) : (
           <Table className="rounded-none">
             <TableHeader className="!bg-card">
-              <TableRow className="hover:bg-transparent border-b border-border">
-                <TableHead className="px-4 py-2.5 text-white text-xs font-medium uppercase tracking-wider">Status</TableHead>
-                <TableHead className="px-4 py-2.5 text-white text-xs font-medium uppercase tracking-wider">Tool Name</TableHead>
-                <TableHead className="px-4 py-2.5 text-white text-xs font-medium uppercase tracking-wider">Client ID</TableHead>
-                <TableHead className="px-4 py-2.5 text-white text-xs font-medium uppercase tracking-wider text-right">Duration</TableHead>
-                <TableHead className="px-4 py-2.5 text-white text-xs font-medium uppercase tracking-wider text-right">Time</TableHead>
+              <TableRow className="border-border border-b hover:bg-transparent">
+                <TableHead className="px-4 py-2.5 text-xs font-medium tracking-wider text-white uppercase">
+                  Status
+                </TableHead>
+                <TableHead className="px-4 py-2.5 text-xs font-medium tracking-wider text-white uppercase">
+                  Tool Name
+                </TableHead>
+                <TableHead className="px-4 py-2.5 text-xs font-medium tracking-wider text-white uppercase">
+                  Client ID
+                </TableHead>
+                <TableHead className="px-4 py-2.5 text-right text-xs font-medium tracking-wider text-white uppercase">
+                  Duration
+                </TableHead>
+                <TableHead className="px-4 py-2.5 text-right text-xs font-medium tracking-wider text-white uppercase">
+                  Time
+                </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody className="!bg-card [&_tr]:!bg-card [&_tr:hover]:!bg-muted">
@@ -62,17 +74,26 @@ export function InvocationsTable({ invocations }: InvocationsTableProps) {
                       ) : (
                         <XCircle className="h-4 w-4 text-red-400" />
                       )}
-                      <span className={`text-sm ${inv.status === "success" ? "text-green-400" : "text-red-400"}`}>
+                      <span
+                        className={`text-sm ${inv.status === "success" ? "text-green-400" : "text-red-400"}`}
+                      >
                         {inv.status}
                       </span>
                     </div>
                   </TableCell>
                   <TableCell className="px-4 py-3">
-                    <code className="text-sm font-mono text-foreground">{inv.toolName}</code>
+                    <code className="text-foreground font-mono text-sm">{inv.toolName}</code>
                   </TableCell>
-                  <TableCell className="px-4 py-3 text-sm text-muted-foreground">{inv.clientId}</TableCell>
-                  <TableCell className="px-4 py-3 text-right text-sm text-muted-foreground">{inv.duration}ms</TableCell>
-                  <TableCell className="px-4 py-3 text-right text-sm text-foreground0" suppressHydrationWarning>
+                  <TableCell className="text-muted-foreground px-4 py-3 text-sm">
+                    {inv.clientId}
+                  </TableCell>
+                  <TableCell className="text-muted-foreground px-4 py-3 text-right text-sm">
+                    {inv.duration}ms
+                  </TableCell>
+                  <TableCell
+                    className="text-foreground0 px-4 py-3 text-right text-sm"
+                    suppressHydrationWarning
+                  >
                     {formatRelativeTime(inv.timestamp)}
                   </TableCell>
                 </TableRow>
@@ -84,4 +105,3 @@ export function InvocationsTable({ invocations }: InvocationsTableProps) {
     </Card>
   );
 }
-

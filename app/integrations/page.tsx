@@ -1,11 +1,11 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
-import { Badge } from "@/components/ui/badge";
-import { Header } from "@/components/layout/header";
-import { AddIntegrationDialog } from "@/components/integrations/add-integration-dialog";
+import { useState } from "react";
 import { IntegrationIcon } from "@/components/integration-icon";
+import { AddIntegrationDialog } from "@/components/integrations/add-integration-dialog";
+import { Header } from "@/components/layout/header";
+import { Badge } from "@/components/ui/badge";
 import { Search, Check } from "@/lib/icons";
 
 interface Integration {
@@ -18,25 +18,94 @@ interface Integration {
 }
 
 const integrations: Integration[] = [
-  { id: "salesforce", name: "Salesforce", description: "CRM platform", category: "CRM", connected: true, usageCount: 3 },
-  { id: "slack", name: "Slack", description: "Team communication", category: "Communication", connected: true, usageCount: 5 },
-  { id: "clearbit", name: "Clearbit", description: "Data enrichment", category: "Data", connected: true, usageCount: 2 },
-  { id: "github", name: "GitHub", description: "Code repository", category: "DevOps", connected: true, usageCount: 2 },
-  { id: "zendesk", name: "Zendesk", description: "Customer support", category: "Support", connected: true, usageCount: 1 },
-  { id: "notion", name: "Notion", description: "Docs and wikis", category: "Productivity", connected: true, usageCount: 4 },
-  { id: "linear", name: "Linear", description: "Issue tracking", category: "DevOps", connected: true, usageCount: 2 },
-  { id: "zoom", name: "Zoom", description: "Video meetings", category: "Communication", connected: true, usageCount: 1 },
-  { id: "gmail", name: "Gmail", description: "Email service", category: "Communication", connected: false },
-  { id: "quickbooks", name: "QuickBooks", description: "Accounting", category: "Finance", connected: false },
+  {
+    id: "salesforce",
+    name: "Salesforce",
+    description: "CRM platform",
+    category: "CRM",
+    connected: true,
+    usageCount: 3,
+  },
+  {
+    id: "slack",
+    name: "Slack",
+    description: "Team communication",
+    category: "Communication",
+    connected: true,
+    usageCount: 5,
+  },
+  {
+    id: "clearbit",
+    name: "Clearbit",
+    description: "Data enrichment",
+    category: "Data",
+    connected: true,
+    usageCount: 2,
+  },
+  {
+    id: "github",
+    name: "GitHub",
+    description: "Code repository",
+    category: "DevOps",
+    connected: true,
+    usageCount: 2,
+  },
+  {
+    id: "zendesk",
+    name: "Zendesk",
+    description: "Customer support",
+    category: "Support",
+    connected: true,
+    usageCount: 1,
+  },
+  {
+    id: "notion",
+    name: "Notion",
+    description: "Docs and wikis",
+    category: "Productivity",
+    connected: true,
+    usageCount: 4,
+  },
+  {
+    id: "linear",
+    name: "Linear",
+    description: "Issue tracking",
+    category: "DevOps",
+    connected: true,
+    usageCount: 2,
+  },
+  {
+    id: "zoom",
+    name: "Zoom",
+    description: "Video meetings",
+    category: "Communication",
+    connected: true,
+    usageCount: 1,
+  },
+  {
+    id: "gmail",
+    name: "Gmail",
+    description: "Email service",
+    category: "Communication",
+    connected: false,
+  },
+  {
+    id: "quickbooks",
+    name: "QuickBooks",
+    description: "Accounting",
+    category: "Finance",
+    connected: false,
+  },
 ];
 
 export default function IntegrationsPage() {
   const [searchQuery, setSearchQuery] = useState("");
-  
-  const filteredIntegrations = integrations.filter(i => 
-    i.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    i.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    i.category.toLowerCase().includes(searchQuery.toLowerCase())
+
+  const filteredIntegrations = integrations.filter(
+    (i) =>
+      i.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      i.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      i.category.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const connectedIntegrations = filteredIntegrations.filter((i) => i.connected);
@@ -44,29 +113,28 @@ export default function IntegrationsPage() {
 
   return (
     <>
-      <Header 
+      <Header
         subtitle="Connect third-party services to extend agent capabilities"
         actionButton={<AddIntegrationDialog />}
       />
-      <main className="flex-1 overflow-y-auto overflow-x-hidden p-6">
-        <div className="space-y-6 min-w-0">
-
+      <main className="flex-1 overflow-x-hidden overflow-y-auto p-6">
+        <div className="min-w-0 space-y-6">
           {/* Search */}
           <div className="relative max-w-md">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-foreground0" />
+            <Search className="text-foreground0 absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
             <input
               type="text"
               placeholder="Search integrations..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full rounded-lg border border bg-card py-2 pl-10 pr-4 text-sm text-foreground placeholder:text-foreground0 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500"
+              className="bg-card text-foreground placeholder:text-foreground0 w-full rounded-lg border py-2 pr-4 pl-10 text-sm focus:border-amber-500 focus:ring-1 focus:ring-amber-500 focus:outline-none"
             />
           </div>
 
           {/* Connected Integrations */}
           {connectedIntegrations.length > 0 && (
             <div>
-              <h2 className="text-sm font-medium text-muted-foreground mb-3">Connected</h2>
+              <h2 className="text-muted-foreground mb-3 text-sm font-medium">Connected</h2>
               <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 {connectedIntegrations.map((integration) => (
                   <IntegrationCard key={integration.id} integration={integration} />
@@ -78,7 +146,7 @@ export default function IntegrationsPage() {
           {/* Available Integrations */}
           {availableIntegrations.length > 0 && (
             <div>
-              <h2 className="text-sm font-medium text-muted-foreground mb-3">Available</h2>
+              <h2 className="text-muted-foreground mb-3 text-sm font-medium">Available</h2>
               <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 {availableIntegrations.map((integration) => (
                   <IntegrationCard key={integration.id} integration={integration} />
@@ -89,9 +157,9 @@ export default function IntegrationsPage() {
 
           {/* Empty State */}
           {filteredIntegrations.length === 0 && (
-            <div className="text-center py-12">
+            <div className="py-12 text-center">
               <p className="text-muted-foreground">No integrations found</p>
-              <button 
+              <button
                 className="mt-4 text-sm text-amber-500 hover:text-amber-400"
                 onClick={() => setSearchQuery("")}
               >
@@ -107,40 +175,39 @@ export default function IntegrationsPage() {
 
 function IntegrationCard({ integration }: { integration: Integration }) {
   return (
-    <Link 
+    <Link
       href={`/integrations/${integration.id}`}
-      className={`flex items-center gap-3 p-3 rounded-lg border transition-all ${
-        integration.connected 
-          ? 'bg-card border hover:border hover:bg-accent/50' 
-          : 'bg-card border hover:border hover:bg-accent/50'
+      className={`flex items-center gap-3 rounded-lg border p-3 transition-all ${
+        integration.connected
+          ? "bg-card hover:bg-accent/50 border hover:border"
+          : "bg-card hover:bg-accent/50 border hover:border"
       }`}
     >
-      <div className="h-9 w-9 rounded-lg bg-accent flex items-center justify-center overflow-hidden shrink-0">
-        <IntegrationIcon 
-          integrationId={integration.id} 
-          alt={integration.name} 
-          width={24} 
+      <div className="bg-accent flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-lg">
+        <IntegrationIcon
+          integrationId={integration.id}
+          alt={integration.name}
+          width={24}
           height={24}
           className="rounded"
         />
       </div>
-      <div className="flex-1 min-w-0">
+      <div className="min-w-0 flex-1">
         <div className="flex items-center gap-2">
-          <span className="text-sm font-medium text-foreground truncate">{integration.name}</span>
-          {integration.connected && (
-            <Check className="h-3.5 w-3.5 text-green-500 shrink-0" />
-          )}
+          <span className="text-foreground truncate text-sm font-medium">{integration.name}</span>
+          {integration.connected && <Check className="h-3.5 w-3.5 shrink-0 text-green-500" />}
         </div>
-        <p className="text-xs text-foreground0 truncate">{integration.description}</p>
+        <p className="text-foreground0 truncate text-xs">{integration.description}</p>
       </div>
       {integration.connected ? (
-        <Badge variant="outline" className="text-xs bg-accent/50 text-muted-foreground border shrink-0">
-          {integration.usageCount} agent{integration.usageCount !== 1 ? 's' : ''}
+        <Badge
+          variant="outline"
+          className="bg-accent/50 text-muted-foreground shrink-0 border text-xs"
+        >
+          {integration.usageCount} agent{integration.usageCount !== 1 ? "s" : ""}
         </Badge>
       ) : (
-        <span className="text-xs text-amber-500 shrink-0">
-          Connect
-        </span>
+        <span className="shrink-0 text-xs text-amber-500">Connect</span>
       )}
     </Link>
   );

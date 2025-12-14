@@ -1,22 +1,22 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useParams, notFound } from "next/navigation";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
-import { Header } from "@/components/layout/header";
-import { IntegrationIcon } from "@/components/integration-icon";
+import { useParams, notFound } from "next/navigation";
+import { useState, useEffect } from "react";
 import { DataTable, TableRow, TableCell } from "@/components/data-table";
+import { IntegrationIcon } from "@/components/integration-icon";
+import { Header } from "@/components/layout/header";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import { getIntegrationTools, Tool } from "@/lib/data/integration-tools";
-import { 
-  ArrowLeft, 
-  Check, 
-  Search, 
-  BookOpen, 
-  Pencil, 
-  Zap, 
+import {
+  ArrowLeft,
+  Check,
+  Search,
+  BookOpen,
+  Pencil,
+  Zap,
   Settings,
   ChevronDown,
   ChevronRight,
@@ -39,9 +39,21 @@ const connectedIntegrations: Record<string, { connected: boolean; usageCount: nu
 };
 
 const categoryColors = {
-  read: { bg: "bg-blue-500/10", text: "text-blue-600 dark:text-blue-400", border: "border-blue-500" },
-  write: { bg: "bg-green-500/10", text: "text-green-600 dark:text-green-400", border: "border-green-500" },
-  action: { bg: "bg-amber-500/10", text: "text-amber-600 dark:text-amber-400", border: "border-amber-500" },
+  read: {
+    bg: "bg-blue-500/10",
+    text: "text-blue-600 dark:text-blue-400",
+    border: "border-blue-500",
+  },
+  write: {
+    bg: "bg-green-500/10",
+    text: "text-green-600 dark:text-green-400",
+    border: "border-green-500",
+  },
+  action: {
+    bg: "bg-amber-500/10",
+    text: "text-amber-600 dark:text-amber-400",
+    border: "border-amber-500",
+  },
 };
 
 const categoryIcons = {
@@ -53,7 +65,7 @@ const categoryIcons = {
 export default function IntegrationDetailPage() {
   const params = useParams();
   const integrationId = params.id as string;
-  
+
   return <IntegrationContent key={integrationId} integrationId={integrationId} />;
 }
 
@@ -63,36 +75,40 @@ function IntegrationContent({ integrationId }: { integrationId: string }) {
   const [expandedTools, setExpandedTools] = useState<Set<string>>(new Set());
   const [editingTool, setEditingTool] = useState<string | null>(null);
   const [editingParam, setEditingParam] = useState<{ tool: string; param: string } | null>(null);
-  
+
   const integration = getIntegrationTools(integrationId);
   const connectionStatus = connectedIntegrations[integrationId];
 
   const [toolDescriptions, setToolDescriptions] = useState<Record<string, string>>(() => {
-    if (!integration) return {};
+    if (!integration) {
+      return {};
+    }
     const toolDescs: Record<string, string> = {};
-    integration.tools.forEach(tool => {
+    integration.tools.forEach((tool) => {
       toolDescs[tool.name] = tool.description;
     });
     return toolDescs;
   });
 
   const [paramDescriptions, setParamDescriptions] = useState<Record<string, string>>(() => {
-    if (!integration) return {};
+    if (!integration) {
+      return {};
+    }
     const paramDescs: Record<string, string> = {};
-    integration.tools.forEach(tool => {
-      tool.parameters.forEach(param => {
+    integration.tools.forEach((tool) => {
+      tool.parameters.forEach((param) => {
         paramDescs[`${tool.name}.${param.name}`] = param.description;
       });
     });
     return paramDescs;
   });
-  
+
   if (!integration) {
     notFound();
   }
 
   const filteredTools = integration.tools.filter((tool) => {
-    const matchesSearch = 
+    const matchesSearch =
       tool.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       toolDescriptions[tool.name]?.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesCategory = categoryFilter === "all" || tool.category === categoryFilter;
@@ -110,76 +126,83 @@ function IntegrationContent({ integrationId }: { integrationId: string }) {
   };
 
   const saveToolDescription = (toolName: string, description: string) => {
-    setToolDescriptions(prev => ({ ...prev, [toolName]: description }));
+    setToolDescriptions((prev) => ({ ...prev, [toolName]: description }));
     setEditingTool(null);
   };
 
   const saveParamDescription = (toolName: string, paramName: string, description: string) => {
-    setParamDescriptions(prev => ({ ...prev, [`${toolName}.${paramName}`]: description }));
+    setParamDescriptions((prev) => ({ ...prev, [`${toolName}.${paramName}`]: description }));
     setEditingParam(null);
   };
 
   return (
     <>
       <Header actionButton={null} />
-      <main className="flex-1 overflow-y-auto overflow-x-hidden">
-        <div className="max-w-6xl mx-auto px-6 py-8 min-w-0">
+      <main className="flex-1 overflow-x-hidden overflow-y-auto">
+        <div className="mx-auto max-w-6xl min-w-0 px-6 py-8">
           {/* Back Link */}
-          <Link 
-            href="/integrations" 
-            className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground mb-6 transition-colors"
+          <Link
+            href="/integrations"
+            className="text-muted-foreground hover:text-foreground mb-6 inline-flex items-center text-sm transition-colors"
           >
-            <ArrowLeft className="h-4 w-4 mr-2" />
+            <ArrowLeft className="mr-2 h-4 w-4" />
             Back to Integrations
           </Link>
 
           {/* Header */}
-          <div className="flex items-start gap-6 mb-8">
-            <div className="h-16 w-16 rounded-xl bg-accent flex items-center justify-center overflow-hidden shrink-0">
-              <IntegrationIcon 
-                integrationId={integrationId} 
-                alt={integration.name} 
-                width={40} 
+          <div className="mb-8 flex items-start gap-6">
+            <div className="bg-accent flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-xl">
+              <IntegrationIcon
+                integrationId={integrationId}
+                alt={integration.name}
+                width={40}
                 height={40}
                 className="rounded"
               />
             </div>
-            <div className="flex-1 min-w-0">
+            <div className="min-w-0 flex-1">
               <div className="flex items-center gap-3">
-                <h1 className="text-2xl font-bold text-foreground">{integration.name}</h1>
+                <h1 className="text-foreground text-2xl font-bold">{integration.name}</h1>
                 {connectionStatus?.connected && (
-                  <Badge variant="outline" className="text-xs bg-green-500/10 border-green-500 text-green-600 dark:text-green-400">
-                    <Check className="h-3 w-3 mr-1" />
+                  <Badge
+                    variant="outline"
+                    className="border-green-500 bg-green-500/10 text-xs text-green-600 dark:text-green-400"
+                  >
+                    <Check className="mr-1 h-3 w-3" />
                     Connected
                   </Badge>
                 )}
               </div>
               <p className="text-muted-foreground mt-1">{integration.description}</p>
-              <div className="flex items-center gap-3 mt-3">
-                <Badge variant="outline" className="text-xs bg-accent text-muted-foreground border">
+              <div className="mt-3 flex items-center gap-3">
+                <Badge variant="outline" className="bg-accent text-muted-foreground border text-xs">
                   {integration.type}
                 </Badge>
-                <Badge variant="outline" className="text-xs bg-accent text-muted-foreground border">
+                <Badge variant="outline" className="bg-accent text-muted-foreground border text-xs">
                   {integration.category}
                 </Badge>
-                <span className="text-sm text-foreground0">
+                <span className="text-foreground0 text-sm">
                   {integration.tools.length} tools available
                 </span>
               </div>
             </div>
-            <div className="flex gap-2 shrink-0">
+            <div className="flex shrink-0 gap-2">
               {connectionStatus?.connected ? (
                 <>
-                  <Button variant="outline" size="sm" className="border text-muted-foreground">
-                    <Settings className="h-4 w-4 mr-2" />
+                  <Button variant="outline" size="sm" className="text-muted-foreground border">
+                    <Settings className="mr-2 h-4 w-4" />
                     Configure
                   </Button>
-                  <Button variant="outline" size="sm" className="border-red-800 text-red-400 hover:bg-red-950">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="border-red-800 text-red-400 hover:bg-red-950"
+                  >
                     Disconnect
                   </Button>
                 </>
               ) : (
-                <Button size="sm" className="bg-amber-600 hover:bg-amber-500 text-white">
+                <Button size="sm" className="bg-amber-600 text-white hover:bg-amber-500">
                   Connect Integration
                 </Button>
               )}
@@ -187,23 +210,23 @@ function IntegrationContent({ integrationId }: { integrationId: string }) {
           </div>
 
           {/* Filters */}
-          <div className="flex items-center gap-4 mb-6">
-            <div className="relative flex-1 max-w-md">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-foreground0" />
+          <div className="mb-6 flex items-center gap-4">
+            <div className="relative max-w-md flex-1">
+              <Search className="text-foreground0 absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
               <input
                 type="text"
                 placeholder="Search tools..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full rounded-lg border border bg-card py-2 pl-10 pr-4 text-sm text-foreground placeholder:text-foreground0 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500"
+                className="bg-card text-foreground placeholder:text-foreground0 w-full rounded-lg border py-2 pr-4 pl-10 text-sm focus:border-amber-500 focus:ring-1 focus:ring-amber-500 focus:outline-none"
               />
             </div>
-            <div className="flex items-center gap-1 bg-accent rounded-lg p-1">
+            <div className="bg-accent flex items-center gap-1 rounded-lg p-1">
               {(["all", "read", "write", "action"] as const).map((cat) => (
                 <button
                   key={cat}
                   onClick={() => setCategoryFilter(cat)}
-                  className={`px-3 py-1.5 rounded text-sm font-medium transition-colors ${
+                  className={`rounded px-3 py-1.5 text-sm font-medium transition-colors ${
                     categoryFilter === cat
                       ? "bg-muted text-foreground"
                       : "text-muted-foreground hover:text-foreground"
@@ -220,11 +243,11 @@ function IntegrationContent({ integrationId }: { integrationId: string }) {
             <CardContent className="p-0">
               <DataTable
                 headers={[
-                  { label: '', align: 'left', className: 'w-10' },
-                  { label: 'Tool', align: 'left' },
-                  { label: 'Description', align: 'left' },
-                  { label: 'Type', align: 'center', className: 'w-24' },
-                  { label: 'Params', align: 'center', className: 'w-24' },
+                  { label: "", align: "left", className: "w-10" },
+                  { label: "Tool", align: "left" },
+                  { label: "Description", align: "left" },
+                  { label: "Type", align: "center", className: "w-24" },
+                  { label: "Params", align: "center", className: "w-24" },
                 ]}
               >
                 {filteredTools.length > 0 ? (
@@ -241,14 +264,18 @@ function IntegrationContent({ integrationId }: { integrationId: string }) {
                       onCancelEdit={() => setEditingTool(null)}
                       paramDescriptions={paramDescriptions}
                       editingParam={editingParam}
-                      onEditParam={(paramName) => setEditingParam({ tool: tool.name, param: paramName })}
-                      onSaveParamDescription={(paramName, desc) => saveParamDescription(tool.name, paramName, desc)}
+                      onEditParam={(paramName) =>
+                        setEditingParam({ tool: tool.name, param: paramName })
+                      }
+                      onSaveParamDescription={(paramName, desc) =>
+                        saveParamDescription(tool.name, paramName, desc)
+                      }
                       onCancelParamEdit={() => setEditingParam(null)}
                     />
                   ))
                 ) : (
                   <TableRow>
-                    <TableCell colSpan={5} className="px-4 py-12 text-center text-foreground0">
+                    <TableCell colSpan={5} className="text-foreground0 px-4 py-12 text-center">
                       No tools found matching your search.
                     </TableCell>
                   </TableRow>
@@ -258,7 +285,7 @@ function IntegrationContent({ integrationId }: { integrationId: string }) {
           </Card>
 
           {/* Legend */}
-          <div className="flex items-center justify-center gap-6 mt-6 text-sm text-foreground0">
+          <div className="text-foreground0 mt-6 flex items-center justify-center gap-6 text-sm">
             <span className="flex items-center gap-2">
               <BookOpen className="h-4 w-4 text-blue-400" /> Read
             </span>
@@ -306,7 +333,7 @@ function ToolRow({
 }) {
   const [editedDescription, setEditedDescription] = useState(description);
   const [editedParamDescription, setEditedParamDescription] = useState("");
-  
+
   const Icon = categoryIcons[tool.category];
   const colors = categoryColors[tool.category];
 
@@ -323,27 +350,20 @@ function ToolRow({
   return (
     <>
       {/* Main Row */}
-      <TableRow 
-        className="cursor-pointer"
-        onClick={onToggle}
-      >
+      <TableRow className="cursor-pointer" onClick={onToggle}>
         <TableCell className="px-4 py-3">
           <button className="text-foreground0 hover:text-muted-foreground">
-            {expanded ? (
-              <ChevronDown className="h-4 w-4" />
-            ) : (
-              <ChevronRight className="h-4 w-4" />
-            )}
+            {expanded ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
           </button>
         </TableCell>
         <TableCell className="px-4 py-3">
           <div className="flex items-center gap-3">
-            <div className={`h-8 w-8 rounded-lg flex items-center justify-center shrink-0 ${colors.bg}`}>
+            <div
+              className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg ${colors.bg}`}
+            >
               <Icon className={`h-4 w-4 ${colors.text}`} />
             </div>
-            <code className="text-sm font-medium text-foreground font-mono">
-              {tool.name}
-            </code>
+            <code className="text-foreground font-mono text-sm font-medium">{tool.name}</code>
           </div>
         </TableCell>
         <TableCell className="px-4 py-3">
@@ -353,48 +373,49 @@ function ToolRow({
                 type="text"
                 value={editedDescription}
                 onChange={(e) => setEditedDescription(e.target.value)}
-                className="flex-1 rounded border border-stone-600 bg-accent px-2 py-1 text-sm text-foreground focus:border-amber-500 focus:outline-none"
+                className="bg-accent text-foreground flex-1 rounded border border-stone-600 px-2 py-1 text-sm focus:border-amber-500 focus:outline-none"
                 autoFocus
               />
-              <Button 
-                size="sm" 
-                variant="ghost" 
+              <Button
+                size="sm"
+                variant="ghost"
                 className="h-7 w-7 p-0 text-green-500 hover:text-green-400"
                 onClick={() => onSaveDescription(editedDescription)}
               >
                 <Save className="h-4 w-4" />
               </Button>
-              <Button 
-                size="sm" 
-                variant="ghost" 
-                className="h-7 w-7 p-0 text-foreground0 hover:text-muted-foreground"
+              <Button
+                size="sm"
+                variant="ghost"
+                className="text-foreground0 hover:text-muted-foreground h-7 w-7 p-0"
                 onClick={onCancelEdit}
               >
                 <X className="h-4 w-4" />
               </Button>
             </div>
           ) : (
-            <span 
-              className="text-sm text-muted-foreground hover:text-muted-foreground cursor-text group"
-              onClick={(e) => { e.stopPropagation(); onEditDescription(); }}
+            <span
+              className="text-muted-foreground hover:text-muted-foreground group cursor-text text-sm"
+              onClick={(e) => {
+                e.stopPropagation();
+                onEditDescription();
+              }}
             >
               {description}
-              <Pencil className="inline h-3 w-3 ml-2 opacity-0 group-hover:opacity-50" />
+              <Pencil className="ml-2 inline h-3 w-3 opacity-0 group-hover:opacity-50" />
             </span>
           )}
         </TableCell>
         <TableCell className="px-4 py-3 text-center">
-          <Badge 
-            variant="outline" 
+          <Badge
+            variant="outline"
             className={`text-xs ${colors.bg} ${colors.text} ${colors.border}`}
           >
             {tool.category}
           </Badge>
         </TableCell>
         <TableCell className="px-4 py-3 text-center">
-          <span className="text-sm text-muted-foreground">
-            {tool.parameters.length}
-          </span>
+          <span className="text-muted-foreground text-sm">{tool.parameters.length}</span>
         </TableCell>
       </TableRow>
 
@@ -403,44 +424,52 @@ function ToolRow({
         <TableRow>
           <TableCell colSpan={5} className="bg-card px-4 py-0">
             <div className="py-4 pl-12">
-              <h4 className="text-xs font-semibold text-foreground0 uppercase tracking-wider mb-3">
+              <h4 className="text-foreground0 mb-3 text-xs font-semibold tracking-wider uppercase">
                 Parameters
               </h4>
               <table className="w-full">
                 <thead>
                   <tr className="text-left">
-                    <th className="pb-2 text-xs font-medium text-stone-600 uppercase tracking-wider w-40">
+                    <th className="w-40 pb-2 text-xs font-medium tracking-wider text-stone-600 uppercase">
                       Name
                     </th>
-                    <th className="pb-2 text-xs font-medium text-stone-600 uppercase tracking-wider w-24">
+                    <th className="w-24 pb-2 text-xs font-medium tracking-wider text-stone-600 uppercase">
                       Type
                     </th>
-                    <th className="pb-2 text-xs font-medium text-stone-600 uppercase tracking-wider w-24">
+                    <th className="w-24 pb-2 text-xs font-medium tracking-wider text-stone-600 uppercase">
                       Required
                     </th>
-                    <th className="pb-2 text-xs font-medium text-stone-600 uppercase tracking-wider">
+                    <th className="pb-2 text-xs font-medium tracking-wider text-stone-600 uppercase">
                       Description
                     </th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-stone-800/50">
                   {tool.parameters.map((param) => {
-                    const isEditing = editingParam?.tool === tool.name && editingParam?.param === param.name;
-                    const paramDesc = paramDescriptions[`${tool.name}.${param.name}`] || param.description;
-                    
+                    const isEditing =
+                      editingParam?.tool === tool.name && editingParam?.param === param.name;
+                    const paramDesc =
+                      paramDescriptions[`${tool.name}.${param.name}`] || param.description;
+
                     return (
                       <tr key={param.name} className="text-sm">
                         <td className="py-2">
-                          <code className="font-mono text-foreground">{param.name}</code>
+                          <code className="text-foreground font-mono">{param.name}</code>
                         </td>
                         <td className="py-2">
-                          <Badge variant="outline" className="text-xs bg-accent text-foreground0 border">
+                          <Badge
+                            variant="outline"
+                            className="bg-accent text-foreground0 border text-xs"
+                          >
                             {param.type}
                           </Badge>
                         </td>
                         <td className="py-2">
                           {param.required ? (
-                            <Badge variant="outline" className="text-xs bg-red-500/10 border-red-500 text-red-600 dark:text-red-400">
+                            <Badge
+                              variant="outline"
+                              className="border-red-500 bg-red-500/10 text-xs text-red-600 dark:text-red-400"
+                            >
                               required
                             </Badge>
                           ) : (
@@ -454,33 +483,35 @@ function ToolRow({
                                 type="text"
                                 value={editedParamDescription}
                                 onChange={(e) => setEditedParamDescription(e.target.value)}
-                                className="flex-1 rounded border border-stone-600 bg-accent px-2 py-1 text-sm text-foreground focus:border-amber-500 focus:outline-none"
+                                className="bg-accent text-foreground flex-1 rounded border border-stone-600 px-2 py-1 text-sm focus:border-amber-500 focus:outline-none"
                                 autoFocus
                               />
-                              <Button 
-                                size="sm" 
-                                variant="ghost" 
+                              <Button
+                                size="sm"
+                                variant="ghost"
                                 className="h-7 w-7 p-0 text-green-500 hover:text-green-400"
-                                onClick={() => onSaveParamDescription(param.name, editedParamDescription)}
+                                onClick={() =>
+                                  onSaveParamDescription(param.name, editedParamDescription)
+                                }
                               >
                                 <Save className="h-4 w-4" />
                               </Button>
-                              <Button 
-                                size="sm" 
-                                variant="ghost" 
-                                className="h-7 w-7 p-0 text-foreground0 hover:text-muted-foreground"
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                className="text-foreground0 hover:text-muted-foreground h-7 w-7 p-0"
                                 onClick={onCancelParamEdit}
                               >
                                 <X className="h-4 w-4" />
                               </Button>
                             </div>
                           ) : (
-                            <span 
-                              className="text-foreground0 hover:text-muted-foreground cursor-text group"
+                            <span
+                              className="text-foreground0 hover:text-muted-foreground group cursor-text"
                               onClick={() => onEditParam(param.name)}
                             >
                               {paramDesc}
-                              <Pencil className="inline h-3 w-3 ml-2 opacity-0 group-hover:opacity-50" />
+                              <Pencil className="ml-2 inline h-3 w-3 opacity-0 group-hover:opacity-50" />
                             </span>
                           )}
                         </td>

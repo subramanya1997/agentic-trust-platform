@@ -1,23 +1,21 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { useState } from "react";
 import { StatsCard } from "@/components/dashboard/stats-card";
 import { DataTable, TableRow, TableCell } from "@/components/data-table";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import { mockTriggers, parseCronExpression } from "@/lib/data/triggers-data";
+import { Zap, ExternalLink, Clock, Activity, ChevronLeft, ChevronRight } from "@/lib/icons";
+import type {
+  AgentTrigger,
+  ScheduledTriggerConfig,
+  WebhookTriggerConfig,
+  ApiTriggerConfig,
+} from "@/lib/types";
 import { formatRelativeTime } from "@/lib/utils";
-import type { AgentTrigger, ScheduledTriggerConfig, WebhookTriggerConfig, ApiTriggerConfig } from "@/lib/types";
-import {
-  Zap,
-  ExternalLink,
-  Clock,
-  Activity,
-  ChevronLeft,
-  ChevronRight,
-} from "@/lib/icons";
 
 interface TriggersTabProps {
   searchQuery: string;
@@ -121,90 +119,92 @@ export function TriggersTab({ searchQuery, typeFilter, statusFilter }: TriggersT
         <CardContent className="p-0">
           <DataTable
             headers={[
-              { label: 'Trigger', align: 'left' },
-              { label: 'Type', align: 'left' },
-              { label: 'Agent', align: 'left' },
-              { label: 'Status', align: 'center' },
-              { label: 'Runs', align: 'center' },
-              { label: 'Last / Next', align: 'left' },
+              { label: "Trigger", align: "left" },
+              { label: "Type", align: "left" },
+              { label: "Agent", align: "left" },
+              { label: "Status", align: "center" },
+              { label: "Runs", align: "center" },
+              { label: "Last / Next", align: "left" },
             ]}
           >
             {paginatedTriggers.map((trigger) => (
               <TableRow key={trigger.id}>
                 <TableCell className="px-4 py-3 whitespace-nowrap">
-                      <div>
-                        <span className="text-sm font-medium text-foreground">
-                          {trigger.name}
+                  <div>
+                    <span className="text-foreground text-sm font-medium">{trigger.name}</span>
+                    <p className="text-foreground0 mt-0.5 max-w-xs truncate font-mono text-xs">
+                      {getTriggerDescription(trigger)}
+                    </p>
+                  </div>
+                </TableCell>
+                <TableCell className="px-4 py-3 whitespace-nowrap">
+                  <Badge
+                    variant="outline"
+                    className={`capitalize ${
+                      trigger.type === "webhook"
+                        ? "border-purple-500 bg-purple-500/10 text-purple-600 dark:text-purple-400"
+                        : trigger.type === "scheduled"
+                          ? "border-blue-500 bg-blue-500/10 text-blue-600 dark:text-blue-400"
+                          : trigger.type === "api"
+                            ? "border-green-500 bg-green-500/10 text-green-600 dark:text-green-400"
+                            : "border-yellow-500 bg-yellow-500/10 text-yellow-600 dark:text-yellow-400"
+                    }`}
+                  >
+                    {trigger.type}
+                  </Badge>
+                </TableCell>
+                <TableCell className="px-4 py-3 whitespace-nowrap">
+                  <Link
+                    href={`/agents/${trigger.agentId}`}
+                    className="text-muted-foreground flex items-center gap-1 text-sm transition-colors hover:text-amber-500"
+                  >
+                    {trigger.agentName}
+                    <ExternalLink className="h-3 w-3" />
+                  </Link>
+                </TableCell>
+                <TableCell className="px-4 py-3 text-center whitespace-nowrap">
+                  <Badge
+                    variant="outline"
+                    className={
+                      trigger.enabled
+                        ? "border-green-500 bg-green-500/10 text-green-600 dark:text-green-400"
+                        : ""
+                    }
+                  >
+                    {trigger.enabled ? "Active" : "Inactive"}
+                  </Badge>
+                </TableCell>
+                <TableCell className="px-4 py-3 text-center whitespace-nowrap">
+                  <span className="text-foreground text-sm font-medium">
+                    {trigger.triggerCount.toLocaleString()}
+                  </span>
+                </TableCell>
+                <TableCell className="px-4 py-3 whitespace-nowrap">
+                  <div className="space-y-1">
+                    {trigger.lastTriggered && (
+                      <div className="text-muted-foreground flex items-center gap-1 text-xs">
+                        <Clock className="h-3 w-3" />
+                        <span suppressHydrationWarning>
+                          {formatRelativeTime(trigger.lastTriggered)}
                         </span>
-                        <p className="text-xs text-foreground0 mt-0.5 max-w-xs truncate font-mono">
-                          {getTriggerDescription(trigger)}
-                        </p>
                       </div>
-                    </TableCell>
-                    <TableCell className="px-4 py-3 whitespace-nowrap">
-                      <Badge
-                        variant="outline"
-                        className={`capitalize ${
-                          trigger.type === "webhook"
-                            ? "bg-purple-500/10 border-purple-500 text-purple-600 dark:text-purple-400"
-                            : trigger.type === "scheduled"
-                            ? "bg-blue-500/10 border-blue-500 text-blue-600 dark:text-blue-400"
-                            : trigger.type === "api"
-                            ? "bg-green-500/10 border-green-500 text-green-600 dark:text-green-400"
-                            : "bg-yellow-500/10 border-yellow-500 text-yellow-600 dark:text-yellow-400"
-                        }`}
-                      >
-                        {trigger.type}
-                      </Badge>
-                    </TableCell>
-                    <TableCell className="px-4 py-3 whitespace-nowrap">
-                      <Link
-                        href={`/agents/${trigger.agentId}`}
-                        className="text-sm text-muted-foreground hover:text-amber-500 transition-colors flex items-center gap-1"
-                      >
-                        {trigger.agentName}
-                        <ExternalLink className="h-3 w-3" />
-                      </Link>
-                    </TableCell>
-                    <TableCell className="px-4 py-3 whitespace-nowrap text-center">
-                      <Badge
-                        variant="outline"
-                        className={trigger.enabled ? "bg-green-500/10 border-green-500 text-green-600 dark:text-green-400" : ""}
-                      >
-                        {trigger.enabled ? "Active" : "Inactive"}
-                      </Badge>
-                    </TableCell>
-                    <TableCell className="px-4 py-3 whitespace-nowrap text-center">
-                      <span className="text-sm font-medium text-foreground">
-                        {trigger.triggerCount.toLocaleString()}
-                      </span>
-                    </TableCell>
-                    <TableCell className="px-4 py-3 whitespace-nowrap">
-                      <div className="space-y-1">
-                        {trigger.lastTriggered && (
-                          <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                            <Clock className="h-3 w-3" />
-                            <span suppressHydrationWarning>
-                              {formatRelativeTime(trigger.lastTriggered)}
-                            </span>
-                          </div>
-                        )}
-                        {getNextRun(trigger) && (
-                          <div className="flex items-center gap-1 text-xs text-blue-400">
-                            <Activity className="h-3 w-3" />
-                            <span suppressHydrationWarning>Next: {getNextRun(trigger)}</span>
-                          </div>
-                        )}
+                    )}
+                    {getNextRun(trigger) && (
+                      <div className="flex items-center gap-1 text-xs text-blue-400">
+                        <Activity className="h-3 w-3" />
+                        <span suppressHydrationWarning>Next: {getNextRun(trigger)}</span>
                       </div>
-                    </TableCell>
-                  </TableRow>
-                ))}
+                    )}
+                  </div>
+                </TableCell>
+              </TableRow>
+            ))}
           </DataTable>
 
           {/* Pagination */}
           {totalPages > 1 && (
             <div className="flex items-center justify-between px-6 py-4">
-              <div className="text-sm text-muted-foreground">
+              <div className="text-muted-foreground text-sm">
                 Showing {startIndex + 1} to{" "}
                 {Math.min(startIndex + ITEMS_PER_PAGE, filteredTriggers.length)} of{" "}
                 {filteredTriggers.length} triggers
@@ -215,9 +215,9 @@ export function TriggersTab({ searchQuery, typeFilter, statusFilter }: TriggersT
                   size="sm"
                   onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
                   disabled={currentPage === 1}
-                  className="border text-muted-foreground disabled:opacity-50"
+                  className="text-muted-foreground border disabled:opacity-50"
                 >
-                  <ChevronLeft className="h-4 w-4 mr-1" />
+                  <ChevronLeft className="mr-1 h-4 w-4" />
                   Previous
                 </Button>
 
@@ -241,7 +241,7 @@ export function TriggersTab({ searchQuery, typeFilter, statusFilter }: TriggersT
                         onClick={() => setCurrentPage(pageNum)}
                         className={
                           currentPage === pageNum
-                            ? "bg-amber-600 hover:bg-amber-500 text-white"
+                            ? "bg-amber-600 text-white hover:bg-amber-500"
                             : "text-muted-foreground hover:text-foreground"
                         }
                       >
@@ -256,10 +256,10 @@ export function TriggersTab({ searchQuery, typeFilter, statusFilter }: TriggersT
                   size="sm"
                   onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
                   disabled={currentPage === totalPages}
-                  className="border text-muted-foreground disabled:opacity-50"
+                  className="text-muted-foreground border disabled:opacity-50"
                 >
                   Next
-                  <ChevronRight className="h-4 w-4 ml-1" />
+                  <ChevronRight className="ml-1 h-4 w-4" />
                 </Button>
               </div>
             </div>
@@ -268,7 +268,7 @@ export function TriggersTab({ searchQuery, typeFilter, statusFilter }: TriggersT
           {/* Empty State */}
           {paginatedTriggers.length === 0 && (
             <div className="px-6 py-12 text-center">
-              <Zap className="h-12 w-12 text-stone-600 mx-auto mb-4" />
+              <Zap className="mx-auto mb-4 h-12 w-12 text-stone-600" />
               <p className="text-muted-foreground">No triggers found matching your criteria.</p>
             </div>
           )}
@@ -277,4 +277,3 @@ export function TriggersTab({ searchQuery, typeFilter, statusFilter }: TriggersT
     </div>
   );
 }
-

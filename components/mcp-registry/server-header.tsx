@@ -19,11 +19,11 @@ export function ServerHeader({ server }: ServerHeaderProps) {
 
   return (
     <div>
-      <h1 className="text-2xl font-semibold text-foreground mb-1">{server.name}</h1>
-      <p className="text-sm text-muted-foreground mb-3">{server.description}</p>
+      <h1 className="text-foreground mb-1 text-2xl font-semibold">{server.name}</h1>
+      <p className="text-muted-foreground mb-3 text-sm">{server.description}</p>
 
-      <div className="flex items-center gap-2 mb-1">
-        <code className="text-xs text-muted-foreground font-mono bg-accent px-2.5 py-1 rounded">
+      <div className="mb-1 flex items-center gap-2">
+        <code className="text-muted-foreground bg-accent rounded px-2.5 py-1 font-mono text-xs">
           {server.serverUrl}
         </code>
         <button
@@ -37,7 +37,7 @@ export function ServerHeader({ server }: ServerHeaderProps) {
           )}
         </button>
       </div>
-      <p className="text-xs text-foreground0">
+      <p className="text-foreground0 text-xs">
         Created by {server.createdBy} on{" "}
         {new Date(server.createdAt).toLocaleDateString("en-US", {
           month: "short",
@@ -48,4 +48,3 @@ export function ServerHeader({ server }: ServerHeaderProps) {
     </div>
   );
 }
-

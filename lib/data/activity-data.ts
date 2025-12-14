@@ -36,8 +36,10 @@ interface StepTemplate {
 
 // Generate detailed steps based on agent's instructions and integrations
 function getAgentStepTemplates(agentId: string): StepTemplate[] {
-  const agent = mockAgents.find(a => a.id === agentId);
-  if (!agent) return [];
+  const agent = mockAgents.find((a) => a.id === agentId);
+  if (!agent) {
+    return [];
+  }
 
   switch (agentId) {
     case "agent-1": // Lead Enrichment Agent
@@ -52,12 +54,12 @@ function getAgentStepTemplates(agentId: string): StepTemplate[] {
             event: "lead.created",
             payload: {
               leadId: "00Q5g00000ABC123",
-              timestamp: "2024-11-28T10:30:00Z"
-            }
+              timestamp: "2024-11-28T10:30:00Z",
+            },
           },
           output: {
             triggered: true,
-            executionId: "exec-1001"
+            executionId: "exec-1001",
           },
         },
         {
@@ -69,7 +71,7 @@ function getAgentStepTemplates(agentId: string): StepTemplate[] {
           input: {
             method: "GET",
             endpoint: "/services/data/v58.0/sobjects/Lead/00Q5g00000ABC123",
-            headers: { "Authorization": "Bearer ***" }
+            headers: { Authorization: "Bearer ***" },
           },
           output: {
             status: 200,
@@ -82,8 +84,8 @@ function getAgentStepTemplates(agentId: string): StepTemplate[] {
               Title: "VP of Engineering",
               Phone: "+1-555-0123",
               LeadSource: "Web",
-              Status: "New"
-            }
+              Status: "New",
+            },
           },
         },
         {
@@ -95,7 +97,7 @@ function getAgentStepTemplates(agentId: string): StepTemplate[] {
           input: {
             method: "GET",
             endpoint: "/v2/companies/find",
-            params: { domain: "acmecorp.com" }
+            params: { domain: "acmecorp.com" },
           },
           output: {
             status: 200,
@@ -108,8 +110,8 @@ function getAgentStepTemplates(agentId: string): StepTemplate[] {
               foundedYear: 2015,
               location: "San Francisco, CA",
               linkedin: "linkedin.com/company/acmecorp",
-              technologies: ["AWS", "React", "Node.js", "PostgreSQL"]
-            }
+              technologies: ["AWS", "React", "Node.js", "PostgreSQL"],
+            },
           },
         },
         {
@@ -120,7 +122,8 @@ function getAgentStepTemplates(agentId: string): StepTemplate[] {
           baseCost: 0.018,
           input: {
             model: agent.model,
-            system: "You are a lead scoring assistant. Analyze the lead and company data to determine lead quality and recommended next steps.",
+            system:
+              "You are a lead scoring assistant. Analyze the lead and company data to determine lead quality and recommended next steps.",
             messages: [
               {
                 role: "user",
@@ -137,11 +140,11 @@ Company Data:
 - Location: San Francisco, CA
 - Tech Stack: AWS, React, Node.js, PostgreSQL
 
-Score this lead (0-100) and provide recommended next steps.`
-              }
+Score this lead (0-100) and provide recommended next steps.`,
+              },
             ],
             temperature: 0.3,
-            max_tokens: 500
+            max_tokens: 500,
           },
           output: {
             model: agent.model,
@@ -161,8 +164,8 @@ Score this lead (0-100) and provide recommended next steps.`
 1. **Priority**: High - Schedule discovery call within 24 hours
 2. Send personalized demo video highlighting engineering workflow features
 3. Connect on LinkedIn with relevant case study
-4. Add to "Enterprise Tech" nurture sequence`
-            }
+4. Add to "Enterprise Tech" nurture sequence`,
+            },
           },
         },
         {
@@ -181,13 +184,13 @@ Score this lead (0-100) and provide recommended next steps.`
               NumberOfEmployees: 350,
               AnnualRevenue: 75000000,
               Description: "Enriched via Clearbit. VP of Engineering, strong ICP fit.",
-              Next_Steps__c: "Schedule discovery call within 24 hours"
-            }
+              Next_Steps__c: "Schedule discovery call within 24 hours",
+            },
           },
           output: {
             status: 204,
             success: true,
-            recordId: "00Q5g00000ABC123"
+            recordId: "00Q5g00000ABC123",
           },
         },
       ];
@@ -204,8 +207,8 @@ Score this lead (0-100) and provide recommended next steps.`
             event: "ticket.created",
             payload: {
               ticketId: "12847",
-              timestamp: "2024-11-28T14:22:00Z"
-            }
+              timestamp: "2024-11-28T14:22:00Z",
+            },
           },
           output: { triggered: true },
         },
@@ -218,23 +221,24 @@ Score this lead (0-100) and provide recommended next steps.`
           input: {
             method: "GET",
             endpoint: "/api/v2/tickets/12847",
-            headers: { "Authorization": "Bearer ***" }
+            headers: { Authorization: "Bearer ***" },
           },
           output: {
             status: 200,
             data: {
               id: 12847,
               subject: "Cannot access dashboard - getting 403 error",
-              description: "Hi, I've been trying to access my dashboard for the past hour but keep getting a 403 Forbidden error. I haven't changed anything on my end. This is blocking my team's work. Please help urgently!",
+              description:
+                "Hi, I've been trying to access my dashboard for the past hour but keep getting a 403 Forbidden error. I haven't changed anything on my end. This is blocking my team's work. Please help urgently!",
               requester: {
                 name: "Sarah Johnson",
                 email: "sarah@bigclient.com",
-                organization: "Big Client Inc"
+                organization: "Big Client Inc",
               },
               priority: "high",
               created_at: "2024-11-28T14:22:00Z",
-              tags: ["dashboard", "access", "error"]
-            }
+              tags: ["dashboard", "access", "error"],
+            },
           },
         },
         {
@@ -245,7 +249,8 @@ Score this lead (0-100) and provide recommended next steps.`
           baseCost: 0.022,
           input: {
             model: agent.model,
-            system: "You are a support ticket classifier. Analyze tickets and determine: category, urgency, and routing.",
+            system:
+              "You are a support ticket classifier. Analyze tickets and determine: category, urgency, and routing.",
             messages: [
               {
                 role: "user",
@@ -263,11 +268,11 @@ Determine:
 1. Category (billing, technical, feature_request, bug, account)
 2. Urgency (low, medium, high, critical)
 3. Routing team (billing, engineering, product, customer_success)
-4. Brief summary for the agent`
-              }
+4. Brief summary for the agent`,
+              },
             ],
             temperature: 0.2,
-            max_tokens: 300
+            max_tokens: 300,
           },
           output: {
             model: agent.model,
@@ -287,8 +292,8 @@ Determine:
 - Issue appeared suddenly without customer changes - likely our side
 
 ### Summary for Agent:
-Enterprise customer experiencing 403 Forbidden on dashboard access. Blocking issue, no recent changes on their end. Likely permission/auth service issue. Check recent deployments and auth service status.`
-            }
+Enterprise customer experiencing 403 Forbidden on dashboard access. Blocking issue, no recent changes on their end. Likely permission/auth service issue. Check recent deployments and auth service status.`,
+            },
           },
         },
         {
@@ -298,11 +303,11 @@ Enterprise customer experiencing 403 Forbidden on dashboard access. Blocking iss
           baseCost: 0,
           input: {
             condition: "urgency === 'critical'",
-            value: "critical"
+            value: "critical",
           },
           output: {
             result: true,
-            branch: "urgent_notification_path"
+            branch: "urgent_notification_path",
           },
         },
         {
@@ -323,10 +328,10 @@ Enterprise customer experiencing 403 Forbidden on dashboard access. Blocking iss
                 custom_fields: [
                   { id: 123, value: "technical" },
                   { id: 124, value: "critical" },
-                  { id: 125, value: "engineering" }
-                ]
-              }
-            }
+                  { id: 125, value: "engineering" },
+                ],
+              },
+            },
           },
           output: {
             status: 200,
@@ -335,9 +340,9 @@ Enterprise customer experiencing 403 Forbidden on dashboard access. Blocking iss
                 id: 12847,
                 group_id: 360001234567,
                 priority: "urgent",
-                updated_at: "2024-11-28T14:22:05Z"
-              }
-            }
+                updated_at: "2024-11-28T14:22:05Z",
+              },
+            },
           },
         },
         {
@@ -354,24 +359,24 @@ Enterprise customer experiencing 403 Forbidden on dashboard access. Blocking iss
               blocks: [
                 {
                   type: "header",
-                  text: { type: "plain_text", text: "🚨 Critical Support Ticket" }
+                  text: { type: "plain_text", text: "🚨 Critical Support Ticket" },
                 },
                 {
                   type: "section",
                   text: {
                     type: "mrkdwn",
-                    text: "*Ticket #12847*: Cannot access dashboard - 403 error\n*Customer*: Big Client Inc (Enterprise)\n*Urgency*: Critical - Blocking Issue"
-                  }
-                }
-              ]
-            }
+                    text: "*Ticket #12847*: Cannot access dashboard - 403 error\n*Customer*: Big Client Inc (Enterprise)\n*Urgency*: Critical - Blocking Issue",
+                  },
+                },
+              ],
+            },
           },
           output: {
             status: 200,
             ok: true,
             channel: "C0123456789",
             ts: "1732803725.000100",
-            message: { text: "🚨 Critical Support Ticket..." }
+            message: { text: "🚨 Critical Support Ticket..." },
           },
         },
       ];
@@ -386,7 +391,7 @@ Enterprise customer experiencing 403 Forbidden on dashboard access. Blocking iss
           input: {
             schedule: "0 8 * * MON",
             event: "cron",
-            timezone: "America/Los_Angeles"
+            timezone: "America/Los_Angeles",
           },
           output: { triggered: true },
         },
@@ -400,8 +405,8 @@ Enterprise customer experiencing 403 Forbidden on dashboard access. Blocking iss
             method: "GET",
             endpoint: "/services/data/v58.0/query",
             params: {
-              q: "SELECT Id, Name, Amount, StageName, CloseDate, Account.Name FROM Opportunity WHERE CloseDate = LAST_WEEK AND IsWon = true"
-            }
+              q: "SELECT Id, Name, Amount, StageName, CloseDate, Account.Name FROM Opportunity WHERE CloseDate = LAST_WEEK AND IsWon = true",
+            },
           },
           output: {
             status: 200,
@@ -409,16 +414,34 @@ Enterprise customer experiencing 403 Forbidden on dashboard access. Blocking iss
               totalSize: 23,
               done: true,
               records: [
-                { Id: "006xxx1", Name: "Acme Corp - Enterprise", Amount: 125000, StageName: "Closed Won", CloseDate: "2024-11-25" },
-                { Id: "006xxx2", Name: "TechStart - Pro Plan", Amount: 45000, StageName: "Closed Won", CloseDate: "2024-11-26" },
-                { Id: "006xxx3", Name: "GlobalTech - Annual", Amount: 89000, StageName: "Closed Won", CloseDate: "2024-11-27" }
+                {
+                  Id: "006xxx1",
+                  Name: "Acme Corp - Enterprise",
+                  Amount: 125000,
+                  StageName: "Closed Won",
+                  CloseDate: "2024-11-25",
+                },
+                {
+                  Id: "006xxx2",
+                  Name: "TechStart - Pro Plan",
+                  Amount: 45000,
+                  StageName: "Closed Won",
+                  CloseDate: "2024-11-26",
+                },
+                {
+                  Id: "006xxx3",
+                  Name: "GlobalTech - Annual",
+                  Amount: 89000,
+                  StageName: "Closed Won",
+                  CloseDate: "2024-11-27",
+                },
               ],
               summary: {
                 totalRevenue: 487500,
                 dealCount: 23,
-                avgDealSize: 21195
-              }
-            }
+                avgDealSize: 21195,
+              },
+            },
           },
         },
         {
@@ -429,7 +452,8 @@ Enterprise customer experiencing 403 Forbidden on dashboard access. Blocking iss
           baseCost: 0.045,
           input: {
             model: agent.model,
-            system: "You are a sales analyst. Generate comprehensive weekly reports with insights and recommendations.",
+            system:
+              "You are a sales analyst. Generate comprehensive weekly reports with insights and recommendations.",
             messages: [
               {
                 role: "user",
@@ -455,11 +479,11 @@ Generate:
 2. Key Metrics Analysis
 3. Top Performers
 4. Trends & Insights
-5. Recommendations for Next Week`
-              }
+5. Recommendations for Next Week`,
+              },
             ],
             temperature: 0.4,
-            max_tokens: 1500
+            max_tokens: 1500,
           },
           output: {
             model: agent.model,
@@ -496,8 +520,8 @@ Outstanding week with **$487,500** in closed revenue, representing an **18.3% in
 1. Double down on enterprise outreach - momentum is strong
 2. Schedule team training on new Pro Plan positioning
 3. Allocate more resources to APAC expansion
-4. Review pipeline for Q4 close opportunities`
-            }
+4. Review pipeline for Q4 close opportunities`,
+            },
           },
         },
         {
@@ -514,20 +538,23 @@ Outstanding week with **$487,500** in closed revenue, representing an **18.3% in
               properties: {
                 Title: { title: [{ text: { content: "Weekly Sales Report - Nov 18-24" } }] },
                 Date: { date: { start: "2024-11-25" } },
-                Status: { select: { name: "Published" } }
+                Status: { select: { name: "Published" } },
               },
               children: [
-                { type: "heading_1", heading_1: { text: [{ text: { content: "Weekly Sales Report" } }] } }
-              ]
-            }
+                {
+                  type: "heading_1",
+                  heading_1: { text: [{ text: { content: "Weekly Sales Report" } }] },
+                },
+              ],
+            },
           },
           output: {
             status: 200,
             data: {
               id: "page-xyz789",
               url: "https://notion.so/Weekly-Sales-Report-Nov-18-24-xyz789",
-              created_time: "2024-11-25T08:01:00Z"
-            }
+              created_time: "2024-11-25T08:01:00Z",
+            },
           },
         },
         {
@@ -543,16 +570,16 @@ Outstanding week with **$487,500** in closed revenue, representing an **18.3% in
               to: ["sales-leadership@company.com", "ceo@company.com"],
               subject: "📊 Weekly Sales Report - Nov 18-24 | $487.5K Revenue (+18.3%)",
               body: "Weekly sales report is ready. Key highlights: $487.5K revenue, 23 deals closed, 18.3% growth WoW.",
-              attachments: ["Weekly_Sales_Report_Nov18-24.pdf"]
-            }
+              attachments: ["Weekly_Sales_Report_Nov18-24.pdf"],
+            },
           },
           output: {
             status: 200,
             data: {
               id: "msg-abc123",
               threadId: "thread-xyz",
-              labelIds: ["SENT"]
-            }
+              labelIds: ["SENT"],
+            },
           },
         },
       ];
@@ -570,8 +597,8 @@ Outstanding week with **$487,500** in closed revenue, representing an **18.3% in
             payload: {
               action: "opened",
               number: 142,
-              repository: "company/main-app"
-            }
+              repository: "company/main-app",
+            },
           },
           output: { triggered: true, prNumber: 142 },
         },
@@ -583,7 +610,7 @@ Outstanding week with **$487,500** in closed revenue, representing an **18.3% in
           baseCost: 0.001,
           input: {
             method: "GET",
-            endpoint: "/repos/company/main-app/pulls/142"
+            endpoint: "/repos/company/main-app/pulls/142",
           },
           output: {
             status: 200,
@@ -595,8 +622,8 @@ Outstanding week with **$487,500** in closed revenue, representing an **18.3% in
               head: { ref: "feature/auth-middleware" },
               additions: 234,
               deletions: 56,
-              changed_files: 8
-            }
+              changed_files: 8,
+            },
           },
         },
         {
@@ -607,7 +634,7 @@ Outstanding week with **$487,500** in closed revenue, representing an **18.3% in
           baseCost: 0.002,
           input: {
             method: "GET",
-            endpoint: "/repos/company/main-app/pulls/142/files"
+            endpoint: "/repos/company/main-app/pulls/142/files",
           },
           output: {
             status: 200,
@@ -616,9 +643,9 @@ Outstanding week with **$487,500** in closed revenue, representing an **18.3% in
                 { filename: "src/middleware/auth.ts", additions: 89, deletions: 0, patch: "..." },
                 { filename: "src/utils/jwt.ts", additions: 45, deletions: 12, patch: "..." },
                 { filename: "src/types/user.ts", additions: 23, deletions: 8, patch: "..." },
-                { filename: "tests/auth.test.ts", additions: 67, deletions: 34, patch: "..." }
-              ]
-            }
+                { filename: "tests/auth.test.ts", additions: 67, deletions: 34, patch: "..." },
+              ],
+            },
           },
         },
         {
@@ -629,7 +656,8 @@ Outstanding week with **$487,500** in closed revenue, representing an **18.3% in
           baseCost: 0.065,
           input: {
             model: agent.model,
-            system: "You are a senior code reviewer. Analyze code for security, performance, and best practices.",
+            system:
+              "You are a senior code reviewer. Analyze code for security, performance, and best practices.",
             messages: [
               {
                 role: "user",
@@ -658,11 +686,11 @@ export async function authMiddleware(req: Request, res: Response, next: NextFunc
 }
 \`\`\`
 
-Review for: security issues, best practices, potential bugs, suggestions.`
-              }
+Review for: security issues, best practices, potential bugs, suggestions.`,
+              },
             ],
             temperature: 0.3,
-            max_tokens: 1000
+            max_tokens: 1000,
           },
           output: {
             model: agent.model,
@@ -700,8 +728,8 @@ Review for: security issues, best practices, potential bugs, suggestions.`
 - Tests cover main scenarios
 
 ### Overall Score: 8.5/10
-Approve with minor changes requested.`
-            }
+Approve with minor changes requested.`,
+            },
           },
         },
         {
@@ -716,11 +744,12 @@ Approve with minor changes requested.`
             messages: [
               {
                 role: "user",
-                content: "Analyze test coverage for the auth middleware. Current tests cover: valid token, invalid token, missing token. What's missing?"
-              }
+                content:
+                  "Analyze test coverage for the auth middleware. Current tests cover: valid token, invalid token, missing token. What's missing?",
+              },
             ],
             temperature: 0.3,
-            max_tokens: 400
+            max_tokens: 400,
           },
           output: {
             model: agent.model,
@@ -737,8 +766,8 @@ Approve with minor changes requested.`
 6. **Token refresh flow** - If implemented
 
 Current coverage estimate: 65%
-Recommended coverage: 85%+`
-            }
+Recommended coverage: 85%+`,
+            },
           },
         },
         {
@@ -757,18 +786,18 @@ Recommended coverage: 85%+`
                 {
                   path: "src/middleware/auth.ts",
                   line: 8,
-                  body: "🔴 **Security**: Consider validating JWT_SECRET exists before using"
-                }
-              ]
-            }
+                  body: "🔴 **Security**: Consider validating JWT_SECRET exists before using",
+                },
+              ],
+            },
           },
           output: {
             status: 200,
             data: {
               id: 1234567,
               state: "COMMENTED",
-              submitted_at: "2024-11-28T10:15:00Z"
-            }
+              submitted_at: "2024-11-28T10:15:00Z",
+            },
           },
         },
         {
@@ -781,12 +810,13 @@ Recommended coverage: 85%+`
             method: "POST",
             endpoint: "/graphql",
             body: {
-              query: "mutation { issueUpdate(id: \"ENG-456\", input: { stateId: \"in-review\" }) { success } }"
-            }
+              query:
+                'mutation { issueUpdate(id: "ENG-456", input: { stateId: "in-review" }) { success } }',
+            },
           },
           output: {
             status: 200,
-            data: { issueUpdate: { success: true } }
+            data: { issueUpdate: { success: true } },
           },
         },
       ];
@@ -801,7 +831,7 @@ Recommended coverage: 85%+`
           input: {
             source: "gmail",
             filter: "has:attachment filename:pdf subject:invoice",
-            messageId: "msg-inv-123"
+            messageId: "msg-inv-123",
           },
           output: { triggered: true, attachments: 1 },
         },
@@ -813,15 +843,15 @@ Recommended coverage: 85%+`
           baseCost: 0.001,
           input: {
             method: "GET",
-            endpoint: "/gmail/v1/users/me/messages/msg-inv-123/attachments/att-001"
+            endpoint: "/gmail/v1/users/me/messages/msg-inv-123/attachments/att-001",
           },
           output: {
             status: 200,
             data: {
               filename: "Invoice-2024-1847.pdf",
               mimeType: "application/pdf",
-              size: 245678
-            }
+              size: 245678,
+            },
           },
         },
         {
@@ -836,33 +866,43 @@ Recommended coverage: 85%+`
             messages: [
               {
                 role: "user",
-                content: "[PDF Content extracted via OCR]\n\nExtract: vendor, invoice number, date, due date, line items, subtotal, tax, total."
-              }
+                content:
+                  "[PDF Content extracted via OCR]\n\nExtract: vendor, invoice number, date, due date, line items, subtotal, tax, total.",
+              },
             ],
             temperature: 0.1,
-            max_tokens: 600
+            max_tokens: 600,
           },
           output: {
             model: agent.model,
             usage: { prompt_tokens: 234, completion_tokens: 189, total_tokens: 423 },
             response: {
               role: "assistant",
-              content: JSON.stringify({
-                vendor: { name: "CloudServices Inc", address: "123 Tech Blvd, SF, CA" },
-                invoiceNumber: "INV-2024-1847",
-                invoiceDate: "2024-11-20",
-                dueDate: "2024-12-20",
-                lineItems: [
-                  { description: "Cloud Hosting - November", quantity: 1, unitPrice: 850, total: 850 },
-                  { description: "API Calls (1M)", quantity: 2, unitPrice: 150, total: 300 },
-                  { description: "Support - Premium", quantity: 1, unitPrice: 200, total: 200 }
-                ],
-                subtotal: 1350,
-                tax: 121.50,
-                total: 1471.50,
-                currency: "USD"
-              }, null, 2)
-            }
+              content: JSON.stringify(
+                {
+                  vendor: { name: "CloudServices Inc", address: "123 Tech Blvd, SF, CA" },
+                  invoiceNumber: "INV-2024-1847",
+                  invoiceDate: "2024-11-20",
+                  dueDate: "2024-12-20",
+                  lineItems: [
+                    {
+                      description: "Cloud Hosting - November",
+                      quantity: 1,
+                      unitPrice: 850,
+                      total: 850,
+                    },
+                    { description: "API Calls (1M)", quantity: 2, unitPrice: 150, total: 300 },
+                    { description: "Support - Premium", quantity: 1, unitPrice: 200, total: 200 },
+                  ],
+                  subtotal: 1350,
+                  tax: 121.5,
+                  total: 1471.5,
+                  currency: "USD",
+                },
+                null,
+                2
+              ),
+            },
           },
         },
         {
@@ -878,13 +918,13 @@ Recommended coverage: 85%+`
               VendorRef: { value: "vendor-cloudservices" },
               TxnDate: "2024-11-20",
               DueDate: "2024-12-20",
-              TotalAmt: 1471.50,
+              TotalAmt: 1471.5,
               Line: [
                 { Amount: 850, Description: "Cloud Hosting - November" },
                 { Amount: 300, Description: "API Calls (1M)" },
-                { Amount: 200, Description: "Support - Premium" }
-              ]
-            }
+                { Amount: 200, Description: "Support - Premium" },
+              ],
+            },
           },
           output: {
             status: 200,
@@ -892,10 +932,10 @@ Recommended coverage: 85%+`
               Bill: {
                 Id: "bill-789",
                 DocNumber: "INV-2024-1847",
-                TotalAmt: 1471.50,
-                Balance: 1471.50
-              }
-            }
+                TotalAmt: 1471.5,
+                Balance: 1471.5,
+              },
+            },
           },
         },
       ];
@@ -910,7 +950,7 @@ Recommended coverage: 85%+`
           input: {
             source: "zoom",
             event: "recording.completed",
-            meetingId: "mtg-987654"
+            meetingId: "mtg-987654",
           },
           output: { triggered: true, duration: "45 min" },
         },
@@ -922,16 +962,16 @@ Recommended coverage: 85%+`
           baseCost: 0.005,
           input: {
             method: "GET",
-            endpoint: "/v2/meetings/mtg-987654/recordings"
+            endpoint: "/v2/meetings/mtg-987654/recordings",
           },
           output: {
             status: 200,
             data: {
               recording_files: [
                 { file_type: "MP4", file_size: 125000000, download_url: "..." },
-                { file_type: "M4A", file_size: 12000000, download_url: "..." }
-              ]
-            }
+                { file_type: "M4A", file_size: 12000000, download_url: "..." },
+              ],
+            },
           },
         },
         {
@@ -944,7 +984,7 @@ Recommended coverage: 85%+`
             model: "whisper-1",
             file: "meeting-audio.m4a",
             language: "en",
-            response_format: "verbose_json"
+            response_format: "verbose_json",
           },
           output: {
             model: "whisper-1",
@@ -952,11 +992,21 @@ Recommended coverage: 85%+`
             response: {
               text: "[Full transcript - 4,523 words]",
               segments: [
-                { start: 0, end: 45, text: "Alright, let's get started with our weekly product sync...", speaker: "Sarah" },
-                { start: 45, end: 120, text: "Thanks Sarah. I wanted to discuss the Q4 roadmap priorities...", speaker: "Mike" }
+                {
+                  start: 0,
+                  end: 45,
+                  text: "Alright, let's get started with our weekly product sync...",
+                  speaker: "Sarah",
+                },
+                {
+                  start: 45,
+                  end: 120,
+                  text: "Thanks Sarah. I wanted to discuss the Q4 roadmap priorities...",
+                  speaker: "Mike",
+                },
               ],
-              speakers: ["Sarah", "Mike", "Alex", "Jordan"]
-            }
+              speakers: ["Sarah", "Mike", "Alex", "Jordan"],
+            },
           },
         },
         {
@@ -967,15 +1017,17 @@ Recommended coverage: 85%+`
           baseCost: 0.028,
           input: {
             model: agent.model,
-            system: "Summarize meeting transcripts. Extract key points, decisions, and action items.",
+            system:
+              "Summarize meeting transcripts. Extract key points, decisions, and action items.",
             messages: [
               {
                 role: "user",
-                content: "Summarize this 45-minute product sync meeting. Participants: Sarah (PM), Mike (Eng Lead), Alex (Design), Jordan (QA).\n\n[Transcript]..."
-              }
+                content:
+                  "Summarize this 45-minute product sync meeting. Participants: Sarah (PM), Mike (Eng Lead), Alex (Design), Jordan (QA).\n\n[Transcript]...",
+              },
             ],
             temperature: 0.3,
-            max_tokens: 1000
+            max_tokens: 1000,
           },
           output: {
             model: agent.model,
@@ -1005,8 +1057,8 @@ Recommended coverage: 85%+`
 
 ## Next Steps
 - Follow-up meeting scheduled for Dec 5
-- Stakeholder review on Dec 10`
-            }
+- Stakeholder review on Dec 10`,
+            },
           },
         },
         {
@@ -1023,16 +1075,23 @@ Recommended coverage: 85%+`
               properties: {
                 Title: { title: [{ text: { content: "Weekly Product Sync - Nov 28" } }] },
                 Date: { date: { start: "2024-11-28" } },
-                Attendees: { multi_select: [{ name: "Sarah" }, { name: "Mike" }, { name: "Alex" }, { name: "Jordan" }] }
-              }
-            }
+                Attendees: {
+                  multi_select: [
+                    { name: "Sarah" },
+                    { name: "Mike" },
+                    { name: "Alex" },
+                    { name: "Jordan" },
+                  ],
+                },
+              },
+            },
           },
           output: {
             status: 200,
             data: {
               id: "page-meeting-123",
-              url: "https://notion.so/Weekly-Product-Sync-Nov-28"
-            }
+              url: "https://notion.so/Weekly-Product-Sync-Nov-28",
+            },
           },
         },
         {
@@ -1048,14 +1107,20 @@ Recommended coverage: 85%+`
               channel: "#product-team",
               text: "📝 Meeting notes ready: Weekly Product Sync",
               blocks: [
-                { type: "section", text: { type: "mrkdwn", text: "*Meeting Notes Ready*\nWeekly Product Sync - Nov 28\n\n<https://notion.so/...|View in Notion>" } }
-              ]
-            }
+                {
+                  type: "section",
+                  text: {
+                    type: "mrkdwn",
+                    text: "*Meeting Notes Ready*\nWeekly Product Sync - Nov 28\n\n<https://notion.so/...|View in Notion>",
+                  },
+                },
+              ],
+            },
           },
           output: {
             status: 200,
             ok: true,
-            ts: "1732803900.000200"
+            ts: "1732803900.000200",
           },
         },
       ];
@@ -1070,7 +1135,7 @@ Recommended coverage: 85%+`
           input: {
             schedule: "0 6 * * *",
             event: "cron",
-            timezone: "UTC"
+            timezone: "UTC",
           },
           output: { triggered: true },
         },
@@ -1084,25 +1149,25 @@ Recommended coverage: 85%+`
             sites: [
               "competitor1.com/pricing",
               "competitor2.com/features",
-              "competitor3.com/pricing"
+              "competitor3.com/pricing",
             ],
             selectors: {
               pricing: ".pricing-card",
-              features: ".feature-list"
-            }
+              features: ".feature-list",
+            },
           },
           output: {
             status: 200,
             data: {
               "competitor1.com": {
                 pricing: { starter: 29, pro: 99, enterprise: "Contact" },
-                lastUpdated: "2024-11-28"
+                lastUpdated: "2024-11-28",
               },
               "competitor2.com": {
                 pricing: { basic: 19, team: 79, business: 199 },
-                newFeature: "AI Assistant (Beta)"
-              }
-            }
+                newFeature: "AI Assistant (Beta)",
+              },
+            },
           },
         },
         {
@@ -1117,11 +1182,12 @@ Recommended coverage: 85%+`
             messages: [
               {
                 role: "user",
-                content: "Compare today's competitor data with yesterday's. Identify pricing changes, new features, and strategic moves."
-              }
+                content:
+                  "Compare today's competitor data with yesterday's. Identify pricing changes, new features, and strategic moves.",
+              },
             ],
             temperature: 0.4,
-            max_tokens: 800
+            max_tokens: 800,
           },
           output: {
             model: agent.model,
@@ -1145,8 +1211,8 @@ Recommended coverage: 85%+`
 
 ### ⚠️ Action Required
 - Review our Team plan pricing competitiveness
-- Prioritize AI feature development`
-            }
+- Prioritize AI feature development`,
+            },
           },
         },
         {
@@ -1162,13 +1228,13 @@ Recommended coverage: 85%+`
               properties: {
                 "Last Updated": { date: { start: "2024-11-28" } },
                 "Price Changes": { checkbox: true },
-                "New Features": { rich_text: [{ text: { content: "AI Assistant (Beta)" } }] }
-              }
-            }
+                "New Features": { rich_text: [{ text: { content: "AI Assistant (Beta)" } }] },
+              },
+            },
           },
           output: {
             status: 200,
-            data: { id: "competitor-db-page", last_edited_time: "2024-11-28T06:05:00Z" }
+            data: { id: "competitor-db-page", last_edited_time: "2024-11-28T06:05:00Z" },
           },
         },
         {
@@ -1182,13 +1248,13 @@ Recommended coverage: 85%+`
             endpoint: "/api/chat.postMessage",
             body: {
               channel: "#competitive-intel",
-              text: "🔔 Competitor Alert: Price change detected + New AI feature launched"
-            }
+              text: "🔔 Competitor Alert: Price change detected + New AI feature launched",
+            },
           },
           output: {
             status: 200,
             ok: true,
-            ts: "1732777500.000300"
+            ts: "1732777500.000300",
           },
         },
       ];
@@ -1206,16 +1272,16 @@ function generateStepsFromTemplates(
 ): TraceStep[] {
   const failAtStep = failed ? Math.floor(seededRandom(seed) * (templates.length - 1)) + 1 : -1;
   let currentOffset = 0;
-  
+
   return templates.map((template, idx) => {
     const stepSeed = seed + idx * 100;
     const isFailed = idx === failAtStep;
     const isSkipped = failAtStep !== -1 && idx > failAtStep;
-    
+
     // Add some random variation to duration (±20%)
     const durationVariation = 0.8 + seededRandom(stepSeed) * 0.4;
     const duration = isSkipped ? 0 : Math.round(template.baseDuration * durationVariation);
-    
+
     const step: TraceStep = {
       id: `step-${seed}-${idx + 1}`,
       name: template.name,
@@ -1230,10 +1296,12 @@ function generateStepsFromTemplates(
       output: isFailed || isSkipped ? undefined : template.output,
       error: isFailed ? getRandomError(template.type, template.integration, stepSeed) : undefined,
     };
-    
+
     // Add token info for LLM calls
     if (template.type === "llm_call" && !isSkipped && template.output) {
-      const outputData = template.output as { usage?: { prompt_tokens: number; completion_tokens: number; total_tokens: number } };
+      const outputData = template.output as {
+        usage?: { prompt_tokens: number; completion_tokens: number; total_tokens: number };
+      };
       if (outputData.usage) {
         step.tokens = {
           input: outputData.usage.prompt_tokens,
@@ -1241,9 +1309,9 @@ function generateStepsFromTemplates(
         };
       }
     }
-    
+
     currentOffset += duration + Math.round(seededRandom(stepSeed + 10) * 50); // Small gap between steps
-    
+
     return step;
   });
 }
@@ -1256,14 +1324,14 @@ function getRandomError(type: TraceStepType, integration?: string, seed: number 
     `${integration || "API"} returned invalid response`,
     `Connection to ${integration || "service"} refused`,
   ];
-  
+
   const llmErrors = [
     "Context length exceeded maximum tokens",
     "Model timeout after 60s",
     "Invalid response format from model",
     "Content filter triggered",
   ];
-  
+
   const errors = type === "llm_call" ? llmErrors : apiErrors;
   return errors[Math.floor(seededRandom(seed) * errors.length)];
 }
@@ -1277,7 +1345,12 @@ export function generateExecutionTraces(count: number = 25): ExecutionTrace[] {
     { id: "user-3", name: "Jordan Smith" },
     { id: "user-4", name: "System" },
   ];
-  const triggerTypes: ("manual" | "scheduled" | "webhook" | "api")[] = ["manual", "scheduled", "webhook", "api"];
+  const triggerTypes: ("manual" | "scheduled" | "webhook" | "api")[] = [
+    "manual",
+    "scheduled",
+    "webhook",
+    "api",
+  ];
 
   for (let i = 0; i < count; i++) {
     const seed = i + 1000;
@@ -1287,16 +1360,18 @@ export function generateExecutionTraces(count: number = 25): ExecutionTrace[] {
     const user = users[userIndex];
     const hoursAgo = Math.floor(seededRandom(seed + 2) * 168); // Last 7 days
     const failed = seededRandom(seed + 3) < 0.12; // 12% failure rate
-    
+
     const templates = getAgentStepTemplates(agent.id);
-    if (templates.length === 0) continue;
-    
+    if (templates.length === 0) {
+      continue;
+    }
+
     const steps = generateStepsFromTemplates(templates, seed, failed);
     const totalDuration = steps.reduce((sum, s) => Math.max(sum, s.startOffset + s.duration), 0);
     const totalCost = steps.reduce((sum, s) => sum + s.cost, 0);
-    const successfulSteps = steps.filter(s => s.status === "completed").length;
-    const failedSteps = steps.filter(s => s.status === "failed").length;
-    
+    const successfulSteps = steps.filter((s) => s.status === "completed").length;
+    const failedSteps = steps.filter((s) => s.status === "failed").length;
+
     traces.push({
       id: `exec-${seed}`,
       agentId: agent.id,
@@ -1305,7 +1380,7 @@ export function generateExecutionTraces(count: number = 25): ExecutionTrace[] {
       triggeredBy: user.name,
       triggerType: triggerTypes[Math.floor(seededRandom(seed + 4) * triggerTypes.length)],
       startedAt: getRelativeDate(hoursAgo),
-      completedAt: getRelativeDate(hoursAgo - (totalDuration / 3600000)),
+      completedAt: getRelativeDate(hoursAgo - totalDuration / 3600000),
       duration: totalDuration,
       totalCost: Math.round(totalCost * 10000) / 10000,
       totalSteps: steps.length,
@@ -1314,7 +1389,7 @@ export function generateExecutionTraces(count: number = 25): ExecutionTrace[] {
       steps,
     });
   }
-  
+
   // Sort by most recent first
   return traces.sort((a, b) => new Date(b.startedAt).getTime() - new Date(a.startedAt).getTime());
 }
@@ -1348,32 +1423,35 @@ export function generateActivityEvents(count: number = 50): ActivityEvent[] {
     const agent = mockAgents[agentIndex];
     const eventTypeIndex = Math.floor(seededRandom(seed + 3) * eventTypes.length);
     const eventType = eventTypes[eventTypeIndex];
-    
+
     let details: Record<string, unknown> = {};
-    
+
     switch (eventType) {
       case "execution_started":
-        details = { 
+        details = {
           triggerType: ["manual", "scheduled", "webhook"][Math.floor(seededRandom(seed + 4) * 3)],
           model: agent.model,
         };
         break;
       case "execution_completed":
-        details = { 
+        details = {
           duration: Math.floor(seededRandom(seed + 4) * 10000) + 500,
           cost: Math.round(seededRandom(seed + 5) * 100) / 1000,
           stepsCompleted: agent.instructions.length,
         };
         break;
       case "execution_failed":
-        details = { 
-          error: ["API rate limit exceeded", "Model timeout", "Invalid input", "Permission denied"][Math.floor(seededRandom(seed + 4) * 4)],
+        details = {
+          error: ["API rate limit exceeded", "Model timeout", "Invalid input", "Permission denied"][
+            Math.floor(seededRandom(seed + 4) * 4)
+          ],
           stepFailed: Math.floor(seededRandom(seed + 5) * 5) + 1,
         };
         break;
       case "tool_called":
-        const integration = agent.integrations[Math.floor(seededRandom(seed + 4) * agent.integrations.length)];
-        details = { 
+        const integration =
+          agent.integrations[Math.floor(seededRandom(seed + 4) * agent.integrations.length)];
+        details = {
           integration: integration?.name || "Unknown",
           tool: ["fetch", "create", "update", "query"][Math.floor(seededRandom(seed + 5) * 4)],
           latency: Math.floor(seededRandom(seed + 6) * 500) + 50,
@@ -1381,43 +1459,55 @@ export function generateActivityEvents(count: number = 50): ActivityEvent[] {
         break;
       case "agent_created":
       case "agent_updated":
-        details = { 
+        details = {
           version: agent.version,
-          changes: eventType === "agent_updated" ? ["instructions", "model", "integrations"][Math.floor(seededRandom(seed + 5) * 3)] : undefined,
+          changes:
+            eventType === "agent_updated"
+              ? ["instructions", "model", "integrations"][Math.floor(seededRandom(seed + 5) * 3)]
+              : undefined,
         };
         break;
       case "integration_connected":
-        const connectedIntegration = agent.integrations[Math.floor(seededRandom(seed + 4) * agent.integrations.length)];
-        details = { 
+        const connectedIntegration =
+          agent.integrations[Math.floor(seededRandom(seed + 4) * agent.integrations.length)];
+        details = {
           integration: connectedIntegration?.name || "Unknown",
           method: ["oauth", "api_key"][Math.floor(seededRandom(seed + 5) * 2)],
         };
         break;
       case "error_occurred":
-        details = { 
-          errorType: ["rate_limit", "timeout", "validation", "auth"][Math.floor(seededRandom(seed + 4) * 4)],
+        details = {
+          errorType: ["rate_limit", "timeout", "validation", "auth"][
+            Math.floor(seededRandom(seed + 4) * 4)
+          ],
           severity: ["warning", "error", "critical"][Math.floor(seededRandom(seed + 5) * 3)],
         };
         break;
     }
-    
+
     events.push({
       id: `event-${seed}`,
       type: eventType,
       timestamp: getRelativeDate(hoursAgo),
       agentId: agent.id,
       agentName: agent.name,
-      executionId: eventType.includes("execution") || eventType === "tool_called" ? `exec-${seed}` : undefined,
+      executionId:
+        eventType.includes("execution") || eventType === "tool_called" ? `exec-${seed}` : undefined,
       userId: user.id,
       userName: user.name,
       details,
-      metadata: seededRandom(seed + 10) > 0.5 ? {
-        ip: `192.168.1.${Math.floor(seededRandom(seed + 11) * 255)}`,
-        region: ["us-east-1", "eu-west-1", "ap-southeast-1"][Math.floor(seededRandom(seed + 12) * 3)],
-      } : undefined,
+      metadata:
+        seededRandom(seed + 10) > 0.5
+          ? {
+              ip: `192.168.1.${Math.floor(seededRandom(seed + 11) * 255)}`,
+              region: ["us-east-1", "eu-west-1", "ap-southeast-1"][
+                Math.floor(seededRandom(seed + 12) * 3)
+              ],
+            }
+          : undefined,
     });
   }
-  
+
   // Sort by most recent first
   return events.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
 }
@@ -1431,27 +1521,32 @@ export function getActivitySummary(dateRange: "7d" | "14d" | "30d" = "7d") {
   const now = new Date();
   const daysAgo = dateRange === "7d" ? 7 : dateRange === "14d" ? 14 : 30;
   const cutoff = new Date(now.getTime() - daysAgo * 24 * 60 * 60 * 1000);
-  
-  const filteredTraces = mockExecutionTraces.filter(t => new Date(t.startedAt) >= cutoff);
-  const filteredEvents = mockActivityEvents.filter(e => new Date(e.timestamp) >= cutoff);
-  
+
+  const filteredTraces = mockExecutionTraces.filter((t) => new Date(t.startedAt) >= cutoff);
+  const filteredEvents = mockActivityEvents.filter((e) => new Date(e.timestamp) >= cutoff);
+
   const totalExecutions = filteredTraces.length;
-  const successfulExecutions = filteredTraces.filter(t => t.status === "completed").length;
-  const failedExecutions = filteredTraces.filter(t => t.status === "failed").length;
-  const avgDuration = filteredTraces.length > 0 
-    ? Math.round(filteredTraces.reduce((sum, t) => sum + t.duration, 0) / filteredTraces.length)
-    : 0;
-  const totalCost = Math.round(filteredTraces.reduce((sum, t) => sum + t.totalCost, 0) * 1000) / 1000;
-  
+  const successfulExecutions = filteredTraces.filter((t) => t.status === "completed").length;
+  const failedExecutions = filteredTraces.filter((t) => t.status === "failed").length;
+  const avgDuration =
+    filteredTraces.length > 0
+      ? Math.round(filteredTraces.reduce((sum, t) => sum + t.duration, 0) / filteredTraces.length)
+      : 0;
+  const totalCost =
+    Math.round(filteredTraces.reduce((sum, t) => sum + t.totalCost, 0) * 1000) / 1000;
+
   return {
     totalExecutions,
     successfulExecutions,
     failedExecutions,
-    successRate: totalExecutions > 0 ? Math.round((successfulExecutions / totalExecutions) * 1000) / 10 : 0,
+    successRate:
+      totalExecutions > 0 ? Math.round((successfulExecutions / totalExecutions) * 1000) / 10 : 0,
     avgDuration,
     totalCost,
     totalEvents: filteredEvents.length,
-    errorEvents: filteredEvents.filter(e => e.type === "error_occurred" || e.type === "execution_failed").length,
+    errorEvents: filteredEvents.filter(
+      (e) => e.type === "error_occurred" || e.type === "execution_failed"
+    ).length,
   };
 }
 
@@ -1466,31 +1561,32 @@ export function filterExecutionTraces(
   }
 ): ExecutionTrace[] {
   let filtered = [...traces];
-  
+
   if (filters.agentId) {
-    filtered = filtered.filter(t => t.agentId === filters.agentId);
+    filtered = filtered.filter((t) => t.agentId === filters.agentId);
   }
-  
+
   if (filters.status) {
-    filtered = filtered.filter(t => t.status === filters.status);
+    filtered = filtered.filter((t) => t.status === filters.status);
   }
-  
+
   if (filters.dateRange) {
     const now = new Date();
     const daysAgo = filters.dateRange === "7d" ? 7 : filters.dateRange === "14d" ? 14 : 30;
     const cutoff = new Date(now.getTime() - daysAgo * 24 * 60 * 60 * 1000);
-    filtered = filtered.filter(t => new Date(t.startedAt) >= cutoff);
+    filtered = filtered.filter((t) => new Date(t.startedAt) >= cutoff);
   }
-  
+
   if (filters.search) {
     const searchLower = filters.search.toLowerCase();
-    filtered = filtered.filter(t => 
-      t.agentName.toLowerCase().includes(searchLower) ||
-      t.triggeredBy.toLowerCase().includes(searchLower) ||
-      t.id.toLowerCase().includes(searchLower)
+    filtered = filtered.filter(
+      (t) =>
+        t.agentName.toLowerCase().includes(searchLower) ||
+        t.triggeredBy.toLowerCase().includes(searchLower) ||
+        t.id.toLowerCase().includes(searchLower)
     );
   }
-  
+
   return filtered;
 }
 
@@ -1505,35 +1601,36 @@ export function filterActivityEvents(
   }
 ): ActivityEvent[] {
   let filtered = [...events];
-  
+
   if (filters.type) {
-    filtered = filtered.filter(e => e.type === filters.type);
+    filtered = filtered.filter((e) => e.type === filters.type);
   }
-  
+
   if (filters.agentId) {
-    filtered = filtered.filter(e => e.agentId === filters.agentId);
+    filtered = filtered.filter((e) => e.agentId === filters.agentId);
   }
-  
+
   if (filters.userId) {
-    filtered = filtered.filter(e => e.userId === filters.userId);
+    filtered = filtered.filter((e) => e.userId === filters.userId);
   }
-  
+
   if (filters.dateRange) {
     const now = new Date();
     const daysAgo = filters.dateRange === "7d" ? 7 : filters.dateRange === "14d" ? 14 : 30;
     const cutoff = new Date(now.getTime() - daysAgo * 24 * 60 * 60 * 1000);
-    filtered = filtered.filter(e => new Date(e.timestamp) >= cutoff);
+    filtered = filtered.filter((e) => new Date(e.timestamp) >= cutoff);
   }
-  
+
   if (filters.search) {
     const searchLower = filters.search.toLowerCase();
-    filtered = filtered.filter(e => 
-      e.agentName?.toLowerCase().includes(searchLower) ||
-      e.userName.toLowerCase().includes(searchLower) ||
-      e.type.toLowerCase().includes(searchLower) ||
-      JSON.stringify(e.details).toLowerCase().includes(searchLower)
+    filtered = filtered.filter(
+      (e) =>
+        e.agentName?.toLowerCase().includes(searchLower) ||
+        e.userName.toLowerCase().includes(searchLower) ||
+        e.type.toLowerCase().includes(searchLower) ||
+        JSON.stringify(e.details).toLowerCase().includes(searchLower)
     );
   }
-  
+
   return filtered;
 }

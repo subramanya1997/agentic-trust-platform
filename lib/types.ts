@@ -157,11 +157,17 @@ export interface DateRange {
 }
 
 // ============ Activity & Trace Types ============
-export type TraceStepType = "trigger" | "llm_call" | "api_call" | "conditional" | "human_approval" | "transform";
+export type TraceStepType =
+  | "trigger"
+  | "llm_call"
+  | "api_call"
+  | "conditional"
+  | "human_approval"
+  | "transform";
 export type TraceStepStatus = "completed" | "failed" | "running" | "skipped" | "waiting";
-export type ActivityEventType = 
-  | "execution_started" 
-  | "execution_completed" 
+export type ActivityEventType =
+  | "execution_started"
+  | "execution_completed"
   | "execution_failed"
   | "tool_called"
   | "approval_requested"
@@ -250,10 +256,7 @@ export interface ApiTriggerConfig {
   apiKeyRequired: boolean;
 }
 
-export type TriggerConfig = 
-  | WebhookTriggerConfig 
-  | ScheduledTriggerConfig 
-  | ApiTriggerConfig;
+export type TriggerConfig = WebhookTriggerConfig | ScheduledTriggerConfig | ApiTriggerConfig;
 
 export interface AgentTrigger {
   id: string;
@@ -348,4 +351,3 @@ export interface MCPToolInvocation {
   output?: Record<string, unknown>;
   error?: string;
 }
-

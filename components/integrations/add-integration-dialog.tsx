@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -40,7 +40,7 @@ export function AddIntegrationDialog({ trigger }: AddIntegrationDialogProps) {
     await new Promise((resolve) => setTimeout(resolve, 1500));
     setIsLoading(false);
     setIsSuccess(true);
-    
+
     // Reset after showing success
     setTimeout(() => {
       setOpen(false);
@@ -63,32 +63,37 @@ export function AddIntegrationDialog({ trigger }: AddIntegrationDialogProps) {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         {trigger || (
-          <Button size="sm" className="bg-amber-600 hover:bg-amber-500 text-white font-medium">
-            <Plus className="h-4 w-4 mr-2" />
+          <Button size="sm" className="bg-amber-600 font-medium text-white hover:bg-amber-500">
+            <Plus className="mr-2 h-4 w-4" />
             Add Integration
           </Button>
         )}
       </DialogTrigger>
-      <DialogContent className="sm:max-w-md bg-card border">
+      <DialogContent className="bg-card border sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="text-foreground">
-            {isSuccess ? "Integration Added" : selectedType ? (selectedType === "mcp" ? "Add MCP Server" : "Import OpenAPI") : "Add Integration"}
+            {isSuccess
+              ? "Integration Added"
+              : selectedType
+                ? selectedType === "mcp"
+                  ? "Add MCP Server"
+                  : "Import OpenAPI"
+                : "Add Integration"}
           </DialogTitle>
           <DialogDescription className="text-muted-foreground">
-            {isSuccess 
+            {isSuccess
               ? "Your integration has been added successfully."
-              : selectedType 
-                ? (selectedType === "mcp" 
-                    ? "Enter the URL of your MCP server to connect."
-                    : "Upload an OpenAPI specification file to create an integration.")
-                : "Choose how you want to add a new integration."
-            }
+              : selectedType
+                ? selectedType === "mcp"
+                  ? "Enter the URL of your MCP server to connect."
+                  : "Upload an OpenAPI specification file to create an integration."
+                : "Choose how you want to add a new integration."}
           </DialogDescription>
         </DialogHeader>
 
         {isSuccess ? (
           <div className="flex flex-col items-center py-8">
-            <div className="h-12 w-12 rounded-full bg-green-950 flex items-center justify-center mb-4">
+            <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-green-950">
               <Check className="h-6 w-6 text-green-500" />
             </div>
             <p className="text-muted-foreground">Integration configured successfully</p>
@@ -111,9 +116,9 @@ export function AddIntegrationDialog({ trigger }: AddIntegrationDialogProps) {
             />
           </div>
         ) : selectedType === "mcp" ? (
-          <div className="py-4 space-y-4">
+          <div className="space-y-4 py-4">
             <div>
-              <label className="text-sm font-medium text-muted-foreground mb-2 block">
+              <label className="text-muted-foreground mb-2 block text-sm font-medium">
                 MCP Server URL
               </label>
               <input
@@ -121,29 +126,29 @@ export function AddIntegrationDialog({ trigger }: AddIntegrationDialogProps) {
                 value={mcpUrl}
                 onChange={(e) => setMcpUrl(e.target.value)}
                 placeholder="https://mcp.example.com/server"
-                className="w-full rounded-lg border border bg-accent px-4 py-2.5 text-sm text-foreground placeholder:text-foreground0 focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500"
+                className="bg-accent text-foreground placeholder:text-foreground0 w-full rounded-lg border px-4 py-2.5 text-sm focus:border-amber-500 focus:ring-1 focus:ring-amber-500 focus:outline-none"
               />
-              <p className="mt-2 text-xs text-foreground0">
+              <p className="text-foreground0 mt-2 text-xs">
                 The URL should point to a running MCP server endpoint
               </p>
             </div>
-            
+
             <div className="flex gap-2 pt-2">
               <Button
                 variant="outline"
-                className="flex-1 border text-muted-foreground hover:bg-accent"
+                className="text-muted-foreground hover:bg-accent flex-1 border"
                 onClick={handleBack}
               >
                 Back
               </Button>
               <Button
-                className="flex-1 bg-amber-600 hover:bg-amber-500 text-white"
+                className="flex-1 bg-amber-600 text-white hover:bg-amber-500"
                 disabled={!canSubmit || isLoading}
                 onClick={handleSubmit}
               >
                 {isLoading ? (
                   <>
-                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                     Connecting...
                   </>
                 ) : (
@@ -153,9 +158,9 @@ export function AddIntegrationDialog({ trigger }: AddIntegrationDialogProps) {
             </div>
           </div>
         ) : (
-          <div className="py-4 space-y-4">
+          <div className="space-y-4 py-4">
             <div>
-              <label className="text-sm font-medium text-muted-foreground mb-2 block">
+              <label className="text-muted-foreground mb-2 block text-sm font-medium">
                 OpenAPI Specification
               </label>
               <div className="relative">
@@ -168,44 +173,42 @@ export function AddIntegrationDialog({ trigger }: AddIntegrationDialogProps) {
                 />
                 <label
                   htmlFor="openapi-file"
-                  className="flex items-center justify-center gap-3 w-full rounded-lg border-2 border-dashed border bg-accent/50 px-4 py-8 cursor-pointer hover:border-accent transition-colors"
+                  className="bg-accent/50 hover:border-accent flex w-full cursor-pointer items-center justify-center gap-3 rounded-lg border border-2 border-dashed px-4 py-8 transition-colors"
                 >
                   {fileName ? (
-                    <div className="flex items-center gap-2 text-foreground">
+                    <div className="text-foreground flex items-center gap-2">
                       <FileJson className="h-5 w-5 text-amber-500" />
                       <span className="text-sm font-medium">{fileName}</span>
                     </div>
                   ) : (
                     <div className="text-center">
-                      <Upload className="h-8 w-8 text-foreground0 mx-auto mb-2" />
-                      <p className="text-sm text-muted-foreground">
+                      <Upload className="text-foreground0 mx-auto mb-2 h-8 w-8" />
+                      <p className="text-muted-foreground text-sm">
                         Click to upload or drag and drop
                       </p>
-                      <p className="text-xs text-foreground0 mt-1">
-                        JSON or YAML (OpenAPI 3.0+)
-                      </p>
+                      <p className="text-foreground0 mt-1 text-xs">JSON or YAML (OpenAPI 3.0+)</p>
                     </div>
                   )}
                 </label>
               </div>
             </div>
-            
+
             <div className="flex gap-2 pt-2">
               <Button
                 variant="outline"
-                className="flex-1 border text-muted-foreground hover:bg-accent"
+                className="text-muted-foreground hover:bg-accent flex-1 border"
                 onClick={handleBack}
               >
                 Back
               </Button>
               <Button
-                className="flex-1 bg-amber-600 hover:bg-amber-500 text-white"
+                className="flex-1 bg-amber-600 text-white hover:bg-amber-500"
                 disabled={!canSubmit || isLoading}
                 onClick={handleSubmit}
               >
                 {isLoading ? (
                   <>
-                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                     Importing...
                   </>
                 ) : (
@@ -236,21 +239,20 @@ function IntegrationTypeCard({
   return (
     <button
       onClick={onClick}
-      className="flex items-start gap-4 p-4 rounded-lg border border hover:border hover:bg-accent/50 transition-all text-left w-full"
+      className="hover:bg-accent/50 flex w-full items-start gap-4 rounded-lg border p-4 text-left transition-all hover:border"
     >
-      <div className="h-10 w-10 rounded-lg bg-accent flex items-center justify-center shrink-0">
+      <div className="bg-accent flex h-10 w-10 shrink-0 items-center justify-center rounded-lg">
         <Icon className="h-5 w-5 text-amber-500" />
       </div>
-      <div className="flex-1 min-w-0">
+      <div className="min-w-0 flex-1">
         <div className="flex items-center gap-2">
-          <span className="text-sm font-medium text-foreground">{title}</span>
-          <Badge variant="outline" className="text-xs bg-accent text-muted-foreground border">
+          <span className="text-foreground text-sm font-medium">{title}</span>
+          <Badge variant="outline" className="bg-accent text-muted-foreground border text-xs">
             {badge}
           </Badge>
         </div>
-        <p className="text-xs text-foreground0 mt-1">{description}</p>
+        <p className="text-foreground0 mt-1 text-xs">{description}</p>
       </div>
     </button>
   );
 }
-

@@ -1,15 +1,17 @@
 // Mock data for Agentic Trust platform
 // Types are now centralized in @/lib/types.ts
 
-import type {
-  Agent,
-  Execution,
-  DashboardStats,
-} from "@/lib/types";
+import type { Agent, Execution, DashboardStats } from "@/lib/types";
 
 // Re-export types for backward compatibility
 export type { Agent, Execution, DashboardStats } from "@/lib/types";
-export type { AgentStatus, ExecutionStatus, StepType, AgentIntegration, ExecutionStep } from "@/lib/types";
+export type {
+  AgentStatus,
+  ExecutionStatus,
+  StepType,
+  AgentIntegration,
+  ExecutionStep,
+} from "@/lib/types";
 
 export const mockAgents: Agent[] = [
   {
@@ -408,4 +410,3 @@ export const mockDashboardStats: DashboardStats = {
 // Cost data is now in @/lib/data/analytics-data.ts
 // Re-export for backward compatibility
 export { mockCostData, mockCostBreakdown } from "@/lib/data/analytics-data";
-

@@ -12,4 +12,3 @@ export function MCPIcon({ className }: { className?: string }) {
     </svg>
   );
 }
-

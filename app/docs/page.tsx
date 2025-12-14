@@ -1,17 +1,9 @@
 "use client";
 
+import Link from "next/link";
 import { Header } from "@/components/layout/header";
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import { 
-  FileText, 
-  Video, 
-  Code2, 
-  Sparkles,
-  ArrowRight,
-  Bell,
-  BookOpen
-} from "@/lib/icons";
+import { FileText, Video, Code2, Sparkles, ArrowRight, Bell, BookOpen } from "@/lib/icons";
 
 const upcomingFeatures = [
   {
@@ -40,40 +32,43 @@ export default function DocsPage() {
   return (
     <>
       <Header subtitle="Documentation — Coming Soon" />
-      <main className="flex-1 overflow-y-auto overflow-x-hidden">
-        <div className="relative min-h-[calc(100vh-4rem)] flex flex-col items-center justify-center px-6 py-20">
+      <main className="flex-1 overflow-x-hidden overflow-y-auto">
+        <div className="relative flex min-h-[calc(100vh-4rem)] flex-col items-center justify-center px-6 py-20">
           {/* Background decoration */}
           <div className="absolute inset-0 overflow-hidden">
-            <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-amber-500/[0.02] rounded-full blur-3xl" />
-            <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-orange-500/[0.02] rounded-full blur-3xl" />
+            <div className="absolute top-1/4 left-1/4 h-96 w-96 rounded-full bg-amber-500/[0.02] blur-3xl" />
+            <div className="absolute right-1/4 bottom-1/4 h-96 w-96 rounded-full bg-orange-500/[0.02] blur-3xl" />
           </div>
 
           {/* Content */}
-          <div className="relative z-10 max-w-2xl mx-auto text-center">
+          <div className="relative z-10 mx-auto max-w-2xl text-center">
             {/* Badge */}
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-500 text-xs font-medium mb-5">
-              <Sparkles className="w-3 h-3" />
+            <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-amber-500/20 bg-amber-500/10 px-3 py-1 text-xs font-medium text-amber-500">
+              <Sparkles className="h-3 w-3" />
               Coming Soon
             </div>
 
-            <p className="text-sm text-muted-foreground mb-10 max-w-md mx-auto leading-relaxed">
-              Comprehensive guides, API references, and tutorials to help you build powerful AI agents with Agentic Trust.
+            <p className="text-muted-foreground mx-auto mb-10 max-w-md text-sm leading-relaxed">
+              Comprehensive guides, API references, and tutorials to help you build powerful AI
+              agents with Agentic Trust.
             </p>
 
             {/* Feature grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-10">
+            <div className="mb-10 grid grid-cols-1 gap-3 sm:grid-cols-2">
               {upcomingFeatures.map((feature) => (
                 <div
                   key={feature.title}
-                  className="group p-4 rounded-lg bg-card/40 border border/60 hover:border transition-all text-left"
+                  className="group bg-card/40 border/60 rounded-lg border p-4 text-left transition-all hover:border"
                 >
                   <div className="flex items-start gap-3">
-                    <div className="p-2 rounded-md bg-accent/50 group-hover:bg-amber-500/10 transition-colors">
-                      <feature.icon className="w-4 h-4 text-foreground0 group-hover:text-amber-500 transition-colors" />
+                    <div className="bg-accent/50 rounded-md p-2 transition-colors group-hover:bg-amber-500/10">
+                      <feature.icon className="text-foreground0 h-4 w-4 transition-colors group-hover:text-amber-500" />
                     </div>
                     <div>
-                      <h3 className="text-sm font-medium text-muted-foreground mb-0.5">{feature.title}</h3>
-                      <p className="text-xs text-foreground0">{feature.description}</p>
+                      <h3 className="text-muted-foreground mb-0.5 text-sm font-medium">
+                        {feature.title}
+                      </h3>
+                      <p className="text-foreground0 text-xs">{feature.description}</p>
                     </div>
                   </div>
                 </div>
@@ -81,31 +76,31 @@ export default function DocsPage() {
             </div>
 
             {/* CTA */}
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-              <Button 
+            <div className="flex flex-col items-center justify-center gap-3 sm:flex-row">
+              <Button
                 size="sm"
-                className="bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-stone-950 font-medium px-4 text-xs"
+                className="bg-gradient-to-r from-amber-500 to-orange-600 px-4 text-xs font-medium text-stone-950 hover:from-amber-600 hover:to-orange-700"
               >
-                <Bell className="w-3 h-3 mr-1.5" />
+                <Bell className="mr-1.5 h-3 w-3" />
                 Get Notified
               </Button>
-              <Button 
+              <Button
                 size="sm"
-                variant="outline" 
-                className="border text-muted-foreground hover:bg-accent hover:text-foreground text-xs"
+                variant="outline"
+                className="text-muted-foreground hover:bg-accent hover:text-foreground border text-xs"
                 asChild
               >
                 <Link href="/">
                   Back to Dashboard
-                  <ArrowRight className="w-3 h-3 ml-1.5" />
+                  <ArrowRight className="ml-1.5 h-3 w-3" />
                 </Link>
               </Button>
             </div>
 
             {/* Timeline */}
             <div className="mt-12 pt-6">
-              <p className="text-xs text-foreground0">
-                Expected launch: <span className="text-amber-500 font-medium">Q1 2026</span>
+              <p className="text-foreground0 text-xs">
+                Expected launch: <span className="font-medium text-amber-500">Q1 2026</span>
               </p>
             </div>
           </div>
@@ -114,4 +109,3 @@ export default function DocsPage() {
     </>
   );
 }
-

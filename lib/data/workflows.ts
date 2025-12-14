@@ -15,7 +15,14 @@ export interface WorkflowTemplate {
 export interface WorkflowStep {
   id: string;
   name: string;
-  type: "trigger" | "llm_call" | "api_call" | "conditional" | "human_approval" | "loop" | "transform";
+  type:
+    | "trigger"
+    | "llm_call"
+    | "api_call"
+    | "conditional"
+    | "human_approval"
+    | "loop"
+    | "transform";
   icon: string;
   description: string;
   estimatedCost: number;
@@ -336,8 +343,5 @@ export function getTemplatesByCategory(category: WorkflowTemplate["category"]) {
 }
 
 export function getPopularTemplates(limit: number = 5) {
-  return [...workflowTemplates]
-    .sort((a, b) => b.usageCount - a.usageCount)
-    .slice(0, limit);
+  return [...workflowTemplates].sort((a, b) => b.usageCount - a.usageCount).slice(0, limit);
 }
-

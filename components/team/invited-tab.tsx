@@ -1,10 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { DataTable, TableRow, TableCell } from "@/components/data-table";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import {
   Select,
   SelectContent,
@@ -61,25 +61,27 @@ export function InvitedTab({ invitations, roles, onResend, onRevoke, onInvite }:
           <CardContent className="p-4">
             <div className="flex items-end gap-4">
               <div className="flex-1">
-                <label className="block text-sm font-medium text-muted-foreground mb-2">Email Address</label>
+                <label className="text-muted-foreground mb-2 block text-sm font-medium">
+                  Email Address
+                </label>
                 <input
                   type="email"
                   value={newEmail}
                   onChange={(e) => setNewEmail(e.target.value)}
                   placeholder="colleague@company.com"
-                  className="w-full rounded-lg border border bg-accent px-4 py-2 text-sm text-foreground focus:border-amber-500 focus:outline-none focus:ring-1 focus:ring-amber-500"
+                  className="bg-accent text-foreground w-full rounded-lg border px-4 py-2 text-sm focus:border-amber-500 focus:ring-1 focus:ring-amber-500 focus:outline-none"
                 />
               </div>
               <div className="w-[140px]">
-                <label className="block text-sm font-medium text-muted-foreground mb-2">Role</label>
+                <label className="text-muted-foreground mb-2 block text-sm font-medium">Role</label>
                 <Select value={newRole} onValueChange={setNewRole}>
-                  <SelectTrigger className="border bg-accent text-foreground">
+                  <SelectTrigger className="bg-accent text-foreground border">
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent className="border bg-card">
+                  <SelectContent className="bg-card border">
                     {roles.map((role) => (
-                      <SelectItem 
-                        key={role.id} 
+                      <SelectItem
+                        key={role.id}
                         value={role.name}
                         className="text-muted-foreground focus:bg-accent focus:text-foreground"
                       >
@@ -89,14 +91,11 @@ export function InvitedTab({ invitations, roles, onResend, onRevoke, onInvite }:
                   </SelectContent>
                 </Select>
               </div>
-              <Button 
-                className="bg-amber-600 hover:bg-amber-500 text-white"
-                onClick={handleInvite}
-              >
+              <Button className="bg-amber-600 text-white hover:bg-amber-500" onClick={handleInvite}>
                 Send Invite
               </Button>
-              <Button 
-                variant="ghost" 
+              <Button
+                variant="ghost"
                 className="text-muted-foreground"
                 onClick={() => setShowInviteForm(false)}
               >
@@ -112,25 +111,25 @@ export function InvitedTab({ invitations, roles, onResend, onRevoke, onInvite }:
         <CardContent className="p-0">
           {invitations.length === 0 ? (
             <div className="p-8 text-center">
-              <Mail className="h-12 w-12 text-stone-600 mx-auto mb-3" />
+              <Mail className="mx-auto mb-3 h-12 w-12 text-stone-600" />
               <p className="text-muted-foreground">No pending invitations</p>
-              <p className="text-sm text-foreground0 mt-1">Invite team members to collaborate</p>
+              <p className="text-foreground0 mt-1 text-sm">Invite team members to collaborate</p>
             </div>
           ) : (
             <>
               <DataTable
                 headers={[
-                  { label: 'Email', align: 'left' },
-                  { label: 'Role', align: 'left' },
-                  { label: 'Invited By', align: 'left' },
-                  { label: 'Status', align: 'left' },
-                  { label: 'Actions', align: 'right' },
+                  { label: "Email", align: "left" },
+                  { label: "Role", align: "left" },
+                  { label: "Invited By", align: "left" },
+                  { label: "Status", align: "left" },
+                  { label: "Actions", align: "right" },
                 ]}
               >
                 {paginatedInvitations.map((invitation) => (
                   <TableRow key={invitation.id}>
                     <TableCell className="px-4 py-3 whitespace-nowrap">
-                      <span className="text-sm text-foreground">{invitation.email}</span>
+                      <span className="text-foreground text-sm">{invitation.email}</span>
                     </TableCell>
                     <TableCell className="px-4 py-3 whitespace-nowrap">
                       <Badge variant="outline" className="bg-accent text-muted-foreground border">
@@ -138,7 +137,7 @@ export function InvitedTab({ invitations, roles, onResend, onRevoke, onInvite }:
                       </Badge>
                     </TableCell>
                     <TableCell className="px-4 py-3 whitespace-nowrap">
-                      <span className="text-sm text-muted-foreground">{invitation.invitedBy}</span>
+                      <span className="text-muted-foreground text-sm">{invitation.invitedBy}</span>
                     </TableCell>
                     <TableCell className="px-4 py-3 whitespace-nowrap">
                       <div className="flex items-center gap-2">
@@ -146,41 +145,37 @@ export function InvitedTab({ invitations, roles, onResend, onRevoke, onInvite }:
                           variant="outline"
                           className={
                             invitation.status === "pending"
-                              ? "bg-yellow-500/10 border-yellow-500 text-yellow-600 dark:text-yellow-400"
+                              ? "border-yellow-500 bg-yellow-500/10 text-yellow-600 dark:text-yellow-400"
                               : invitation.status === "expired"
-                              ? "bg-red-500/10 border-red-500 text-red-600 dark:text-red-400"
-                              : ""
+                                ? "border-red-500 bg-red-500/10 text-red-600 dark:text-red-400"
+                                : ""
                           }
                         >
-                          {invitation.status === "pending" && (
-                            <Clock className="h-3 w-3 mr-1" />
-                          )}
-                          {invitation.status === "expired" && (
-                            <XCircle className="h-3 w-3 mr-1" />
-                          )}
+                          {invitation.status === "pending" && <Clock className="mr-1 h-3 w-3" />}
+                          {invitation.status === "expired" && <XCircle className="mr-1 h-3 w-3" />}
                           {invitation.status}
                         </Badge>
-                        <span className="text-xs text-foreground0 flex items-center gap-1">
+                        <span className="text-foreground0 flex items-center gap-1 text-xs">
                           <Clock className="h-3 w-3" />
                           Expires {invitation.expiresAt}
                         </span>
                       </div>
                     </TableCell>
-                    <TableCell className="px-4 py-3 whitespace-nowrap text-right">
+                    <TableCell className="px-4 py-3 text-right whitespace-nowrap">
                       <div className="flex items-center justify-end gap-2">
-                        <Button 
-                          variant="ghost" 
-                          size="sm" 
+                        <Button
+                          variant="ghost"
+                          size="sm"
                           className="text-muted-foreground hover:text-foreground"
                           onClick={() => onResend?.(invitation.id)}
                         >
-                          <RefreshCw className="h-4 w-4 mr-1" />
+                          <RefreshCw className="mr-1 h-4 w-4" />
                           Resend
                         </Button>
-                        <Button 
-                          variant="ghost" 
-                          size="sm" 
-                          className="text-red-400 hover:text-red-300 hover:bg-red-950"
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="text-red-400 hover:bg-red-950 hover:text-red-300"
                           onClick={() => onRevoke?.(invitation.id)}
                         >
                           <X className="h-4 w-4" />
@@ -194,8 +189,10 @@ export function InvitedTab({ invitations, roles, onResend, onRevoke, onInvite }:
               {/* Pagination */}
               {totalPages > 1 && (
                 <div className="flex items-center justify-between px-6 py-4">
-                  <p className="text-sm text-muted-foreground">
-                    Showing {startIndex + 1}-{Math.min(startIndex + ITEMS_PER_PAGE, invitations.length)} of {invitations.length}
+                  <p className="text-muted-foreground text-sm">
+                    Showing {startIndex + 1}-
+                    {Math.min(startIndex + ITEMS_PER_PAGE, invitations.length)} of{" "}
+                    {invitations.length}
                   </p>
                   <div className="flex items-center gap-2">
                     <Button
@@ -203,11 +200,11 @@ export function InvitedTab({ invitations, roles, onResend, onRevoke, onInvite }:
                       size="sm"
                       onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
                       disabled={currentPage === 1}
-                      className="border text-muted-foreground disabled:opacity-50"
+                      className="text-muted-foreground border disabled:opacity-50"
                     >
                       <ChevronLeft className="h-4 w-4" />
                     </Button>
-                    <span className="text-sm text-muted-foreground">
+                    <span className="text-muted-foreground text-sm">
                       Page {currentPage} of {totalPages}
                     </span>
                     <Button
@@ -215,7 +212,7 @@ export function InvitedTab({ invitations, roles, onResend, onRevoke, onInvite }:
                       size="sm"
                       onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
                       disabled={currentPage === totalPages}
-                      className="border text-muted-foreground disabled:opacity-50"
+                      className="text-muted-foreground border disabled:opacity-50"
                     >
                       <ChevronRight className="h-4 w-4" />
                     </Button>

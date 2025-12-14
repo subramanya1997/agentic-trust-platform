@@ -32,11 +32,13 @@ A fully functional mockup of the Agentic Trust platform built with Next.js 16, T
 ## Getting Started
 
 1. Install dependencies:
+
 ```bash
 npm install
 ```
 
 2. Run the development server:
+
 ```bash
 npm run dev
 ```
@@ -61,6 +63,7 @@ npm run dev
 ## Agent Builder
 
 The agent builder (`/agents/new`) features a comprehensive chat-based interface for creating AI agents:
+
 - **Goal Definition:** Set clear objectives for your agent
 - **Integration Selection:** Choose from 12+ integrations
 - **Instructions:** Define agent behavior and guidelines
@@ -70,6 +73,7 @@ The agent builder (`/agents/new`) features a comprehensive chat-based interface 
 ## Activity Tracking
 
 The Activity page (`/activity`) provides comprehensive monitoring capabilities:
+
 - **Executions Tab:** Monitor all agent executions with filtering by status, agent, and date range
 - **Audit Log Tab:** Track all system events, user actions, and configuration changes
 - **Trace Viewer:** Detailed step-by-step execution traces with performance metrics and error analysis
@@ -77,6 +81,7 @@ The Activity page (`/activity`) provides comprehensive monitoring capabilities:
 ## Analytics Dashboard
 
 The Analytics page (`/analytics`) offers multi-dimensional insights:
+
 - **Costs Tab:** Track spending by agent, time period, and provider with interactive charts
 - **Performance Tab:** Monitor response times, success rates, and throughput metrics
 - **Usage Tab:** Analyze API calls, token consumption, and agent utilization
@@ -85,6 +90,7 @@ The Analytics page (`/analytics`) offers multi-dimensional insights:
 ## Mock Data
 
 All data is mocked across multiple files in `/lib/data/`:
+
 - **`mock-data.ts`** - Agents, integrations, dashboard statistics, team members
 - **`activity-data.ts`** - Audit logs and execution history
 - **`analytics-data.ts`** - Cost analytics, performance metrics, usage statistics
@@ -95,28 +101,33 @@ All data is mocked across multiple files in `/lib/data/`:
 ## Key Components
 
 ### Layout
+
 - `components/app-sidebar.tsx` - Main application sidebar with navigation
 - `components/layout/header.tsx` - Top header with search and actions
 - `components/nav-main.tsx` - Main navigation menu
 - `components/nav-user.tsx` - User navigation and profile
 
 ### Dashboard
+
 - `components/dashboard/stats-card.tsx` - Metric cards with trends
 - `components/dashboard/recent-executions.tsx` - Recent executions table
 - `components/dashboard/active-agents.tsx` - Active agents list
 
 ### Activity
+
 - `components/activity/audit-log-tab.tsx` - Audit log viewer
 - `components/activity/executions-tab.tsx` - Executions monitoring
 - `components/activity/trace-viewer.tsx` - Detailed execution trace viewer
 
 ### Analytics
+
 - `components/analytics/costs-tab.tsx` - Cost analytics and charts
 - `components/analytics/performance-tab.tsx` - Performance metrics
 - `components/analytics/usage-tab.tsx` - Usage statistics
 - `components/analytics/integrations-tab.tsx` - Integration analytics
 
 ### Organization & Team
+
 - `components/organization/general-tab.tsx` - Organization general settings
 - `components/organization/billing-tab.tsx` - Billing management
 - `components/organization/security-tab.tsx` - Security configuration
@@ -126,11 +137,13 @@ All data is mocked across multiple files in `/lib/data/`:
 - `components/team/invited-tab.tsx` - Invitation management
 
 ### UI Components
+
 - `components/ui/*` - Shadcn/ui components (Card, Badge, Button, Table, Dialog, etc.)
 
 ## Design System
 
 ### Colors
+
 - **Primary:** Blue (#3b82f6)
 - **Success:** Green (#10b981)
 - **Warning:** Yellow (#f59e0b)
@@ -138,6 +151,7 @@ All data is mocked across multiple files in `/lib/data/`:
 - **Info:** Blue (#3b82f6)
 
 ### Typography
+
 - **Font:** Inter (via next/font/google)
 - **Headings:** Bold, various sizes
 - **Body:** Regular, 14px base

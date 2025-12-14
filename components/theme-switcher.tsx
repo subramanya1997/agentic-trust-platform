@@ -1,33 +1,34 @@
-"use client"
+"use client";
 
-import { Moon, Sun } from "@/lib/icons"
-import { useTheme } from "next-themes"
-import { useEffect, useState } from "react"
+import { useTheme } from "next-themes";
+import { useEffect, useState } from "react";
 import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
   useSidebar,
-} from "@/components/ui/sidebar"
+} from "@/components/ui/sidebar";
+import { Moon, Sun } from "@/lib/icons";
 
 export function ThemeSwitcher() {
-  const { theme, setTheme } = useTheme()
-  const { state } = useSidebar()
-  const isCollapsed = state === "collapsed"
-  const [mounted, setMounted] = useState(false)
+  const { theme, setTheme } = useTheme();
+  const { state } = useSidebar();
+  const isCollapsed = state === "collapsed";
+  const [mounted, setMounted] = useState(false);
 
   // Avoid hydration mismatch
   useEffect(() => {
-    setMounted(true)
-  }, [])
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setMounted(true);
+  }, []);
 
   if (!mounted) {
-    return null
+    return null;
   }
 
   const toggleTheme = () => {
-    setTheme(theme === "dark" ? "light" : "dark")
-  }
+    setTheme(theme === "dark" ? "light" : "dark");
+  };
 
   return (
     <SidebarMenu>
@@ -38,17 +39,10 @@ export function ThemeSwitcher() {
             className="flex items-center justify-center"
             onClick={toggleTheme}
           >
-            {theme === "dark" ? (
-              <Sun className="size-4" />
-            ) : (
-              <Moon className="size-4" />
-            )}
+            {theme === "dark" ? <Sun className="size-4" /> : <Moon className="size-4" />}
           </SidebarMenuButton>
         ) : (
-          <SidebarMenuButton
-            onClick={toggleTheme}
-            className="flex items-center gap-2 w-full"
-          >
+          <SidebarMenuButton onClick={toggleTheme} className="flex w-full items-center gap-2">
             {theme === "dark" ? (
               <>
                 <Sun className="size-4" />
@@ -64,6 +58,5 @@ export function ThemeSwitcher() {
         )}
       </SidebarMenuItem>
     </SidebarMenu>
-  )
+  );
 }
-

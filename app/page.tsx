@@ -1,28 +1,19 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
-import {
-  StatsCard,
-  ExecutionTrend,
-  QuickActions,
-  RecentActivity,
-} from "@/components/dashboard";
+import { useState } from "react";
+import { ExecutionTrend, QuickActions, RecentActivity, StatsCard } from "@/components/dashboard";
 import { Header } from "@/components/layout/header";
 import { Badge } from "@/components/ui/badge";
-import {
-  mockDashboardStats,
-  mockExecutions,
-} from "@/lib/data/mock-data";
-import {
-  getAnalyticsData,
-} from "@/lib/data/analytics-data";
+import { DEFAULT_DATE_RANGE } from "@/lib/constants";
 import { mockExecutionTraces } from "@/lib/data/activity-data";
+import { getAnalyticsData } from "@/lib/data/analytics-data";
+import { mockDashboardStats, mockExecutions } from "@/lib/data/mock-data";
+import { AlertTriangle, Clock } from "@/lib/icons";
 import { formatCurrency, formatPercentage } from "@/lib/utils";
-import { Clock, AlertTriangle } from "@/lib/icons";
 
 export default function Home() {
-  const [dateRange, setDateRange] = useState<"7d" | "14d" | "30d">("7d");
+  const [dateRange, setDateRange] = useState<"7d" | "14d" | "30d">(DEFAULT_DATE_RANGE);
   const [now] = useState(() => Date.now());
 
   const stats = mockDashboardStats;
@@ -30,9 +21,7 @@ export default function Home() {
   const recentExecutions = mockExecutionTraces.slice(0, 10);
 
   // Calculate action items
-  const pendingApprovals = mockExecutions.filter(
-    (e) => e.status === "waiting_approval"
-  ).length;
+  const pendingApprovals = mockExecutions.filter((e) => e.status === "waiting_approval").length;
   const recentFailures = mockExecutionTraces.filter((t) => {
     const executionTime = new Date(t.startedAt).getTime();
     const oneDayAgo = now - 24 * 60 * 60 * 1000;
@@ -45,11 +34,13 @@ export default function Home() {
 
   // Calculate totals
   const totalCost = costData.reduce((sum, d) => sum + d.cost, 0);
-  const projectedMonthly = Math.round((totalCost / (dateRange === "7d" ? 7 : dateRange === "14d" ? 14 : 30)) * 30);
+  const projectedMonthly = Math.round(
+    (totalCost / (dateRange === "7d" ? 7 : dateRange === "14d" ? 14 : 30)) * 30
+  );
 
   return (
     <>
-      <Header 
+      <Header
         subtitle="Monitor your AI agent infrastructure at a glance"
         actionButton={
           <div className="flex items-center gap-2">
@@ -57,9 +48,9 @@ export default function Home() {
               <Link href="/activity?status=waiting_approval">
                 <Badge
                   variant="outline"
-                  className="bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20 dark:border-amber-800 hover:bg-amber-500/20 cursor-pointer"
+                  className="cursor-pointer border-amber-500/20 bg-amber-500/10 text-amber-600 hover:bg-amber-500/20 dark:border-amber-800 dark:text-amber-400"
                 >
-                  <Clock className="h-3.5 w-3.5 mr-1.5" />
+                  <Clock className="mr-1.5 h-3.5 w-3.5" />
                   {pendingApprovals} Pending
                 </Badge>
               </Link>
@@ -68,9 +59,9 @@ export default function Home() {
               <Link href="/activity?status=failed">
                 <Badge
                   variant="outline"
-                  className="bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/20 dark:border-red-800 hover:bg-red-500/20 cursor-pointer"
+                  className="cursor-pointer border-red-500/20 bg-red-500/10 text-red-600 hover:bg-red-500/20 dark:border-red-800 dark:text-red-400"
                 >
-                  <AlertTriangle className="h-3.5 w-3.5 mr-1.5" />
+                  <AlertTriangle className="mr-1.5 h-3.5 w-3.5" />
                   {recentFailures} Failed
                 </Badge>
               </Link>
@@ -78,9 +69,8 @@ export default function Home() {
           </div>
         }
       />
-      <main className="flex-1 overflow-y-auto overflow-x-hidden p-6">
-        <div className="space-y-6 min-w-0">
-
+      <main className="flex-1 overflow-x-hidden overflow-y-auto p-6">
+        <div className="min-w-0 space-y-6">
           {/* Stats Grid */}
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
             <StatsCard

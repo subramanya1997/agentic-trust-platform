@@ -1,14 +1,13 @@
 "use client";
 
-import { useState } from "react";
-import { useParams } from "next/navigation";
 import Link from "next/link";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useParams } from "next/navigation";
+import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Select,
   SelectContent,
@@ -16,14 +15,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { mockAgents } from "@/lib/data/mock-data";
 import {
   getWebhookById,
   getWebhookDeliveries,
   type Webhook,
   type WebhookDelivery,
 } from "@/lib/data/webhooks-data";
-import { mockAgents } from "@/lib/data/mock-data";
-import { formatRelativeTime } from "@/lib/utils";
 import {
   ArrowLeft,
   Copy,
@@ -44,6 +43,7 @@ import {
   Play,
   Pause,
 } from "@/lib/icons";
+import { formatRelativeTime } from "@/lib/utils";
 
 export default function WebhookDetailPage() {
   const params = useParams();
@@ -62,8 +62,8 @@ function WebhookContent({ webhookId }: { webhookId: string }) {
 
   if (!webhook) {
     return (
-      <div className="flex flex-col h-screen bg-background">
-        <header className="sticky top-0 z-10 flex h-14 shrink-0 items-center border-b border-border bg-background px-4">
+      <div className="bg-background flex h-screen flex-col">
+        <header className="border-border bg-background sticky top-0 z-10 flex h-14 shrink-0 items-center border-b px-4">
           <div className="text-muted-foreground">Loading...</div>
         </header>
       </div>
@@ -88,9 +88,9 @@ function WebhookContent({ webhookId }: { webhookId: string }) {
       case "failed":
         return <XCircle className="h-4 w-4 text-red-400" />;
       case "retrying":
-        return <RefreshCw className="h-4 w-4 text-amber-400 animate-spin" />;
+        return <RefreshCw className="h-4 w-4 animate-spin text-amber-400" />;
       default:
-        return <Clock className="h-4 w-4 text-muted-foreground" />;
+        return <Clock className="text-muted-foreground h-4 w-4" />;
     }
   };
 
@@ -98,19 +98,28 @@ function WebhookContent({ webhookId }: { webhookId: string }) {
     switch (status) {
       case "success":
         return (
-          <Badge variant="outline" className="bg-green-500/10 border-green-500 text-green-600 dark:text-green-400">
+          <Badge
+            variant="outline"
+            className="border-green-500 bg-green-500/10 text-green-600 dark:text-green-400"
+          >
             Success
           </Badge>
         );
       case "failed":
         return (
-          <Badge variant="outline" className="bg-red-500/10 border-red-500 text-red-600 dark:text-red-400">
+          <Badge
+            variant="outline"
+            className="border-red-500 bg-red-500/10 text-red-600 dark:text-red-400"
+          >
             Failed
           </Badge>
         );
       case "retrying":
         return (
-          <Badge variant="outline" className="bg-amber-500/10 border-amber-500 text-amber-600 dark:text-amber-400">
+          <Badge
+            variant="outline"
+            className="border-amber-500 bg-amber-500/10 text-amber-600 dark:text-amber-400"
+          >
             Retrying
           </Badge>
         );
@@ -124,13 +133,13 @@ function WebhookContent({ webhookId }: { webhookId: string }) {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-background">
+    <div className="bg-background flex h-screen flex-col">
       {/* Header - matching agents page style */}
-      <header className="sticky top-0 z-10 flex h-14 shrink-0 items-center justify-between border-b border-border bg-background px-4">
+      <header className="border-border bg-background sticky top-0 z-10 flex h-14 shrink-0 items-center justify-between border-b px-4">
         <div className="flex items-center gap-4">
           <Link
             href="/webhooks"
-            className="flex items-center text-sm text-muted-foreground hover:text-foreground transition-colors"
+            className="text-muted-foreground hover:text-foreground flex items-center text-sm transition-colors"
           >
             <ArrowLeft className="mr-2 h-4 w-4" />
             Webhooks
@@ -144,7 +153,7 @@ function WebhookContent({ webhookId }: { webhookId: string }) {
             variant="outline"
             className={
               webhook.status === "active"
-                ? "bg-green-500/10 border-green-500 text-green-600 dark:text-green-400"
+                ? "border-green-500 bg-green-500/10 text-green-600 dark:text-green-400"
                 : "bg-accent text-muted-foreground border"
             }
           >
@@ -152,28 +161,37 @@ function WebhookContent({ webhookId }: { webhookId: string }) {
           </Badge>
         </div>
         <div className="flex items-center gap-2">
-          <span className="text-xs text-foreground0" suppressHydrationWarning>
-            Last triggered {webhook.lastTriggered ? formatRelativeTime(webhook.lastTriggered) : "Never"}
+          <span className="text-foreground0 text-xs" suppressHydrationWarning>
+            Last triggered{" "}
+            {webhook.lastTriggered ? formatRelativeTime(webhook.lastTriggered) : "Never"}
           </span>
           <Button
             variant="ghost"
             size="icon"
-            className="h-8 w-8 text-muted-foreground hover:text-foreground"
+            className="text-muted-foreground hover:text-foreground h-8 w-8"
             onClick={() => copyToClipboard(webhook.url, "url")}
           >
-            {copiedUrl ? <Check className="h-4 w-4 text-green-500" /> : <Copy className="h-4 w-4" />}
+            {copiedUrl ? (
+              <Check className="h-4 w-4 text-green-500" />
+            ) : (
+              <Copy className="h-4 w-4" />
+            )}
           </Button>
           <Button
             variant="ghost"
             size="icon"
-            className="h-8 w-8 text-muted-foreground hover:text-foreground"
+            className="text-muted-foreground hover:text-foreground h-8 w-8"
           >
-            {webhook.status === "active" ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
+            {webhook.status === "active" ? (
+              <Pause className="h-4 w-4" />
+            ) : (
+              <Play className="h-4 w-4" />
+            )}
           </Button>
           <Button
             variant="ghost"
             size="icon"
-            className="h-8 w-8 text-muted-foreground hover:text-red-400"
+            className="text-muted-foreground h-8 w-8 hover:text-red-400"
           >
             <Trash2 className="h-4 w-4" />
           </Button>
@@ -181,17 +199,17 @@ function WebhookContent({ webhookId }: { webhookId: string }) {
       </header>
 
       {/* Main Content */}
-      <div className="flex flex-1 overflow-hidden min-w-0">
-        <div className="flex-1 overflow-y-auto overflow-x-hidden min-w-0">
-          <div className="max-w-4xl mx-auto px-8 py-10">
+      <div className="flex min-w-0 flex-1 overflow-hidden">
+        <div className="min-w-0 flex-1 overflow-x-hidden overflow-y-auto">
+          <div className="mx-auto max-w-4xl px-8 py-10">
             {/* Webhook Info Section */}
             <div className="mb-8">
-              <h1 className="text-3xl font-bold text-foreground mb-2">{webhook.name}</h1>
+              <h1 className="text-foreground mb-2 text-3xl font-bold">{webhook.name}</h1>
               <p className="text-muted-foreground mb-4">{webhook.description}</p>
-              
+
               {/* URL Display */}
-              <div className="flex items-center gap-2 mb-6">
-                <code className="text-sm text-muted-foreground font-mono bg-accent px-3 py-1.5 rounded-lg">
+              <div className="mb-6 flex items-center gap-2">
+                <code className="text-muted-foreground bg-accent rounded-lg px-3 py-1.5 font-mono text-sm">
                   {webhook.url}
                 </code>
                 <button
@@ -207,35 +225,42 @@ function WebhookContent({ webhookId }: { webhookId: string }) {
               </div>
 
               {/* Stats Row - Simplified without large icons */}
-              <div className="grid gap-4 md:grid-cols-4 pb-6 border-b border-border">
+              <div className="border-border grid gap-4 border-b pb-6 md:grid-cols-4">
                 <div>
-                  <p className="text-xs text-foreground0 uppercase tracking-wider">Deliveries</p>
-                  <p className="mt-1 text-2xl font-bold text-foreground">
+                  <p className="text-foreground0 text-xs tracking-wider uppercase">Deliveries</p>
+                  <p className="text-foreground mt-1 text-2xl font-bold">
                     {webhook.totalDeliveries.toLocaleString()}
                   </p>
                 </div>
                 <div>
-                  <p className="text-xs text-foreground0 uppercase tracking-wider">Success Rate</p>
-                  <p className={`mt-1 text-2xl font-bold ${
-                    webhook.successRate >= 98 ? "text-green-400" : 
-                    webhook.successRate >= 95 ? "text-amber-400" : "text-red-400"
-                  }`}>
+                  <p className="text-foreground0 text-xs tracking-wider uppercase">Success Rate</p>
+                  <p
+                    className={`mt-1 text-2xl font-bold ${
+                      webhook.successRate >= 98
+                        ? "text-green-400"
+                        : webhook.successRate >= 95
+                          ? "text-amber-400"
+                          : "text-red-400"
+                    }`}
+                  >
                     {webhook.successRate.toFixed(1)}%
                   </p>
                 </div>
                 <div>
-                  <p className="text-xs text-foreground0 uppercase tracking-wider">Target Agent</p>
+                  <p className="text-foreground0 text-xs tracking-wider uppercase">Target Agent</p>
                   <Link
                     href={`/agents/${webhook.targetAgentId}`}
-                    className="mt-1 text-sm font-medium text-foreground hover:text-amber-500 flex items-center gap-1"
+                    className="text-foreground mt-1 flex items-center gap-1 text-sm font-medium hover:text-amber-500"
                   >
                     {webhook.targetAgentName}
                     <ExternalLink className="h-3 w-3" />
                   </Link>
                 </div>
                 <div>
-                  <p className="text-xs text-foreground0 uppercase tracking-wider">Last Triggered</p>
-                  <p className="mt-1 text-sm font-medium text-foreground" suppressHydrationWarning>
+                  <p className="text-foreground0 text-xs tracking-wider uppercase">
+                    Last Triggered
+                  </p>
+                  <p className="text-foreground mt-1 text-sm font-medium" suppressHydrationWarning>
                     {webhook.lastTriggered ? formatRelativeTime(webhook.lastTriggered) : "Never"}
                   </p>
                 </div>
@@ -254,7 +279,7 @@ function WebhookContent({ webhookId }: { webhookId: string }) {
                 <TabsTrigger value="logs" className="data-[state=active]:bg-muted">
                   Logs
                   {deliveries.length > 0 && (
-                    <span className="ml-1.5 text-[10px] bg-amber-600 text-white px-1.5 py-0.5 rounded">
+                    <span className="ml-1.5 rounded bg-amber-600 px-1.5 py-0.5 text-[10px] text-white">
                       {deliveries.length}
                     </span>
                   )}
@@ -273,14 +298,14 @@ function WebhookContent({ webhookId }: { webhookId: string }) {
                         <Label className="text-foreground">Name</Label>
                         <Input
                           defaultValue={webhook.name}
-                          className="bg-accent border text-foreground"
+                          className="bg-accent text-foreground border"
                         />
                       </div>
                       <div className="space-y-2">
                         <Label className="text-foreground">Description</Label>
                         <Input
                           defaultValue={webhook.description}
-                          className="bg-accent border text-foreground"
+                          className="bg-accent text-foreground border"
                         />
                       </div>
                     </div>
@@ -291,7 +316,7 @@ function WebhookContent({ webhookId }: { webhookId: string }) {
                         <Input
                           value={webhook.url}
                           readOnly
-                          className="bg-accent border text-muted-foreground font-mono"
+                          className="bg-accent text-muted-foreground border font-mono"
                         />
                         <Button
                           variant="outline"
@@ -311,7 +336,7 @@ function WebhookContent({ webhookId }: { webhookId: string }) {
                     <div className="space-y-2">
                       <Label className="text-foreground">Target Agent</Label>
                       <Select defaultValue={webhook.targetAgentId}>
-                        <SelectTrigger className="bg-accent border text-foreground">
+                        <SelectTrigger className="bg-accent text-foreground border">
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent className="bg-accent border">
@@ -336,12 +361,12 @@ function WebhookContent({ webhookId }: { webhookId: string }) {
                             <Input
                               defaultValue={key}
                               placeholder="Header name"
-                              className="bg-accent border text-foreground flex-1"
+                              className="bg-accent text-foreground flex-1 border"
                             />
                             <Input
                               defaultValue={value}
                               placeholder="Header value"
-                              className="bg-accent border text-foreground flex-1"
+                              className="bg-accent text-foreground flex-1 border"
                             />
                             <Button
                               variant="ghost"
@@ -355,23 +380,25 @@ function WebhookContent({ webhookId }: { webhookId: string }) {
                         <Button
                           variant="outline"
                           size="sm"
-                          className="border text-muted-foreground"
+                          className="text-muted-foreground border"
                         >
-                          <Plus className="h-4 w-4 mr-2" />
+                          <Plus className="mr-2 h-4 w-4" />
                           Add Header
                         </Button>
                       </div>
                     </div>
 
                     <div className="pt-4">
-                      <h3 className="text-sm font-medium text-foreground mb-4">Retry Configuration</h3>
+                      <h3 className="text-foreground mb-4 text-sm font-medium">
+                        Retry Configuration
+                      </h3>
                       <div className="grid gap-4 md:grid-cols-3">
                         <div className="space-y-2">
                           <Label className="text-muted-foreground">Max Retries</Label>
                           <Input
                             type="number"
                             defaultValue={webhook.retryConfig.maxRetries}
-                            className="bg-accent border text-foreground"
+                            className="bg-accent text-foreground border"
                           />
                         </div>
                         <div className="space-y-2">
@@ -379,7 +406,7 @@ function WebhookContent({ webhookId }: { webhookId: string }) {
                           <Input
                             type="number"
                             defaultValue={webhook.retryConfig.retryDelayMs}
-                            className="bg-accent border text-foreground"
+                            className="bg-accent text-foreground border"
                           />
                         </div>
                         <div className="space-y-2">
@@ -387,7 +414,7 @@ function WebhookContent({ webhookId }: { webhookId: string }) {
                           <Select
                             defaultValue={webhook.retryConfig.exponentialBackoff ? "true" : "false"}
                           >
-                            <SelectTrigger className="bg-accent border text-foreground">
+                            <SelectTrigger className="bg-accent text-foreground border">
                               <SelectValue />
                             </SelectTrigger>
                             <SelectContent className="bg-accent border">
@@ -404,7 +431,7 @@ function WebhookContent({ webhookId }: { webhookId: string }) {
                     </div>
 
                     <div className="flex justify-end">
-                      <Button className="bg-amber-600 hover:bg-amber-500 text-white">
+                      <Button className="bg-amber-600 text-white hover:bg-amber-500">
                         Save Changes
                       </Button>
                     </div>
@@ -422,7 +449,7 @@ function WebhookContent({ webhookId }: { webhookId: string }) {
                     <div className="space-y-2">
                       <Label className="text-foreground">Authentication Type</Label>
                       <Select defaultValue={webhook.security.authType}>
-                        <SelectTrigger className="bg-accent border text-foreground">
+                        <SelectTrigger className="bg-accent text-foreground border">
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent className="bg-accent border">
@@ -451,7 +478,7 @@ function WebhookContent({ webhookId }: { webhookId: string }) {
                               type={showSecret ? "text" : "password"}
                               value={webhook.security.hmacSecret || ""}
                               readOnly
-                              className="bg-accent border text-muted-foreground font-mono"
+                              className="bg-accent text-muted-foreground border font-mono"
                             />
                             <Button
                               variant="outline"
@@ -480,7 +507,7 @@ function WebhookContent({ webhookId }: { webhookId: string }) {
                               )}
                             </Button>
                           </div>
-                          <p className="text-xs text-foreground0">
+                          <p className="text-foreground0 text-xs">
                             Use this secret to verify webhook signatures in your source application.
                           </p>
                         </div>
@@ -488,7 +515,7 @@ function WebhookContent({ webhookId }: { webhookId: string }) {
                         <div className="space-y-2">
                           <Label className="text-foreground">HMAC Algorithm</Label>
                           <Select defaultValue={webhook.security.hmacAlgorithm || "sha256"}>
-                            <SelectTrigger className="bg-accent border text-foreground w-48">
+                            <SelectTrigger className="bg-accent text-foreground w-48 border">
                               <SelectValue />
                             </SelectTrigger>
                             <SelectContent className="bg-accent border">
@@ -505,13 +532,13 @@ function WebhookContent({ webhookId }: { webhookId: string }) {
                     )}
 
                     <div className="pt-4">
-                      <h3 className="text-sm font-medium text-foreground mb-4">IP Allowlist</h3>
+                      <h3 className="text-foreground mb-4 text-sm font-medium">IP Allowlist</h3>
                       <div className="space-y-2">
                         {(webhook.security.ipAllowlist || []).map((ip, index) => (
                           <div key={index} className="flex gap-2">
                             <Input
                               defaultValue={ip}
-                              className="bg-accent border text-foreground font-mono"
+                              className="bg-accent text-foreground border font-mono"
                             />
                             <Button
                               variant="ghost"
@@ -525,31 +552,31 @@ function WebhookContent({ webhookId }: { webhookId: string }) {
                         <Button
                           variant="outline"
                           size="sm"
-                          className="border text-muted-foreground"
+                          className="text-muted-foreground border"
                         >
-                          <Plus className="h-4 w-4 mr-2" />
+                          <Plus className="mr-2 h-4 w-4" />
                           Add IP Address
                         </Button>
                       </div>
-                      <p className="text-xs text-foreground0 mt-2">
+                      <p className="text-foreground0 mt-2 text-xs">
                         Leave empty to allow requests from any IP address.
                       </p>
                     </div>
 
                     <div className="pt-4">
-                      <h3 className="text-sm font-medium text-foreground mb-4">Rate Limiting</h3>
+                      <h3 className="text-foreground mb-4 text-sm font-medium">Rate Limiting</h3>
                       <div className="space-y-2">
                         <Label className="text-muted-foreground">Requests per minute</Label>
                         <Input
                           type="number"
                           defaultValue={webhook.security.rateLimitPerMinute || 100}
-                          className="bg-accent border text-foreground w-48"
+                          className="bg-accent text-foreground w-48 border"
                         />
                       </div>
                     </div>
 
                     <div className="flex justify-end">
-                      <Button className="bg-amber-600 hover:bg-amber-500 text-white">
+                      <Button className="bg-amber-600 text-white hover:bg-amber-500">
                         Save Changes
                       </Button>
                     </div>
@@ -562,8 +589,8 @@ function WebhookContent({ webhookId }: { webhookId: string }) {
                 <Card className="bg-card border">
                   <CardHeader className="flex flex-row items-center justify-between">
                     <CardTitle className="text-foreground">Delivery Logs</CardTitle>
-                    <Button variant="outline" size="sm" className="border text-muted-foreground">
-                      <RefreshCw className="h-4 w-4 mr-2" />
+                    <Button variant="outline" size="sm" className="text-muted-foreground border">
+                      <RefreshCw className="mr-2 h-4 w-4" />
                       Refresh
                     </Button>
                   </CardHeader>
@@ -573,7 +600,7 @@ function WebhookContent({ webhookId }: { webhookId: string }) {
                         deliveries.map((delivery) => (
                           <div key={delivery.id}>
                             <div
-                              className="flex items-center gap-4 px-6 py-4 hover:bg-accent/50 cursor-pointer transition-colors"
+                              className="hover:bg-accent/50 flex cursor-pointer items-center gap-4 px-6 py-4 transition-colors"
                               onClick={() =>
                                 setExpandedDelivery(
                                   expandedDelivery === delivery.id ? null : delivery.id
@@ -588,17 +615,17 @@ function WebhookContent({ webhookId }: { webhookId: string }) {
                                 )}
                               </button>
                               {getDeliveryStatusIcon(delivery.status)}
-                              <div className="flex-1 min-w-0">
+                              <div className="min-w-0 flex-1">
                                 <div className="flex items-center gap-2">
                                   <span
-                                    className="text-sm text-foreground"
+                                    className="text-foreground text-sm"
                                     suppressHydrationWarning
                                   >
                                     {formatRelativeTime(delivery.timestamp)}
                                   </span>
                                   {getDeliveryStatusBadge(delivery.status)}
                                 </div>
-                                <p className="text-xs text-foreground0 mt-0.5">
+                                <p className="text-foreground0 mt-0.5 text-xs">
                                   {delivery.sourceIp} • {delivery.duration}ms
                                   {delivery.retryCount > 0 && ` • ${delivery.retryCount} retries`}
                                 </p>
@@ -608,8 +635,8 @@ function WebhookContent({ webhookId }: { webhookId: string }) {
                                   variant="outline"
                                   className={
                                     delivery.responseStatus >= 200 && delivery.responseStatus < 300
-                                      ? "bg-green-500/10 border-green-500 text-green-600 dark:text-green-400"
-                                      : "bg-red-500/10 border-red-500 text-red-600 dark:text-red-400"
+                                      ? "border-green-500 bg-green-500/10 text-green-600 dark:text-green-400"
+                                      : "border-red-500 bg-red-500/10 text-red-600 dark:text-red-400"
                                   }
                                 >
                                   {delivery.responseStatus}
@@ -619,35 +646,39 @@ function WebhookContent({ webhookId }: { webhookId: string }) {
                                 <Button
                                   variant="outline"
                                   size="sm"
-                                  className="border text-muted-foreground"
+                                  className="text-muted-foreground border"
                                   onClick={(e) => e.stopPropagation()}
                                 >
-                                  <RefreshCw className="h-3 w-3 mr-1" />
+                                  <RefreshCw className="mr-1 h-3 w-3" />
                                   Retry
                                 </Button>
                               )}
                             </div>
 
                             {expandedDelivery === delivery.id && (
-                              <div className="px-6 py-4 bg-background">
+                              <div className="bg-background px-6 py-4">
                                 <div className="grid gap-4 md:grid-cols-2">
                                   <div className="space-y-2">
-                                    <Label className="text-muted-foreground text-xs">Request Payload</Label>
-                                    <pre className="text-xs text-muted-foreground font-mono bg-card p-3 rounded-lg overflow-auto max-h-48">
+                                    <Label className="text-muted-foreground text-xs">
+                                      Request Payload
+                                    </Label>
+                                    <pre className="text-muted-foreground bg-card max-h-48 overflow-auto rounded-lg p-3 font-mono text-xs">
                                       {JSON.stringify(delivery.requestPayload, null, 2)}
                                     </pre>
                                   </div>
                                   <div className="space-y-2">
-                                    <Label className="text-muted-foreground text-xs">Response</Label>
+                                    <Label className="text-muted-foreground text-xs">
+                                      Response
+                                    </Label>
                                     {delivery.error ? (
-                                      <div className="bg-red-950/50 border border-red-800 rounded-lg p-3">
+                                      <div className="rounded-lg border border-red-800 bg-red-950/50 p-3">
                                         <div className="flex items-start gap-2">
-                                          <AlertCircle className="h-4 w-4 text-red-400 mt-0.5" />
+                                          <AlertCircle className="mt-0.5 h-4 w-4 text-red-400" />
                                           <p className="text-xs text-red-300">{delivery.error}</p>
                                         </div>
                                       </div>
                                     ) : (
-                                      <pre className="text-xs text-muted-foreground font-mono bg-card p-3 rounded-lg overflow-auto max-h-48">
+                                      <pre className="text-muted-foreground bg-card max-h-48 overflow-auto rounded-lg p-3 font-mono text-xs">
                                         {delivery.responseBody || "No response body"}
                                       </pre>
                                     )}
@@ -657,7 +688,7 @@ function WebhookContent({ webhookId }: { webhookId: string }) {
                                   <div className="mt-4 pt-4">
                                     <Link
                                       href={`/activity?execution=${delivery.executionId}`}
-                                      className="text-sm text-amber-500 hover:text-amber-400 flex items-center gap-1"
+                                      className="flex items-center gap-1 text-sm text-amber-500 hover:text-amber-400"
                                     >
                                       View Execution Trace
                                       <ExternalLink className="h-3 w-3" />
@@ -671,7 +702,7 @@ function WebhookContent({ webhookId }: { webhookId: string }) {
                       ) : (
                         <div className="px-6 py-12 text-center">
                           <p className="text-muted-foreground">No deliveries yet</p>
-                          <p className="text-sm text-foreground0 mt-1">
+                          <p className="text-foreground0 mt-1 text-sm">
                             Deliveries will appear here when the webhook receives requests.
                           </p>
                         </div>

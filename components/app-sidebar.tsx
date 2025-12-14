@@ -1,39 +1,11 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import Image from "next/image"
-import Link from "next/link"
-import {
-  LayoutDashboard,
-  Bot,
-  HelpCircle,
-  Activity,
-  BookOpen,
-  Key,
-  Users,
-  BarChart3,
-  Webhook,
-  Building2,
-  Zap,
-} from "@/lib/icons"
-
-// Custom MCP icon component to match Lucide icon interface
-// Using inline SVG to ensure proper sizing in collapsed sidebar state
-function McpIcon({ className }: { className?: string }) {
-  return (
-    <Image
-      src="/icons/mcp.svg"
-      alt="MCP"
-      width={16}
-      height={16}
-      className={`brightness-0 dark:invert shrink-0 ${className || ""}`}
-    />
-  )
-}
-
-import { NavMain } from "@/components/nav-main"
-import { NavUser } from "@/components/nav-user"
-import { ThemeSwitcher } from "@/components/theme-switcher"
+import Image from "next/image";
+import Link from "next/link";
+import * as React from "react";
+import { NavMain } from "@/components/nav-main";
+import { NavUser } from "@/components/nav-user";
+import { ThemeSwitcher } from "@/components/theme-switcher";
 import {
   Sidebar,
   SidebarContent,
@@ -44,7 +16,34 @@ import {
   SidebarMenuItem,
   SidebarTrigger,
   useSidebar,
-} from "@/components/ui/sidebar"
+} from "@/components/ui/sidebar";
+import {
+  Activity,
+  BarChart3,
+  BookOpen,
+  Bot,
+  Building2,
+  HelpCircle,
+  Key,
+  LayoutDashboard,
+  Users,
+  Webhook,
+  Zap,
+} from "@/lib/icons";
+
+// Custom MCP icon component to match Lucide icon interface
+// Using inline SVG to ensure proper sizing in collapsed sidebar state
+function McpIcon({ className }: { className?: string }) {
+  return (
+    <Image
+      src="/icons/mcp.svg"
+      alt="MCP"
+      width={16}
+      height={16}
+      className={`shrink-0 brightness-0 dark:invert ${className || ""}`}
+    />
+  );
+}
 
 const data = {
   user: {
@@ -122,18 +121,18 @@ const data = {
       icon: HelpCircle,
     },
   ],
-}
+};
 
 function SidebarHeaderContent() {
-  const { state } = useSidebar()
-  const isCollapsed = state === "collapsed"
+  const { state } = useSidebar();
+  const isCollapsed = state === "collapsed";
 
   return (
     <SidebarHeader>
       <SidebarMenu>
         <SidebarMenuItem>
           {isCollapsed ? (
-            <SidebarTrigger className="size-8 mx-auto" />
+            <SidebarTrigger className="mx-auto size-8" />
           ) : (
             <SidebarMenuButton size="lg" asChild>
               <Link href="/">
@@ -146,7 +145,7 @@ function SidebarHeaderContent() {
         </SidebarMenuItem>
       </SidebarMenu>
     </SidebarHeader>
-  )
+  );
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
@@ -165,5 +164,5 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavUser user={data.user} />
       </SidebarFooter>
     </Sidebar>
-  )
+  );
 }

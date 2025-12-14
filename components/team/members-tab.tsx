@@ -1,10 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { DataTable, TableRow, TableCell } from "@/components/data-table";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import {
   Select,
   SelectContent,
@@ -46,83 +46,84 @@ export function MembersTab({ members, roles, onRoleChange, onRemove }: MembersTa
       <CardContent className="p-0">
         <DataTable
           headers={[
-            { label: 'Member', align: 'left' },
-            { label: 'Role', align: 'left' },
-            { label: 'Status', align: 'left' },
-            { label: 'Last Active', align: 'left' },
-            { label: 'Actions', align: 'right' },
+            { label: "Member", align: "left" },
+            { label: "Role", align: "left" },
+            { label: "Status", align: "left" },
+            { label: "Last Active", align: "left" },
+            { label: "Actions", align: "right" },
           ]}
         >
           {paginatedMembers.map((member) => (
             <TableRow key={member.id}>
               <TableCell className="px-4 py-3 whitespace-nowrap">
-                  <div className="flex items-center gap-3">
-                    <div className="h-9 w-9 rounded-full bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center text-white text-sm font-medium">
-                      {member.avatar}
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-foreground">{member.name}</p>
-                      <p className="text-xs text-foreground0">{member.email}</p>
-                    </div>
+                <div className="flex items-center gap-3">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-amber-500 to-orange-600 text-sm font-medium text-white">
+                    {member.avatar}
                   </div>
-                </TableCell>
-                <TableCell className="px-4 py-3 whitespace-nowrap">
-                  <Select 
-                    defaultValue={member.role}
-                    onValueChange={(value) => onRoleChange?.(member.id, value)}
-                  >
-                    <SelectTrigger className="w-[120px] border bg-accent text-foreground" size="sm">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent className="border bg-card">
-                      {roles.map((role) => (
-                        <SelectItem 
-                          key={role.id} 
-                          value={role.name} 
-                          className="text-muted-foreground focus:bg-accent focus:text-foreground"
-                        >
-                          {role.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </TableCell>
-                <TableCell className="px-4 py-3 whitespace-nowrap">
-                  <Badge
-                    variant="outline"
-                    className={member.status === "active" ? "bg-green-500/10 border-green-500 text-green-600 dark:text-green-400" : ""}
-                  >
-                    {member.status === "active" && (
-                      <CheckCircle className="h-3 w-3 mr-1" />
-                    )}
-                    {member.status === "inactive" && (
-                      <Circle className="h-3 w-3 mr-1" />
-                    )}
-                    {member.status}
-                  </Badge>
-                </TableCell>
-                <TableCell className="px-4 py-3 whitespace-nowrap">
-                  <span className="text-sm text-muted-foreground">{member.lastActive}</span>
-                </TableCell>
-                <TableCell className="px-4 py-3 whitespace-nowrap text-right">
-                  <Button 
-                    variant="ghost" 
-                    size="sm" 
-                    className="text-red-400 hover:text-red-300 hover:bg-red-950"
-                    onClick={() => onRemove?.(member.id)}
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                </TableCell>
-              </TableRow>
-            ))}
+                  <div>
+                    <p className="text-foreground text-sm font-medium">{member.name}</p>
+                    <p className="text-foreground0 text-xs">{member.email}</p>
+                  </div>
+                </div>
+              </TableCell>
+              <TableCell className="px-4 py-3 whitespace-nowrap">
+                <Select
+                  defaultValue={member.role}
+                  onValueChange={(value) => onRoleChange?.(member.id, value)}
+                >
+                  <SelectTrigger className="bg-accent text-foreground w-[120px] border" size="sm">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent className="bg-card border">
+                    {roles.map((role) => (
+                      <SelectItem
+                        key={role.id}
+                        value={role.name}
+                        className="text-muted-foreground focus:bg-accent focus:text-foreground"
+                      >
+                        {role.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </TableCell>
+              <TableCell className="px-4 py-3 whitespace-nowrap">
+                <Badge
+                  variant="outline"
+                  className={
+                    member.status === "active"
+                      ? "border-green-500 bg-green-500/10 text-green-600 dark:text-green-400"
+                      : ""
+                  }
+                >
+                  {member.status === "active" && <CheckCircle className="mr-1 h-3 w-3" />}
+                  {member.status === "inactive" && <Circle className="mr-1 h-3 w-3" />}
+                  {member.status}
+                </Badge>
+              </TableCell>
+              <TableCell className="px-4 py-3 whitespace-nowrap">
+                <span className="text-muted-foreground text-sm">{member.lastActive}</span>
+              </TableCell>
+              <TableCell className="px-4 py-3 text-right whitespace-nowrap">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-red-400 hover:bg-red-950 hover:text-red-300"
+                  onClick={() => onRemove?.(member.id)}
+                >
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              </TableCell>
+            </TableRow>
+          ))}
         </DataTable>
 
         {/* Pagination */}
         {totalPages > 1 && (
           <div className="flex items-center justify-between px-6 py-4">
-            <p className="text-sm text-muted-foreground">
-              Showing {startIndex + 1}-{Math.min(startIndex + ITEMS_PER_PAGE, members.length)} of {members.length}
+            <p className="text-muted-foreground text-sm">
+              Showing {startIndex + 1}-{Math.min(startIndex + ITEMS_PER_PAGE, members.length)} of{" "}
+              {members.length}
             </p>
             <div className="flex items-center gap-2">
               <Button
@@ -130,11 +131,11 @@ export function MembersTab({ members, roles, onRoleChange, onRemove }: MembersTa
                 size="sm"
                 onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
                 disabled={currentPage === 1}
-                className="border text-muted-foreground disabled:opacity-50"
+                className="text-muted-foreground border disabled:opacity-50"
               >
                 <ChevronLeft className="h-4 w-4" />
               </Button>
-              <span className="text-sm text-muted-foreground">
+              <span className="text-muted-foreground text-sm">
                 Page {currentPage} of {totalPages}
               </span>
               <Button
@@ -142,7 +143,7 @@ export function MembersTab({ members, roles, onRoleChange, onRemove }: MembersTa
                 size="sm"
                 onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
                 disabled={currentPage === totalPages}
-                className="border text-muted-foreground disabled:opacity-50"
+                className="text-muted-foreground border disabled:opacity-50"
               >
                 <ChevronRight className="h-4 w-4" />
               </Button>

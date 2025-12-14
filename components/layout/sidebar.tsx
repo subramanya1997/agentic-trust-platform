@@ -27,11 +27,11 @@ export function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <div className="flex h-screen w-64 flex-col bg-background text-foreground border-r border-border">
+    <div className="bg-background text-foreground border-border flex h-screen w-64 flex-col border-r">
       {/* Logo */}
-      <div className="flex h-16 items-center px-6 border-b border-border">
+      <div className="border-border flex h-16 items-center border-b px-6">
         <div className="flex items-center gap-2">
-          <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center">
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-amber-500 to-orange-600">
             <Zap className="h-5 w-5 text-white" />
           </div>
           <span className="text-xl font-bold">Agentic Trust</span>
@@ -65,16 +65,15 @@ export function Sidebar() {
       {/* User Info */}
       <div className="p-4">
         <div className="flex items-center gap-3">
-          <div className="h-10 w-10 rounded-full bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center text-sm font-semibold">
+          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-amber-500 to-orange-600 text-sm font-semibold">
             SK
           </div>
-          <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium text-foreground truncate">Sara Klein</p>
-            <p className="text-xs text-muted-foreground truncate">sara@company.com</p>
+          <div className="min-w-0 flex-1">
+            <p className="text-foreground truncate text-sm font-medium">Sara Klein</p>
+            <p className="text-muted-foreground truncate text-xs">sara@company.com</p>
           </div>
         </div>
       </div>
     </div>
   );
 }
-

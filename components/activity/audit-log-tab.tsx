@@ -2,10 +2,7 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import {
-  mockActivityEvents,
-  filterActivityEvents,
-} from "@/lib/data/activity-data";
+import { mockActivityEvents, filterActivityEvents } from "@/lib/data/activity-data";
 import type { ActivityEventType } from "@/lib/types";
 
 interface AuditLogTabProps {
@@ -20,20 +17,28 @@ function formatTimestamp(isoString: string): string {
 }
 
 function getEventLevel(type: ActivityEventType): string {
-  if (type === "execution_failed" || type === "error_occurred") return "ERROR";
-  if (type === "approval_denied") return "WARN";
+  if (type === "execution_failed" || type === "error_occurred") {
+    return "ERROR";
+  }
+  if (type === "approval_denied") {
+    return "WARN";
+  }
   return "INFO";
 }
 
 function getLevelColor(level: string): string {
-  if (level === "ERROR") return "text-red-500";
-  if (level === "WARN") return "text-amber-500";
+  if (level === "ERROR") {
+    return "text-red-500";
+  }
+  if (level === "WARN") {
+    return "text-amber-500";
+  }
   return "text-blue-500";
 }
 
 function formatDetails(type: ActivityEventType, details: Record<string, unknown>): string {
   const parts: string[] = [];
-  
+
   Object.entries(details).forEach(([key, value]) => {
     if (value !== undefined && value !== null) {
       if (typeof value === "string") {
@@ -47,7 +52,7 @@ function formatDetails(type: ActivityEventType, details: Record<string, unknown>
       }
     }
   });
-  
+
   return parts.join(" ");
 }
 
@@ -69,7 +74,7 @@ export function AuditLogTab({ dateRange, searchQuery, typeFilter }: AuditLogTabP
   const paginatedEvents = filteredEvents.slice(startIndex, startIndex + itemsPerPage);
 
   const toggleEvent = (eventId: string) => {
-    setExpandedEvents(prev => {
+    setExpandedEvents((prev) => {
       const next = new Set(prev);
       if (next.has(eventId)) {
         next.delete(eventId);
@@ -83,28 +88,30 @@ export function AuditLogTab({ dateRange, searchQuery, typeFilter }: AuditLogTabP
   return (
     <div className="space-y-4">
       {/* Log viewer */}
-      <div className="bg-background rounded border border overflow-hidden font-mono text-[11px]">
+      <div className="bg-background overflow-hidden rounded border font-mono text-[11px]">
         {/* Header */}
-        <div className="px-2 py-1.5 bg-card border-b border-border text-foreground0 flex justify-between">
-          <span>audit_log entries={filteredEvents.length} range={dateRange} filter={typeFilter}</span>
+        <div className="bg-card border-border text-foreground0 flex justify-between border-b px-2 py-1.5">
+          <span>
+            audit_log entries={filteredEvents.length} range={dateRange} filter={typeFilter}
+          </span>
           <span>{paginatedEvents.length} shown</span>
         </div>
-        
+
         {/* Log entries */}
         <div className="max-h-[600px] overflow-y-auto">
           {paginatedEvents.map((event) => {
             const level = getEventLevel(event.type);
             const levelColor = getLevelColor(level);
             const isExpanded = expandedEvents.has(event.id);
-            
+
             return (
-              <div key={event.id} className="border-b border/50 last:border-b-0">
+              <div key={event.id} className="border/50 border-b last:border-b-0">
                 {/* Main log line */}
-                <div 
-                  className="flex gap-2 py-1 px-2 hover:bg-accent/50 cursor-pointer leading-relaxed"
+                <div
+                  className="hover:bg-accent/50 flex cursor-pointer gap-2 px-2 py-1 leading-relaxed"
                   onClick={() => toggleEvent(event.id)}
                 >
-                  <span className="text-stone-600 shrink-0" suppressHydrationWarning>
+                  <span className="shrink-0 text-stone-600" suppressHydrationWarning>
                     {formatTimestamp(event.timestamp)}
                   </span>
                   <span className={`shrink-0 ${levelColor}`}>[{level}]</span>
@@ -123,29 +130,35 @@ export function AuditLogTab({ dateRange, searchQuery, typeFilter }: AuditLogTabP
                     <span className="text-stone-600">ip={event.metadata.ip}</span>
                   )}
                 </div>
-                
+
                 {/* Expanded details */}
                 {isExpanded && (
-                  <div className="bg-background border-l-2 border ml-2 mb-1">
+                  <div className="bg-background mb-1 ml-2 border border-l-2">
                     <div className="px-3 py-1">
                       <span className="text-foreground0">DETAILS: </span>
-                      <span className="text-muted-foreground">{formatDetails(event.type, event.details)}</span>
+                      <span className="text-muted-foreground">
+                        {formatDetails(event.type, event.details)}
+                      </span>
                     </div>
                     <div className="px-3 py-1">
                       <span className="text-foreground0">RAW: </span>
-                      <pre className="text-muted-foreground whitespace-pre-wrap mt-1 text-[10px]">
-{JSON.stringify({
-  id: event.id,
-  type: event.type,
-  timestamp: event.timestamp,
-  agentId: event.agentId,
-  agentName: event.agentName,
-  executionId: event.executionId,
-  userId: event.userId,
-  userName: event.userName,
-  details: event.details,
-  metadata: event.metadata,
-}, null, 2)}
+                      <pre className="text-muted-foreground mt-1 text-[10px] whitespace-pre-wrap">
+                        {JSON.stringify(
+                          {
+                            id: event.id,
+                            type: event.type,
+                            timestamp: event.timestamp,
+                            agentId: event.agentId,
+                            agentName: event.agentName,
+                            executionId: event.executionId,
+                            userId: event.userId,
+                            userName: event.userName,
+                            details: event.details,
+                            metadata: event.metadata,
+                          },
+                          null,
+                          2
+                        )}
                       </pre>
                     </div>
                   </div>
@@ -153,20 +166,21 @@ export function AuditLogTab({ dateRange, searchQuery, typeFilter }: AuditLogTabP
               </div>
             );
           })}
-          
+
           {/* Empty state */}
           {filteredEvents.length === 0 && (
-            <div className="px-2 py-4 text-foreground0 text-center">
+            <div className="text-foreground0 px-2 py-4 text-center">
               No audit log entries found for the selected filters.
             </div>
           )}
         </div>
-        
+
         {/* Footer with pagination */}
         {totalPages > 1 && (
-          <div className="px-2 py-1.5 bg-card text-foreground0 flex justify-between items-center">
+          <div className="bg-card text-foreground0 flex items-center justify-between px-2 py-1.5">
             <span>
-              showing {startIndex + 1}-{Math.min(startIndex + itemsPerPage, filteredEvents.length)} of {filteredEvents.length}
+              showing {startIndex + 1}-{Math.min(startIndex + itemsPerPage, filteredEvents.length)}{" "}
+              of {filteredEvents.length}
             </span>
             <div className="flex items-center gap-2">
               <Button
@@ -174,7 +188,7 @@ export function AuditLogTab({ dateRange, searchQuery, typeFilter }: AuditLogTabP
                 size="sm"
                 onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
                 disabled={currentPage === 1}
-                className="h-6 px-2 text-[11px] text-muted-foreground hover:text-foreground hover:bg-accent disabled:opacity-50"
+                className="text-muted-foreground hover:text-foreground hover:bg-accent h-6 px-2 text-[11px] disabled:opacity-50"
               >
                 prev
               </Button>
@@ -186,7 +200,7 @@ export function AuditLogTab({ dateRange, searchQuery, typeFilter }: AuditLogTabP
                 size="sm"
                 onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
                 disabled={currentPage === totalPages}
-                className="h-6 px-2 text-[11px] text-muted-foreground hover:text-foreground hover:bg-accent disabled:opacity-50"
+                className="text-muted-foreground hover:text-foreground hover:bg-accent h-6 px-2 text-[11px] disabled:opacity-50"
               >
                 next
               </Button>
