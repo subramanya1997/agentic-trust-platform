@@ -9,7 +9,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Mail } from "lucide-react";
+import { Mail } from "@/lib/icons";
 
 const emailNotifications = [
   { label: "Agent failures", description: "Get notified when an agent execution fails", enabled: true },
@@ -28,13 +28,13 @@ export function GeneralTab() {
             <CardTitle className="text-foreground text-base">General Settings</CardTitle>
           </CardHeader>
           <CardContent className="p-0">
-            <table className="min-w-full">
-              <tbody className="divide-y divide-stone-800">
-                <tr>
-                  <td className="px-6 py-4 w-2/5">
+            <table className="min-w-full divide-y divide-border rounded-lg overflow-hidden">
+              <tbody className="bg-card divide-y divide-border">
+                <tr className="bg-card">
+                  <td className="px-4 py-3 w-2/5">
                     <span className="text-sm font-medium text-muted-foreground">Organization Name</span>
                   </td>
-                  <td className="px-6 py-4">
+                  <td className="px-4 py-3">
                     <input
                       type="text"
                       defaultValue="Acme Corp"
@@ -42,11 +42,11 @@ export function GeneralTab() {
                     />
                   </td>
                 </tr>
-                <tr>
-                  <td className="px-6 py-4 w-2/5">
+                <tr className="bg-card">
+                  <td className="px-4 py-3 w-2/5">
                     <span className="text-sm font-medium text-muted-foreground">Organization Slug</span>
                   </td>
-                  <td className="px-6 py-4">
+                  <td className="px-4 py-3">
                     <input
                       type="text"
                       defaultValue="acme-corp"
@@ -54,11 +54,11 @@ export function GeneralTab() {
                     />
                   </td>
                 </tr>
-                <tr>
-                  <td className="px-6 py-4 w-2/5">
+                <tr className="bg-card">
+                  <td className="px-4 py-3 w-2/5">
                     <span className="text-sm font-medium text-muted-foreground">Timezone</span>
                   </td>
-                  <td className="px-6 py-4">
+                  <td className="px-4 py-3">
                     <Select defaultValue="pst">
                       <SelectTrigger className="w-full border bg-accent text-foreground">
                         <SelectValue />
@@ -80,11 +80,11 @@ export function GeneralTab() {
                     </Select>
                   </td>
                 </tr>
-                <tr>
-                  <td className="px-6 py-4 w-2/5">
+                <tr className="bg-card">
+                  <td className="px-4 py-3 w-2/5">
                     <span className="text-sm font-medium text-muted-foreground">Default LLM Model</span>
                   </td>
-                  <td className="px-6 py-4">
+                  <td className="px-4 py-3">
                     <Select defaultValue="claude-sonnet">
                       <SelectTrigger className="w-full border bg-accent text-foreground">
                         <SelectValue />
@@ -109,14 +109,14 @@ export function GeneralTab() {
                     </Select>
                   </td>
                 </tr>
-                <tr>
-                  <td className="px-6 py-4 w-2/5">
+                <tr className="bg-card">
+                  <td className="px-4 py-3 w-2/5">
                     <div>
                       <span className="text-sm font-medium text-muted-foreground">Require approval</span>
                       <p className="text-xs text-foreground0 mt-0.5">New agents must be approved</p>
                     </div>
                   </td>
-                  <td className="px-6 py-4">
+                  <td className="px-4 py-3">
                     <button className="relative inline-flex h-6 w-11 items-center rounded-full bg-amber-600 transition-colors">
                       <span className="inline-block h-4 w-4 transform rounded-full bg-white transition-transform translate-x-6" />
                     </button>
@@ -135,17 +135,17 @@ export function GeneralTab() {
             <CardTitle className="text-foreground text-base">Email Notifications</CardTitle>
           </CardHeader>
           <CardContent className="p-0">
-            <table className="min-w-full">
-              <tbody className="divide-y divide-stone-800">
+            <table className="min-w-full divide-y divide-border rounded-lg overflow-hidden">
+              <tbody className="bg-card divide-y divide-border">
                 {emailNotifications.map((item, index) => (
-                  <tr key={index}>
-                    <td className="px-6 py-4">
+                  <tr key={index} className="bg-card">
+                    <td className="px-4 py-3">
                       <div>
                         <p className="text-sm font-medium text-muted-foreground">{item.label}</p>
                         <p className="text-xs text-foreground0 mt-0.5">{item.description}</p>
                       </div>
                     </td>
-                    <td className="px-6 py-4 text-right">
+                    <td className="px-4 py-3 text-right">
                       <button
                         className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
                           item.enabled ? "bg-amber-600" : "bg-muted"

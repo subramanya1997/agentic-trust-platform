@@ -1,14 +1,14 @@
 import type { Metadata } from "next";
-import { Nunito_Sans } from "next/font/google";
+import { Raleway } from "next/font/google";
 import { cookies } from "next/headers";
 import "./globals.css";
 import { AppSidebar } from "@/components/app-sidebar";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { ThemeProvider } from "@/components/theme-provider";
 
-const nunitoSans = Nunito_Sans({
+const raleway = Raleway({
   subsets: ["latin"],
-  variable: "--font-nunito-sans",
+  variable: "--font-raleway",
 });
 
 export const metadata: Metadata = {
@@ -27,7 +27,7 @@ export default async function RootLayout({
 
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${nunitoSans.variable} font-sans antialiased`}>
+      <body className={`${raleway.variable} font-sans antialiased`}>
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"

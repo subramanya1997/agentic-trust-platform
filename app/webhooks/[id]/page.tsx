@@ -43,7 +43,7 @@ import {
   ChevronRight,
   Play,
   Pause,
-} from "lucide-react";
+} from "@/lib/icons";
 
 export default function WebhookDetailPage() {
   const params = useParams();
@@ -98,19 +98,19 @@ function WebhookContent({ webhookId }: { webhookId: string }) {
     switch (status) {
       case "success":
         return (
-          <Badge variant="outline" className="bg-green-950 text-green-400 border-green-800">
+          <Badge variant="outline" className="bg-green-500/10 border-green-500 text-green-600 dark:text-green-400">
             Success
           </Badge>
         );
       case "failed":
         return (
-          <Badge variant="outline" className="bg-red-950 text-red-400 border-red-800">
+          <Badge variant="outline" className="bg-red-500/10 border-red-500 text-red-600 dark:text-red-400">
             Failed
           </Badge>
         );
       case "retrying":
         return (
-          <Badge variant="outline" className="bg-amber-950 text-amber-400 border-amber-800">
+          <Badge variant="outline" className="bg-amber-500/10 border-amber-500 text-amber-600 dark:text-amber-400">
             Retrying
           </Badge>
         );
@@ -144,7 +144,7 @@ function WebhookContent({ webhookId }: { webhookId: string }) {
             variant="outline"
             className={
               webhook.status === "active"
-                ? "bg-green-950 text-green-400 border-green-800"
+                ? "bg-green-500/10 border-green-500 text-green-600 dark:text-green-400"
                 : "bg-accent text-muted-foreground border"
             }
           >
@@ -253,6 +253,11 @@ function WebhookContent({ webhookId }: { webhookId: string }) {
                 </TabsTrigger>
                 <TabsTrigger value="logs" className="data-[state=active]:bg-muted">
                   Logs
+                  {deliveries.length > 0 && (
+                    <span className="ml-1.5 text-[10px] bg-amber-600 text-white px-1.5 py-0.5 rounded">
+                      {deliveries.length}
+                    </span>
+                  )}
                 </TabsTrigger>
               </TabsList>
 
@@ -603,8 +608,8 @@ function WebhookContent({ webhookId }: { webhookId: string }) {
                                   variant="outline"
                                   className={
                                     delivery.responseStatus >= 200 && delivery.responseStatus < 300
-                                      ? "bg-green-950 text-green-400 border-green-800"
-                                      : "bg-red-950 text-red-400 border-red-800"
+                                      ? "bg-green-500/10 border-green-500 text-green-600 dark:text-green-400"
+                                      : "bg-red-500/10 border-red-500 text-red-600 dark:text-red-400"
                                   }
                                 >
                                   {delivery.responseStatus}

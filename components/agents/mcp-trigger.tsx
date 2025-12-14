@@ -24,7 +24,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Settings, Copy, Check, ExternalLink } from "lucide-react";
+import { Settings, Copy, Check, ExternalLink } from "@/lib/icons";
 
 interface MCPTriggerProps {
   agentId: string;
@@ -69,7 +69,7 @@ export function MCPTrigger({ agentId, agentName, enabled, onEnabledChange }: MCP
               MCP Server
             </span>
             {enabled && (
-              <Badge variant="success" className="text-xs">
+              <Badge variant="outline" className="text-xs bg-green-500/10 border-green-500 text-green-600 dark:text-green-400">
                 Active
               </Badge>
             )}

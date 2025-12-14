@@ -10,7 +10,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { getIntegrationIcon } from "@/lib/integration-icons";
-import { Shield, Bot } from "lucide-react";
+import { Shield, Bot } from "@/lib/icons";
 import type { CustomMCPServer } from "@/lib/types";
 
 interface ToolsTableProps {
@@ -25,7 +25,7 @@ export function ToolsTable({ server }: ToolsTableProps) {
           <span>Tools ({server.selectedTools.length})</span>
           <Badge
             variant="outline"
-            className="bg-purple-950/50 text-purple-400 border-purple-800 text-xs"
+            className="bg-purple-500/10 border-purple-500 text-purple-600 dark:text-purple-400 text-xs"
           >
             <Shield className="h-3 w-3 mr-1" />
             {server.authType}
@@ -33,20 +33,20 @@ export function ToolsTable({ server }: ToolsTableProps) {
         </CardTitle>
       </CardHeader>
       <CardContent className="pt-0">
-        <Table>
-          <TableHeader>
-            <TableRow className="border hover:bg-transparent">
-              <TableHead className="text-muted-foreground">Source</TableHead>
-              <TableHead className="text-muted-foreground">Tool Name</TableHead>
-              <TableHead className="text-muted-foreground">Description</TableHead>
-              <TableHead className="text-muted-foreground">Category</TableHead>
-              <TableHead className="text-muted-foreground text-right">Parameters</TableHead>
+        <Table className="rounded-none">
+          <TableHeader className="!bg-card">
+            <TableRow className="hover:bg-transparent border-b border-border">
+              <TableHead className="px-4 py-2.5 text-white text-xs font-medium uppercase tracking-wider">Source</TableHead>
+              <TableHead className="px-4 py-2.5 text-white text-xs font-medium uppercase tracking-wider">Tool Name</TableHead>
+              <TableHead className="px-4 py-2.5 text-white text-xs font-medium uppercase tracking-wider">Description</TableHead>
+              <TableHead className="px-4 py-2.5 text-white text-xs font-medium uppercase tracking-wider">Category</TableHead>
+              <TableHead className="px-4 py-2.5 text-white text-xs font-medium uppercase tracking-wider text-right">Parameters</TableHead>
             </TableRow>
           </TableHeader>
-          <TableBody>
+          <TableBody className="!bg-card [&_tr]:!bg-card [&_tr:hover]:!bg-muted">
             {server.selectedTools.map((tool, idx) => (
-              <TableRow key={idx} className="border hover:bg-accent/50">
-                <TableCell>
+              <TableRow key={idx}>
+                <TableCell className="px-4 py-3">
                   <div className="flex items-center gap-2">
                     {tool.sourceType === "integration" ? (
                       <Image
@@ -62,21 +62,27 @@ export function ToolsTable({ server }: ToolsTableProps) {
                     <span className="text-sm text-muted-foreground">{tool.sourceName}</span>
                   </div>
                 </TableCell>
-                <TableCell>
+                <TableCell className="px-4 py-3">
                   <code className="text-sm font-mono text-foreground">{tool.toolName}</code>
                 </TableCell>
-                <TableCell className="text-sm text-muted-foreground max-w-xs truncate">
+                <TableCell className="px-4 py-3 text-sm text-muted-foreground max-w-xs truncate">
                   {tool.toolDescription}
                 </TableCell>
-                <TableCell>
+                <TableCell className="px-4 py-3">
                   <Badge
-                    variant={tool.category === "read" ? "success" : tool.category === "write" ? "info" : "warning"}
-                    className="text-xs"
+                    variant="outline"
+                    className={`text-xs ${
+                      tool.category === "read" 
+                        ? "bg-green-500/10 border-green-500 text-green-600 dark:text-green-400"
+                        : tool.category === "write"
+                        ? "bg-blue-500/10 border-blue-500 text-blue-600 dark:text-blue-400"
+                        : "bg-yellow-500/10 border-yellow-500 text-yellow-600 dark:text-yellow-400"
+                    }`}
                   >
                     {tool.category}
                   </Badge>
                 </TableCell>
-                <TableCell className="text-right text-xs text-foreground0">
+                <TableCell className="px-4 py-3 text-right text-xs text-foreground0">
                   {tool.parameters.filter((p) => p.required).length} required,{" "}
                   {tool.parameters.filter((p) => !p.required).length} optional
                 </TableCell>

@@ -11,7 +11,7 @@ import {
   ArrowRight,
   Bell,
   BookOpen
-} from "lucide-react";
+} from "@/lib/icons";
 
 const upcomingFeatures = [
   {

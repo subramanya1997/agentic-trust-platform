@@ -15,7 +15,7 @@ import {
   Webhook,
   Building2,
   Zap,
-} from "lucide-react"
+} from "@/lib/icons"
 
 // Custom MCP icon component to match Lucide icon interface
 // Using inline SVG to ensure proper sizing in collapsed sidebar state
@@ -133,15 +133,13 @@ function SidebarHeaderContent() {
       <SidebarMenu>
         <SidebarMenuItem>
           {isCollapsed ? (
-            <SidebarTrigger className="size-8 mx-auto text-muted-foreground hover:text-foreground hover:bg-accent" />
+            <SidebarTrigger className="size-8 mx-auto" />
           ) : (
-            <SidebarMenuButton
-              asChild
-              size="lg"
-              className="data-[slot=sidebar-menu-button]:!p-2 hover:bg-transparent"
-            >
-              <Link href="/" className="flex items-center gap-2">
-                <span className="text-base font-semibold text-foreground">Agentic Trust</span>
+            <SidebarMenuButton size="lg" asChild>
+              <Link href="/">
+                <div className="grid flex-1 text-left text-sm leading-tight">
+                  <span className="truncate font-medium">Agentic Trust</span>
+                </div>
               </Link>
             </SidebarMenuButton>
           )}

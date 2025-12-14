@@ -23,7 +23,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Settings, Copy, Check, ExternalLink, Webhook } from "lucide-react";
+import { Settings, Copy, Check, ExternalLink, Webhook } from "@/lib/icons";
 
 interface WebhookTriggerProps {
   agentId: string;
@@ -62,7 +62,7 @@ export function WebhookTrigger({ agentId, enabled, onEnabledChange, callCount = 
               Webhook
             </span>
             {enabled && (
-              <Badge variant="success" className="text-xs">
+              <Badge variant="outline" className="text-xs bg-green-500/10 border-green-500 text-green-600 dark:text-green-400">
                 Active
               </Badge>
             )}

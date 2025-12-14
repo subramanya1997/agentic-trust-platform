@@ -5,13 +5,14 @@ import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { StatsCard } from "@/components/dashboard/stats-card";
+import { DataTable, TableRow, TableCell } from "@/components/data-table";
 import { getIntegrationIcon } from "@/lib/integration-icons";
 import {
   getIntegrationUsage,
   getAnalyticsSummary,
 } from "@/lib/data/analytics-data";
 import { formatCurrency } from "@/lib/utils";
-import { AlertTriangle } from "lucide-react";
+import { AlertTriangle } from "@/lib/icons";
 import {
   BarChart,
   Bar,
@@ -65,105 +66,85 @@ export function IntegrationsTab({ dateRange }: IntegrationsTabProps) {
 
       {/* Integration Usage Table */}
       <Card className="bg-card border">
-        <CardHeader>
-          <CardTitle className="text-foreground">Integration Usage</CardTitle>
-        </CardHeader>
         <CardContent className="p-0">
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-stone-800">
-              <thead className="bg-card">
-                <tr>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                    Integration
-                  </th>
-                  <th className="px-6 py-4 text-right text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                    API Calls
-                  </th>
-                  <th className="px-6 py-4 text-right text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                    Avg Latency
-                  </th>
-                  <th className="px-6 py-4 text-right text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                    Error Rate
-                  </th>
-                  <th className="px-6 py-4 text-right text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                    Cost
-                  </th>
-                  <th className="px-6 py-4 text-right text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                    Agents
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-stone-800">
-                {sortedByUsage.map((integration) => (
-                  <tr key={integration.integrationId} className="hover:bg-accent/50 transition-colors">
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <Link
-                        href={`/integrations/${integration.integrationId}`}
-                        className="flex items-center gap-3 hover:opacity-80 transition-opacity"
-                      >
-                        <div className="h-8 w-8 rounded-lg bg-accent flex items-center justify-center overflow-hidden">
-                          <Image
-                            src={getIntegrationIcon(integration.integrationId)}
-                            alt={integration.integrationName}
-                            width={20}
-                            height={20}
-                            className="rounded"
-                          />
-                        </div>
-                        <span className="text-sm font-medium text-foreground">
-                          {integration.integrationName}
-                        </span>
-                      </Link>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-right">
-                      <span className="text-sm text-foreground">
-                        {integration.callCount.toLocaleString()}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-right">
-                      <span
-                        className={`text-sm ${
-                          integration.avgLatency < 400
-                            ? "text-foreground"
-                            : integration.avgLatency < 600
-                            ? "text-amber-400"
-                            : "text-red-400"
-                        }`}
-                      >
-                        {integration.avgLatency}ms
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-right">
-                      <div className="flex items-center justify-end gap-1">
-                        {integration.errorRate > 1 && (
-                          <AlertTriangle className="h-3.5 w-3.5 text-amber-400" />
-                        )}
-                        <span
-                          className={`text-sm ${
-                            integration.errorRate < 1
-                              ? "text-foreground"
-                              : integration.errorRate < 2
-                              ? "text-amber-400"
-                              : "text-red-400"
-                          }`}
-                        >
-                          {integration.errorRate}%
-                        </span>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-right">
-                      <span className="text-sm text-muted-foreground">{formatCurrency(integration.cost)}</span>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-right">
-                      <Badge variant="outline" className="bg-accent text-muted-foreground border">
-                        {integration.agentsUsing}
-                      </Badge>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <DataTable
+            headers={[
+              { label: 'Integration', align: 'left' },
+              { label: 'API Calls', align: 'right' },
+              { label: 'Avg Latency', align: 'right' },
+              { label: 'Error Rate', align: 'right' },
+              { label: 'Cost', align: 'right' },
+              { label: 'Agents', align: 'right' },
+            ]}
+          >
+            {sortedByUsage.map((integration) => (
+              <TableRow key={integration.integrationId}>
+                <TableCell className="px-4 py-3 whitespace-nowrap">
+                  <Link
+                    href={`/integrations/${integration.integrationId}`}
+                    className="flex items-center gap-3 hover:opacity-80 transition-opacity"
+                  >
+                    <div className="h-8 w-8 rounded-lg bg-accent flex items-center justify-center overflow-hidden">
+                      <Image
+                        src={getIntegrationIcon(integration.integrationId)}
+                        alt={integration.integrationName}
+                        width={20}
+                        height={20}
+                        className="rounded"
+                      />
+                    </div>
+                    <span className="text-sm font-medium text-foreground">
+                      {integration.integrationName}
+                    </span>
+                  </Link>
+                </TableCell>
+                <TableCell className="px-4 py-3 whitespace-nowrap text-right">
+                  <span className="text-sm text-foreground">
+                    {integration.callCount.toLocaleString()}
+                  </span>
+                </TableCell>
+                <TableCell className="px-4 py-3 whitespace-nowrap text-right">
+                  <span
+                    className={`text-sm ${
+                      integration.avgLatency < 400
+                        ? "text-foreground"
+                        : integration.avgLatency < 600
+                        ? "text-amber-400"
+                        : "text-red-400"
+                    }`}
+                  >
+                    {integration.avgLatency}ms
+                  </span>
+                </TableCell>
+                <TableCell className="px-4 py-3 whitespace-nowrap text-right">
+                  <div className="flex items-center justify-end gap-1">
+                    {integration.errorRate > 1 && (
+                      <AlertTriangle className="h-3.5 w-3.5 text-amber-400" />
+                    )}
+                    <span
+                      className={`text-sm ${
+                        integration.errorRate < 1
+                          ? "text-foreground"
+                          : integration.errorRate < 2
+                          ? "text-amber-400"
+                          : "text-red-400"
+                      }`}
+                    >
+                      {integration.errorRate}%
+                    </span>
+                  </div>
+                </TableCell>
+                <TableCell className="px-4 py-3 whitespace-nowrap text-right">
+                  <span className="text-sm text-muted-foreground">{formatCurrency(integration.cost)}</span>
+                </TableCell>
+                <TableCell className="px-4 py-3 whitespace-nowrap text-right">
+                  <Badge variant="outline" className="bg-accent text-muted-foreground border">
+                    {integration.agentsUsing}
+                  </Badge>
+                </TableCell>
+              </TableRow>
+            ))}
+          </DataTable>
         </CardContent>
       </Card>
 

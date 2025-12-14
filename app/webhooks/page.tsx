@@ -6,6 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Header } from "@/components/layout/header";
+import { DataTable, TableRow, TableCell } from "@/components/data-table";
 import {
   Dialog,
   DialogContent,
@@ -38,10 +39,9 @@ import {
   ChevronLeft,
   ChevronRight,
   Circle,
-  CircleDot,
   CheckCircle,
   XCircle,
-} from "lucide-react";
+} from "@/lib/icons";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -84,7 +84,7 @@ export default function WebhooksPage() {
 
   const statusFilters: { value: string; label: string; icon?: React.ReactNode }[] = [
     { value: "all", label: "All" },
-    { value: "active", label: "Active", icon: <CircleDot className="h-3.5 w-3.5" /> },
+    { value: "active", label: "Active", icon: <CheckCircle className="h-3.5 w-3.5" /> },
     { value: "inactive", label: "Inactive", icon: <Circle className="h-3.5 w-3.5" /> },
   ];
 
@@ -230,7 +230,11 @@ export default function WebhooksPage() {
                 >
                   {filter.icon}
                   {filter.label}
-                  <span className="text-foreground0 ml-1">{statusCounts[filter.value as keyof typeof statusCounts]}</span>
+                  {statusCounts[filter.value as keyof typeof statusCounts] > 0 && (
+                    <span className="ml-1 text-[10px] bg-amber-600 text-white px-1.5 py-0.5 rounded">
+                      {statusCounts[filter.value as keyof typeof statusCounts]}
+                    </span>
+                  )}
                 </button>
               ))}
             </div>
@@ -239,121 +243,107 @@ export default function WebhooksPage() {
           {/* Webhooks Table */}
           <Card className="bg-card border">
             <CardContent className="p-0">
-              <div className="overflow-x-auto">
-                <table className="min-w-full divide-y divide-stone-800">
-                  <thead className="bg-card">
-                    <tr>
-                      <th className="px-6 py-4 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                        Webhook
-                      </th>
-                      <th className="px-6 py-4 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                        Target Agent
-                      </th>
-                      <th className="px-6 py-4 text-center text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                        Status
-                      </th>
-                      <th className="px-6 py-4 text-center text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                        Deliveries
-                      </th>
-                      <th className="px-6 py-4 text-center text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                        Success
-                      </th>
-                      <th className="px-6 py-4 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                        Last Triggered
-                      </th>
-                      <th className="px-6 py-4 text-right text-xs font-medium text-muted-foreground uppercase tracking-wider"></th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-stone-800">
-                    {paginatedWebhooks.map((webhook) => (
-                      <tr key={webhook.id} className="hover:bg-accent/50 transition-colors">
-                        <td className="px-6 py-4">
-                          <div className="flex items-start gap-3">
-                            <Link
-                              href={`/webhooks/${webhook.id}`}
-                              className="h-9 w-9 rounded-lg bg-purple-950 flex items-center justify-center shrink-0 mt-0.5"
-                            >
-                              <Webhook className="h-4 w-4 text-purple-400" />
-                            </Link>
-                            <div className="min-w-0">
-                              <Link
-                                href={`/webhooks/${webhook.id}`}
-                                className="text-sm font-medium text-foreground hover:text-amber-500 transition-colors block"
-                              >
-                                {webhook.name}
-                              </Link>
-                              <p className="text-xs text-foreground0 mt-0.5 truncate max-w-[280px]">
-                                {webhook.description}
-                              </p>
-                              <div className="flex items-center gap-1.5 mt-1.5">
-                                <code className="text-xs text-muted-foreground font-mono bg-accent px-2 py-0.5 rounded truncate max-w-[200px]">
-                                  {webhook.url}
-                                </code>
-                                <button
-                                  onClick={(e) => {
-                                    e.preventDefault();
-                                    copyToClipboard(webhook.id, webhook.url);
-                                  }}
-                                  className="text-foreground0 hover:text-muted-foreground transition-colors shrink-0"
-                                >
-                                  {copiedId === webhook.id ? (
-                                    <Check className="h-3.5 w-3.5 text-green-500" />
-                                  ) : (
-                                    <Copy className="h-3.5 w-3.5" />
-                                  )}
-                                </button>
-                              </div>
-                            </div>
-                          </div>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
+              <DataTable
+                headers={[
+                  { label: 'Webhook', align: 'left' },
+                  { label: 'Target Agent', align: 'left' },
+                  { label: 'Status', align: 'center' },
+                  { label: 'Deliveries', align: 'center' },
+                  { label: 'Success', align: 'center' },
+                  { label: 'Last Triggered', align: 'left' },
+                  { label: '', align: 'right' },
+                ]}
+              >
+                {paginatedWebhooks.map((webhook) => (
+                  <TableRow key={webhook.id}>
+                    <TableCell className="px-4 py-3">
+                      <div className="flex items-start gap-3">
+                        <Link
+                          href={`/webhooks/${webhook.id}`}
+                          className="h-9 w-9 rounded-lg bg-purple-950 flex items-center justify-center shrink-0 mt-0.5"
+                        >
+                          <Webhook className="h-4 w-4 text-purple-400" />
+                        </Link>
+                        <div className="min-w-0">
                           <Link
-                            href={`/agents/${webhook.targetAgentId}`}
-                            className="text-sm text-muted-foreground hover:text-amber-500 transition-colors flex items-center gap-1"
+                            href={`/webhooks/${webhook.id}`}
+                            className="text-sm font-medium text-foreground hover:text-amber-500 transition-colors block"
                           >
-                            {webhook.targetAgentName}
-                            <ExternalLink className="h-3 w-3" />
+                            {webhook.name}
                           </Link>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-center">
-                          <Badge
-                            variant={webhook.status === "active" ? "success" : "outline"}
-                          >
-                            {webhook.status === "active" && (
-                              <CheckCircle className="h-3 w-3 mr-1" />
-                            )}
-                            {webhook.status === "inactive" && (
-                              <Circle className="h-3 w-3 mr-1" />
-                            )}
-                            {webhook.status}
-                          </Badge>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-center">
-                          <span className="text-sm font-medium text-foreground">
-                            {webhook.totalDeliveries.toLocaleString()}
-                          </span>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-center">
-                          <span
-                            className={`text-sm font-medium ${
-                              webhook.successRate >= 98
-                                ? "text-green-400"
-                                : webhook.successRate >= 95
-                                ? "text-amber-400"
-                                : "text-red-400"
-                            }`}
-                          >
-                            {webhook.successRate.toFixed(1)}%
-                          </span>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <span className="text-sm text-muted-foreground" suppressHydrationWarning>
-                            {webhook.lastTriggered
-                              ? formatRelativeTime(webhook.lastTriggered)
-                              : "Never"}
-                          </span>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-right">
+                          <p className="text-xs text-foreground0 mt-0.5 truncate max-w-[280px]">
+                            {webhook.description}
+                          </p>
+                          <div className="flex items-center gap-1.5 mt-1.5">
+                            <code className="text-xs text-muted-foreground font-mono bg-accent px-2 py-0.5 rounded truncate max-w-[200px]">
+                              {webhook.url}
+                            </code>
+                            <button
+                              onClick={(e) => {
+                                e.preventDefault();
+                                copyToClipboard(webhook.id, webhook.url);
+                              }}
+                              className="text-foreground0 hover:text-muted-foreground transition-colors shrink-0"
+                            >
+                              {copiedId === webhook.id ? (
+                                <Check className="h-3.5 w-3.5 text-green-500" />
+                              ) : (
+                                <Copy className="h-3.5 w-3.5" />
+                              )}
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </TableCell>
+                    <TableCell className="px-4 py-3 whitespace-nowrap">
+                      <Link
+                        href={`/agents/${webhook.targetAgentId}`}
+                        className="text-sm text-muted-foreground hover:text-amber-500 transition-colors flex items-center gap-1"
+                      >
+                        {webhook.targetAgentName}
+                        <ExternalLink className="h-3 w-3" />
+                      </Link>
+                    </TableCell>
+                    <TableCell className="px-4 py-3 whitespace-nowrap text-center">
+                      <Badge
+                        variant="outline"
+                        className={webhook.status === "active" ? "bg-green-500/10 border-green-500 text-green-600 dark:text-green-400" : ""}
+                      >
+                        {webhook.status === "active" && (
+                          <CheckCircle className="h-3 w-3 mr-1" />
+                        )}
+                        {webhook.status === "inactive" && (
+                          <Circle className="h-3 w-3 mr-1" />
+                        )}
+                        {webhook.status}
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="px-4 py-3 whitespace-nowrap text-center">
+                      <span className="text-sm font-medium text-foreground">
+                        {webhook.totalDeliveries.toLocaleString()}
+                      </span>
+                    </TableCell>
+                    <TableCell className="px-4 py-3 whitespace-nowrap text-center">
+                      <span
+                        className={`text-sm font-medium ${
+                          webhook.successRate >= 98
+                            ? "text-green-400"
+                            : webhook.successRate >= 95
+                            ? "text-amber-400"
+                            : "text-red-400"
+                        }`}
+                      >
+                        {webhook.successRate.toFixed(1)}%
+                      </span>
+                    </TableCell>
+                    <TableCell className="px-4 py-3 whitespace-nowrap">
+                      <span className="text-sm text-muted-foreground" suppressHydrationWarning>
+                        {webhook.lastTriggered
+                          ? formatRelativeTime(webhook.lastTriggered)
+                          : "Never"}
+                      </span>
+                    </TableCell>
+                    <TableCell className="px-4 py-3 whitespace-nowrap text-right">
                           <div className="flex items-center justify-end gap-1">
                             <Button
                               variant="ghost"
@@ -364,12 +354,10 @@ export default function WebhooksPage() {
                               <Trash2 className="h-4 w-4" />
                             </Button>
                           </div>
-                        </td>
-                      </tr>
+                        </TableCell>
+                      </TableRow>
                     ))}
-                  </tbody>
-                </table>
-              </div>
+              </DataTable>
 
               {/* Pagination */}
               {totalPages > 1 && (

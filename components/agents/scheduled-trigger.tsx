@@ -2,7 +2,7 @@
 
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
-import { Calendar } from "lucide-react";
+import { Calendar } from "@/lib/icons";
 import type { AgentTrigger, ScheduledTriggerConfig } from "@/lib/types";
 import { parseCronExpression } from "@/lib/data/triggers-data";
 
@@ -25,8 +25,8 @@ export function ScheduledTrigger({ trigger, onEnabledChange }: ScheduledTriggerP
           <div className="flex items-center gap-2">
             <span className="text-sm font-medium text-foreground">{trigger.name}</span>
             <Badge
-              variant={trigger.enabled ? "success" : "outline"}
-              className="text-xs"
+              variant="outline"
+              className={trigger.enabled ? "text-xs bg-green-500/10 border-green-500 text-green-600 dark:text-green-400" : "text-xs"}
             >
               {trigger.enabled ? "Active" : "Inactive"}
             </Badge>

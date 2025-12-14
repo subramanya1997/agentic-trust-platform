@@ -6,6 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { StatsCard } from "@/components/dashboard/stats-card";
+import { DataTable, TableRow, TableCell } from "@/components/data-table";
 import { TraceViewer } from "./trace-viewer";
 import {
   ChevronDown,
@@ -19,7 +20,7 @@ import {
   Timer,
   Webhook,
   Play,
-} from "lucide-react";
+} from "@/lib/icons";
 import {
   mockExecutionTraces,
   filterExecutionTraces,
@@ -118,51 +119,30 @@ export function ExecutionsTab({ dateRange, searchQuery, statusFilter, agentFilte
       {/* Executions Table */}
       <Card className="bg-card border">
         <CardContent className="p-0">
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-stone-800">
-              <thead className="bg-card">
-                <tr>
-                  <th className="w-10 px-4 py-4"></th>
-                  <th className="px-4 py-4 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                    Execution
-                  </th>
-                  <th className="px-4 py-4 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                    Agent
-                  </th>
-                  <th className="px-4 py-4 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                    Status
-                  </th>
-                  <th className="px-4 py-4 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                    Trigger
-                  </th>
-                  <th className="px-4 py-4 text-right text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                    Duration
-                  </th>
-                  <th className="px-4 py-4 text-right text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                    Cost
-                  </th>
-                  <th className="px-4 py-4 text-right text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                    Steps
-                  </th>
-                  <th className="px-4 py-4 text-right text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                    Started
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-stone-800">
-                {paginatedTraces.map((trace) => {
-                  const isExpanded = expandedTrace === trace.id;
-                  const TriggerIcon = triggerTypeIcons[trace.triggerType] || Zap;
+          <DataTable
+            headers={[
+              { label: '', align: 'left', className: 'w-10' },
+              { label: 'Execution', align: 'left' },
+              { label: 'Agent', align: 'left' },
+              { label: 'Status', align: 'left' },
+              { label: 'Trigger', align: 'left' },
+              { label: 'Duration', align: 'right' },
+              { label: 'Cost', align: 'right' },
+              { label: 'Steps', align: 'right' },
+              { label: 'Started', align: 'right' },
+            ]}
+          >
+            {paginatedTraces.map((trace) => {
+              const isExpanded = expandedTrace === trace.id;
+              const TriggerIcon = triggerTypeIcons[trace.triggerType] || Zap;
 
-                  return (
+              return (
                     <Fragment key={trace.id}>
-                      <tr
-                        className={`cursor-pointer transition-colors ${
-                          isExpanded ? "bg-accent/50" : "hover:bg-accent/30"
-                        }`}
+                      <TableRow
+                        className="cursor-pointer"
                         onClick={() => toggleTrace(trace.id)}
                       >
-                        <td className="px-4 py-4">
+                        <TableCell className="px-4 py-3">
                           <button className="text-foreground0 hover:text-muted-foreground">
                             {isExpanded ? (
                               <ChevronDown className="h-4 w-4" />
@@ -170,13 +150,13 @@ export function ExecutionsTab({ dateRange, searchQuery, statusFilter, agentFilte
                               <ChevronRight className="h-4 w-4" />
                             )}
                           </button>
-                        </td>
-                        <td className="px-4 py-4 whitespace-nowrap">
+                        </TableCell>
+                        <TableCell className="px-4 py-3 whitespace-nowrap">
                           <div className="text-sm font-mono text-muted-foreground">
                             {trace.id}
                           </div>
-                        </td>
-                        <td className="px-4 py-4 whitespace-nowrap">
+                        </TableCell>
+                        <TableCell className="px-4 py-3 whitespace-nowrap">
                           <Link
                             href={`/agents/${trace.agentId}`}
                             className="text-sm font-medium text-foreground hover:text-amber-500 transition-colors"
@@ -184,15 +164,16 @@ export function ExecutionsTab({ dateRange, searchQuery, statusFilter, agentFilte
                           >
                             {trace.agentName}
                           </Link>
-                        </td>
-                        <td className="px-4 py-4 whitespace-nowrap">
+                        </TableCell>
+                        <TableCell className="px-4 py-3 whitespace-nowrap">
                           <Badge
-                            variant={
+                            variant="outline"
+                            className={
                               trace.status === "completed"
-                                ? "success"
+                                ? "bg-green-500/10 border-green-500 text-green-600 dark:text-green-400"
                                 : trace.status === "failed"
-                                ? "error"
-                                : "info"
+                                ? "bg-red-500/10 border-red-500 text-red-600 dark:text-red-400"
+                                : "bg-blue-500/10 border-blue-500 text-blue-600 dark:text-blue-400"
                             }
                           >
                             {trace.status === "completed" && (
@@ -206,8 +187,8 @@ export function ExecutionsTab({ dateRange, searchQuery, statusFilter, agentFilte
                             )}
                             {trace.status}
                           </Badge>
-                        </td>
-                        <td className="px-4 py-4 whitespace-nowrap">
+                        </TableCell>
+                        <TableCell className="px-4 py-3 whitespace-nowrap">
                           <div className="flex items-center gap-2">
                             <TriggerIcon className="h-4 w-4 text-foreground0" />
                             <span className="text-sm text-muted-foreground capitalize">
@@ -220,21 +201,21 @@ export function ExecutionsTab({ dateRange, searchQuery, statusFilter, agentFilte
                               {trace.triggeredBy}
                             </span>
                           </div>
-                        </td>
-                        <td className="px-4 py-4 whitespace-nowrap text-right">
+                        </TableCell>
+                        <TableCell className="px-4 py-3 whitespace-nowrap text-right">
                           <div className="flex items-center justify-end gap-1">
                             <Timer className="h-3.5 w-3.5 text-foreground0" />
                             <span className="text-sm text-foreground">
                               {formatDuration(trace.duration)}
                             </span>
                           </div>
-                        </td>
-                        <td className="px-4 py-4 whitespace-nowrap text-right">
+                        </TableCell>
+                        <TableCell className="px-4 py-3 whitespace-nowrap text-right">
                           <span className="text-sm text-muted-foreground">
                             ${trace.totalCost.toFixed(4)}
                           </span>
-                        </td>
-                        <td className="px-4 py-4 whitespace-nowrap text-right">
+                        </TableCell>
+                        <TableCell className="px-4 py-3 whitespace-nowrap text-right">
                           <div className="flex items-center justify-end gap-1">
                             <span className="text-sm text-green-400">
                               {trace.successfulSteps}
@@ -249,29 +230,27 @@ export function ExecutionsTab({ dateRange, searchQuery, statusFilter, agentFilte
                               </span>
                             )}
                           </div>
-                        </td>
-                        <td className="px-4 py-4 whitespace-nowrap text-right">
+                        </TableCell>
+                        <TableCell className="px-4 py-3 whitespace-nowrap text-right">
                           <span
                             className="text-sm text-muted-foreground"
                             suppressHydrationWarning
                           >
                             {formatRelativeTime(trace.startedAt)}
                           </span>
-                        </td>
-                      </tr>
+                        </TableCell>
+                      </TableRow>
                       {isExpanded && (
-                        <tr>
-                          <td colSpan={9} className="p-4 bg-background">
+                        <TableRow>
+                          <TableCell colSpan={9} className="p-4 bg-card">
                             <TraceViewer trace={trace} />
-                          </td>
-                        </tr>
+                          </TableCell>
+                        </TableRow>
                       )}
                     </Fragment>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
+              );
+            })}
+          </DataTable>
 
           {/* Pagination */}
           {totalPages > 1 && (

@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Agent } from "@/lib/data/mock-data";
 import { formatCurrency, formatPercentage, formatRelativeTime } from "@/lib/utils";
-import { Bot, TrendingUp } from "lucide-react";
+import { Bot, TrendingUp } from "@/lib/icons";
 
 interface ActiveAgentsProps {
   agents: Agent[];
@@ -41,7 +41,10 @@ export function ActiveAgents({ agents }: ActiveAgentsProps) {
                       <h4 className="font-semibold text-foreground truncate">
                         {agent.name}
                       </h4>
-                      <Badge variant={agent.status === "active" ? "default" : "destructive"}>
+                      <Badge 
+                        variant="outline"
+                        className={agent.status === "active" ? "bg-green-500/10 border-green-500 text-green-600 dark:text-green-400" : "bg-red-500/10 border-red-500 text-red-600 dark:text-red-400"}
+                      >
                         {agent.status}
                       </Badge>
                     </div>

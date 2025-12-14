@@ -18,7 +18,7 @@ import {
   Activity,
   Zap,
   BarChart3,
-} from "lucide-react";
+} from "@/lib/icons";
 import {
   CostsTab,
   PerformanceTab,

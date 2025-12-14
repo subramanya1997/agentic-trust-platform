@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { DataTable, TableRow, TableCell } from "@/components/data-table";
 import {
   Select,
   SelectContent,
@@ -11,7 +12,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { X, RefreshCw, Mail, Clock, ChevronLeft, ChevronRight, XCircle } from "lucide-react";
+import { X, RefreshCw, Mail, Clock, ChevronLeft, ChevronRight, XCircle } from "@/lib/icons";
 
 export interface Invitation {
   id: string;
@@ -117,90 +118,78 @@ export function InvitedTab({ invitations, roles, onResend, onRevoke, onInvite }:
             </div>
           ) : (
             <>
-              <table className="min-w-full divide-y divide-stone-800">
-                <thead>
-                  <tr>
-                    <th className="px-6 py-4 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                      Email
-                    </th>
-                    <th className="px-6 py-4 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                      Role
-                    </th>
-                    <th className="px-6 py-4 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                      Invited By
-                    </th>
-                    <th className="px-6 py-4 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                      Status
-                    </th>
-                    <th className="px-6 py-4 text-right text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                      Actions
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-stone-800">
-                  {paginatedInvitations.map((invitation) => (
-                    <tr key={invitation.id} className="hover:bg-accent/50 transition-colors">
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <span className="text-sm text-foreground">{invitation.email}</span>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <Badge variant="outline" className="bg-accent text-muted-foreground border">
-                          {invitation.role}
+              <DataTable
+                headers={[
+                  { label: 'Email', align: 'left' },
+                  { label: 'Role', align: 'left' },
+                  { label: 'Invited By', align: 'left' },
+                  { label: 'Status', align: 'left' },
+                  { label: 'Actions', align: 'right' },
+                ]}
+              >
+                {paginatedInvitations.map((invitation) => (
+                  <TableRow key={invitation.id}>
+                    <TableCell className="px-4 py-3 whitespace-nowrap">
+                      <span className="text-sm text-foreground">{invitation.email}</span>
+                    </TableCell>
+                    <TableCell className="px-4 py-3 whitespace-nowrap">
+                      <Badge variant="outline" className="bg-accent text-muted-foreground border">
+                        {invitation.role}
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="px-4 py-3 whitespace-nowrap">
+                      <span className="text-sm text-muted-foreground">{invitation.invitedBy}</span>
+                    </TableCell>
+                    <TableCell className="px-4 py-3 whitespace-nowrap">
+                      <div className="flex items-center gap-2">
+                        <Badge
+                          variant="outline"
+                          className={
+                            invitation.status === "pending"
+                              ? "bg-yellow-500/10 border-yellow-500 text-yellow-600 dark:text-yellow-400"
+                              : invitation.status === "expired"
+                              ? "bg-red-500/10 border-red-500 text-red-600 dark:text-red-400"
+                              : ""
+                          }
+                        >
+                          {invitation.status === "pending" && (
+                            <Clock className="h-3 w-3 mr-1" />
+                          )}
+                          {invitation.status === "expired" && (
+                            <XCircle className="h-3 w-3 mr-1" />
+                          )}
+                          {invitation.status}
                         </Badge>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <span className="text-sm text-muted-foreground">{invitation.invitedBy}</span>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="flex items-center gap-2">
-                          <Badge
-                            variant={
-                              invitation.status === "pending"
-                                ? "warning"
-                                : invitation.status === "expired"
-                                ? "error"
-                                : "outline"
-                            }
-                          >
-                            {invitation.status === "pending" && (
-                              <Clock className="h-3 w-3 mr-1" />
-                            )}
-                            {invitation.status === "expired" && (
-                              <XCircle className="h-3 w-3 mr-1" />
-                            )}
-                            {invitation.status}
-                          </Badge>
-                          <span className="text-xs text-foreground0 flex items-center gap-1">
-                            <Clock className="h-3 w-3" />
-                            Expires {invitation.expiresAt}
-                          </span>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-right">
-                        <div className="flex items-center justify-end gap-2">
-                          <Button 
-                            variant="ghost" 
-                            size="sm" 
-                            className="text-muted-foreground hover:text-foreground"
-                            onClick={() => onResend?.(invitation.id)}
-                          >
-                            <RefreshCw className="h-4 w-4 mr-1" />
-                            Resend
-                          </Button>
-                          <Button 
-                            variant="ghost" 
-                            size="sm" 
-                            className="text-red-400 hover:text-red-300 hover:bg-red-950"
-                            onClick={() => onRevoke?.(invitation.id)}
-                          >
-                            <X className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+                        <span className="text-xs text-foreground0 flex items-center gap-1">
+                          <Clock className="h-3 w-3" />
+                          Expires {invitation.expiresAt}
+                        </span>
+                      </div>
+                    </TableCell>
+                    <TableCell className="px-4 py-3 whitespace-nowrap text-right">
+                      <div className="flex items-center justify-end gap-2">
+                        <Button 
+                          variant="ghost" 
+                          size="sm" 
+                          className="text-muted-foreground hover:text-foreground"
+                          onClick={() => onResend?.(invitation.id)}
+                        >
+                          <RefreshCw className="h-4 w-4 mr-1" />
+                          Resend
+                        </Button>
+                        <Button 
+                          variant="ghost" 
+                          size="sm" 
+                          className="text-red-400 hover:text-red-300 hover:bg-red-950"
+                          onClick={() => onRevoke?.(invitation.id)}
+                        >
+                          <X className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </DataTable>
 
               {/* Pagination */}
               {totalPages > 1 && (

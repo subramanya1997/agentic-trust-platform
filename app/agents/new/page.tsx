@@ -25,7 +25,7 @@ import {
   Code,
   Webhook,
   Calendar,
-} from "lucide-react";
+} from "@/lib/icons";
 import Link from "next/link";
 import { Switch } from "@/components/ui/switch";
 import { Input } from "@/components/ui/input";

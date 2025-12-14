@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { IntegrationIcon } from "@/components/integration-icon";
 import type { CustomMCPServer } from "@/lib/types";
-import { Bot, Copy, Check } from "lucide-react";
+import { Bot, Copy, Check } from "@/lib/icons";
 import { MCPIcon } from "./mcp-icon";
 
 interface MCPServerCardProps {
@@ -25,7 +25,7 @@ export function MCPServerCard({ server }: MCPServerCardProps) {
 
   return (
     <Link href={`/mcp-registry/${server.id}`}>
-      <Card className="bg-card/50 border hover:border transition-colors h-full">
+      <Card className="bg-card border hover:border transition-colors h-full">
         <CardContent className="px-4">
           {/* Header */}
           <div className="flex items-start justify-between mb-2">
@@ -51,8 +51,12 @@ export function MCPServerCard({ server }: MCPServerCardProps) {
               </div>
             </div>
             <Badge
-              variant={server.type === "agent" ? "warning" : "info"}
-              className="text-[10px] shrink-0"
+              variant="outline"
+              className={`text-[10px] shrink-0 ${
+                server.type === "agent" 
+                  ? "bg-yellow-500/10 border-yellow-500 text-yellow-600 dark:text-yellow-400"
+                  : "bg-blue-500/10 border-blue-500 text-blue-600 dark:text-blue-400"
+              }`}
             >
               {server.type}
             </Badge>

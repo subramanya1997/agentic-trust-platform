@@ -10,7 +10,7 @@ import {
   Settings,
   Zap,
   ShieldCheck,
-} from "lucide-react";
+} from "@/lib/icons";
 import { cn } from "@/lib/utils";
 
 const navigation = [

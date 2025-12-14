@@ -29,7 +29,7 @@ import {
   Check,
   Code,
   FileJson,
-} from "lucide-react";
+} from "@/lib/icons";
 
 interface TestConsoleProps {
   tools: SelectedTool[];
@@ -259,8 +259,14 @@ export function TestConsole({ tools, serverUrl }: TestConsoleProps) {
                     )}
                     <span className="font-mono text-sm">{tool.toolName}</span>
                     <Badge
-                      variant={tool.category === "read" ? "success" : tool.category === "write" ? "info" : "warning"}
-                      className="text-[10px] px-1 py-0 ml-1"
+                      variant="outline"
+                      className={`text-[10px] px-1 py-0 ml-1 ${
+                        tool.category === "read" 
+                          ? "bg-green-500/10 border-green-500 text-green-600 dark:text-green-400"
+                          : tool.category === "write"
+                          ? "bg-blue-500/10 border-blue-500 text-blue-600 dark:text-blue-400"
+                          : "bg-yellow-500/10 border-yellow-500 text-yellow-600 dark:text-yellow-400"
+                      }`}
                     >
                       {tool.category}
                     </Badge>
@@ -291,7 +297,7 @@ export function TestConsole({ tools, serverUrl }: TestConsoleProps) {
                     {param.required && (
                       <Badge
                         variant="outline"
-                        className="text-[10px] px-1 py-0 bg-red-950/50 text-red-400 border-red-800"
+                        className="text-[10px] px-1 py-0 bg-red-500/10 border-red-500 text-red-600 dark:text-red-400"
                       >
                         required
                       </Badge>

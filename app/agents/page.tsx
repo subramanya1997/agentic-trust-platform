@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Header } from "@/components/layout/header";
+import { DataTable, TableRow, TableCell } from "@/components/data-table";
 import { mockAgents } from "@/lib/data/mock-data";
 import { formatPercentage, formatRelativeTime } from "@/lib/utils";
 import { 
@@ -14,12 +15,11 @@ import {
   ChevronLeft, 
   ChevronRight,
   Search,
-  CircleDot,
   Circle,
   Plus,
   CheckCircle,
   Pause,
-} from "lucide-react";
+} from "@/lib/icons";
 import { Button } from "@/components/ui/button";
 
 const ITEMS_PER_PAGE = 10;
@@ -52,7 +52,7 @@ export default function AgentsPage() {
 
   const statusFilters: { value: string; label: string; icon?: React.ReactNode }[] = [
     { value: "all", label: "All" },
-    { value: "active", label: "Active", icon: <CircleDot className="h-3.5 w-3.5" /> },
+    { value: "active", label: "Active", icon: <CheckCircle className="h-3.5 w-3.5" /> },
     { value: "paused", label: "Paused", icon: <Circle className="h-3.5 w-3.5" /> },
   ];
 
@@ -106,7 +106,11 @@ export default function AgentsPage() {
                 >
                   {filter.icon}
                   {filter.label}
-                  <span className="text-foreground0 ml-1">{statusCounts[filter.value as keyof typeof statusCounts]}</span>
+                  {statusCounts[filter.value as keyof typeof statusCounts] > 0 && (
+                    <span className="ml-1 text-[10px] bg-amber-600 text-white px-1.5 py-0.5 rounded">
+                      {statusCounts[filter.value as keyof typeof statusCounts]}
+                    </span>
+                  )}
                 </button>
               ))}
             </div>
@@ -115,109 +119,89 @@ export default function AgentsPage() {
           {/* Agents Table */}
           <Card className="bg-card border">
             <CardContent className="p-0">
-              <div className="overflow-x-auto">
-                <table className="min-w-full divide-y divide-stone-800">
-                  <thead className="bg-card">
-                    <tr>
-                      <th className="px-6 py-4 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                        Name
-                      </th>
-                      <th className="px-6 py-4 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                        Created by
-                      </th>
-                      <th className="px-6 py-4 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                        Status
-                      </th>
-                      <th className="px-6 py-4 text-center text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                        Runs
-                      </th>
-                      <th className="px-6 py-4 text-center text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                        Success Rate
-                      </th>
-                      <th className="px-6 py-4 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                        Created
-                      </th>
-                      <th className="px-6 py-4 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                        Last Used
-                      </th>
-                      <th className="px-6 py-4 text-right text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                        
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-stone-800">
-                    {paginatedAgents.map((agent) => (
-                      <tr key={agent.id} className="hover:bg-accent/50 transition-colors">
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <Link
-                            href={`/agents/${agent.id}`}
-                            className="text-sm font-medium text-foreground hover:text-amber-500 transition-colors"
-                          >
-                            {agent.name}
-                          </Link>
-                          <p className="text-xs text-foreground0 mt-0.5 max-w-xs truncate">
-                            {agent.description}
-                          </p>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <span className="text-sm text-muted-foreground">{agent.createdBy}</span>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <Badge 
-                            variant={agent.status === "active" ? "success" : "outline"}
-                          >
-                            {agent.status === "active" && (
-                              <CheckCircle className="h-3 w-3 mr-1" />
-                            )}
-                            {agent.status === "paused" && (
-                              <Pause className="h-3 w-3 mr-1" />
-                            )}
-                            {agent.status}
-                          </Badge>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-center">
-                          <span className="text-sm font-medium text-foreground">
-                            {agent.executionCount.toLocaleString()}
-                          </span>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-center">
-                          <div className="flex items-center justify-center gap-1">
-                            {agent.successRate >= 90 ? (
-                              <TrendingUp className="h-4 w-4 text-green-400" />
-                            ) : (
-                              <TrendingDown className="h-4 w-4 text-orange-400" />
-                            )}
-                            <span className={`text-sm font-medium ${
-                              agent.successRate >= 90 ? 'text-green-400' : 'text-orange-400'
-                            }`}>
-                              {formatPercentage(agent.successRate)}
-                            </span>
-                          </div>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <span className="text-sm text-muted-foreground">
-                            {new Date(agent.createdAt).toLocaleDateString('en-US', { 
-                              month: 'short', 
-                              day: 'numeric',
-                              year: 'numeric'
-                            })}
-                          </span>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <span className="text-sm text-muted-foreground" suppressHydrationWarning>
-                            {formatRelativeTime(agent.lastRun)}
-                          </span>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-right">
-                          <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-foreground">
-                            <MoreHorizontal className="h-4 w-4" />
-                          </Button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+              <DataTable
+                headers={[
+                  { label: 'Name', align: 'left' },
+                  { label: 'Created by', align: 'left' },
+                  { label: 'Status', align: 'left' },
+                  { label: 'Runs', align: 'center' },
+                  { label: 'Success Rate', align: 'center' },
+                  { label: 'Created', align: 'left' },
+                  { label: 'Last Used', align: 'left' },
+                  { label: '', align: 'right' },
+                ]}
+              >
+                {paginatedAgents.map((agent) => (
+                  <TableRow key={agent.id}>
+                    <TableCell className="px-4 py-3 whitespace-nowrap">
+                      <Link
+                        href={`/agents/${agent.id}`}
+                        className="text-sm font-medium text-foreground hover:text-amber-500 transition-colors"
+                      >
+                        {agent.name}
+                      </Link>
+                      <p className="text-xs text-foreground0 mt-0.5 max-w-xs truncate">
+                        {agent.description}
+                      </p>
+                    </TableCell>
+                    <TableCell className="px-4 py-3 whitespace-nowrap">
+                      <span className="text-sm text-muted-foreground">{agent.createdBy}</span>
+                    </TableCell>
+                    <TableCell className="px-4 py-3 whitespace-nowrap">
+                      <Badge 
+                        variant="outline"
+                        className={agent.status === "active" ? "bg-green-500/10 border-green-500 text-green-600 dark:text-green-400" : ""}
+                      >
+                        {agent.status === "active" && (
+                          <CheckCircle className="h-3 w-3 mr-1" />
+                        )}
+                        {agent.status === "paused" && (
+                          <Pause className="h-3 w-3 mr-1" />
+                        )}
+                        {agent.status}
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="px-4 py-3 whitespace-nowrap text-center">
+                      <span className="text-sm font-medium text-foreground">
+                        {agent.executionCount.toLocaleString()}
+                      </span>
+                    </TableCell>
+                    <TableCell className="px-4 py-3 whitespace-nowrap text-center">
+                      <div className="flex items-center justify-center gap-1">
+                        {agent.successRate >= 90 ? (
+                          <TrendingUp className="h-4 w-4 text-green-400" />
+                        ) : (
+                          <TrendingDown className="h-4 w-4 text-orange-400" />
+                        )}
+                        <span className={`text-sm font-medium ${
+                          agent.successRate >= 90 ? 'text-green-400' : 'text-orange-400'
+                        }`}>
+                          {formatPercentage(agent.successRate)}
+                        </span>
+                      </div>
+                    </TableCell>
+                    <TableCell className="px-4 py-3 whitespace-nowrap">
+                      <span className="text-sm text-muted-foreground">
+                        {new Date(agent.createdAt).toLocaleDateString('en-US', { 
+                          month: 'short', 
+                          day: 'numeric',
+                          year: 'numeric'
+                        })}
+                      </span>
+                    </TableCell>
+                    <TableCell className="px-4 py-3 whitespace-nowrap">
+                      <span className="text-sm text-muted-foreground" suppressHydrationWarning>
+                        {formatRelativeTime(agent.lastRun)}
+                      </span>
+                    </TableCell>
+                    <TableCell className="px-4 py-3 whitespace-nowrap text-right">
+                      <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-foreground">
+                        <MoreHorizontal className="h-4 w-4" />
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </DataTable>
 
               {/* Pagination */}
               {totalPages > 1 && (

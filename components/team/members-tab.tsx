@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { DataTable, TableRow, TableCell } from "@/components/data-table";
 import {
   Select,
   SelectContent,
@@ -11,7 +12,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Trash2, ChevronLeft, ChevronRight, CheckCircle, Circle } from "lucide-react";
+import { Trash2, ChevronLeft, ChevronRight, CheckCircle, Circle } from "@/lib/icons";
 
 export interface TeamMember {
   id: string;
@@ -43,30 +44,18 @@ export function MembersTab({ members, roles, onRoleChange, onRemove }: MembersTa
   return (
     <Card className="bg-card border">
       <CardContent className="p-0">
-        <table className="min-w-full divide-y divide-stone-800">
-          <thead>
-            <tr>
-              <th className="px-6 py-4 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                Member
-              </th>
-              <th className="px-6 py-4 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                Role
-              </th>
-              <th className="px-6 py-4 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                Status
-              </th>
-              <th className="px-6 py-4 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                Last Active
-              </th>
-              <th className="px-6 py-4 text-right text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                Actions
-              </th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-stone-800">
-            {paginatedMembers.map((member) => (
-              <tr key={member.id} className="hover:bg-accent/50 transition-colors">
-                <td className="px-6 py-4 whitespace-nowrap">
+        <DataTable
+          headers={[
+            { label: 'Member', align: 'left' },
+            { label: 'Role', align: 'left' },
+            { label: 'Status', align: 'left' },
+            { label: 'Last Active', align: 'left' },
+            { label: 'Actions', align: 'right' },
+          ]}
+        >
+          {paginatedMembers.map((member) => (
+            <TableRow key={member.id}>
+              <TableCell className="px-4 py-3 whitespace-nowrap">
                   <div className="flex items-center gap-3">
                     <div className="h-9 w-9 rounded-full bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center text-white text-sm font-medium">
                       {member.avatar}
@@ -76,8 +65,8 @@ export function MembersTab({ members, roles, onRoleChange, onRemove }: MembersTa
                       <p className="text-xs text-foreground0">{member.email}</p>
                     </div>
                   </div>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
+                </TableCell>
+                <TableCell className="px-4 py-3 whitespace-nowrap">
                   <Select 
                     defaultValue={member.role}
                     onValueChange={(value) => onRoleChange?.(member.id, value)}
@@ -97,10 +86,11 @@ export function MembersTab({ members, roles, onRoleChange, onRemove }: MembersTa
                       ))}
                     </SelectContent>
                   </Select>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
+                </TableCell>
+                <TableCell className="px-4 py-3 whitespace-nowrap">
                   <Badge
-                    variant={member.status === "active" ? "success" : "outline"}
+                    variant="outline"
+                    className={member.status === "active" ? "bg-green-500/10 border-green-500 text-green-600 dark:text-green-400" : ""}
                   >
                     {member.status === "active" && (
                       <CheckCircle className="h-3 w-3 mr-1" />
@@ -110,11 +100,11 @@ export function MembersTab({ members, roles, onRoleChange, onRemove }: MembersTa
                     )}
                     {member.status}
                   </Badge>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
+                </TableCell>
+                <TableCell className="px-4 py-3 whitespace-nowrap">
                   <span className="text-sm text-muted-foreground">{member.lastActive}</span>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-right">
+                </TableCell>
+                <TableCell className="px-4 py-3 whitespace-nowrap text-right">
                   <Button 
                     variant="ghost" 
                     size="sm" 
@@ -123,11 +113,10 @@ export function MembersTab({ members, roles, onRoleChange, onRemove }: MembersTa
                   >
                     <Trash2 className="h-4 w-4" />
                   </Button>
-                </td>
-              </tr>
+                </TableCell>
+              </TableRow>
             ))}
-          </tbody>
-        </table>
+        </DataTable>
 
         {/* Pagination */}
         {totalPages > 1 && (

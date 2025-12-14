@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Header } from "@/components/layout/header";
+import { DataTable, TableRow, TableCell } from "@/components/data-table";
 import {
   Copy,
   Eye,
@@ -12,7 +13,7 @@ import {
   Plus,
   Shield,
   Trash2,
-} from "lucide-react";
+} from "@/lib/icons";
 
 const apiKeys = [
   { id: "1", name: "Production API Key", prefix: "nx_prod_", created: "Oct 15, 2024", lastUsed: "2 hours ago" },
@@ -45,79 +46,66 @@ export default function ApiKeysPage() {
 
           <Card className="bg-card border">
             <CardContent className="p-0">
-              <table className="min-w-full divide-y divide-stone-800">
-                <thead>
-                  <tr>
-                    <th className="px-6 py-4 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                      Name
-                    </th>
-                    <th className="px-6 py-4 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                      Key
-                    </th>
-                    <th className="px-6 py-4 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                      Created
-                    </th>
-                    <th className="px-6 py-4 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                      Last Used
-                    </th>
-                    <th className="px-6 py-4 text-right text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                      Actions
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-stone-800">
-                  {apiKeys.map((key) => (
-                    <tr key={key.id} className="hover:bg-accent/50 transition-colors">
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <span className="text-sm font-medium text-foreground">{key.name}</span>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="flex items-center gap-2">
-                          <code className="text-sm text-muted-foreground font-mono">
-                            {showKey === key.id ? `${key.prefix}xxxxxxxxxxxx` : `${key.prefix}••••••••••••`}
-                          </code>
-                          <button
-                            onClick={() => setShowKey(showKey === key.id ? null : key.id)}
-                            className="text-foreground0 hover:text-muted-foreground"
-                          >
-                            {showKey === key.id ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                          </button>
-                          <button
-                            onClick={() => copyToClipboard(key.id)}
-                            className="text-foreground0 hover:text-muted-foreground"
-                          >
-                            {copied === key.id ? (
-                              <Check className="h-4 w-4 text-green-500" />
-                            ) : (
-                              <Copy className="h-4 w-4" />
-                            )}
-                          </button>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <span className="text-sm text-muted-foreground">{key.created}</span>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <span className="text-sm text-muted-foreground">{key.lastUsed}</span>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-right">
-                        <Button variant="ghost" size="sm" className="text-red-400 hover:text-red-300 hover:bg-red-950">
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+              <DataTable
+                headers={[
+                  { label: 'Name', align: 'left' },
+                  { label: 'Key', align: 'left' },
+                  { label: 'Created', align: 'left' },
+                  { label: 'Last Used', align: 'left' },
+                  { label: 'Actions', align: 'right' },
+                ]}
+              >
+                {apiKeys.map((key) => (
+                  <TableRow key={key.id}>
+                    <TableCell className="px-4 py-3 whitespace-nowrap">
+                      <span className="text-sm font-medium text-foreground">{key.name}</span>
+                    </TableCell>
+                    <TableCell className="px-4 py-3 whitespace-nowrap">
+                      <div className="flex items-center gap-2">
+                        <code className="text-sm text-muted-foreground font-mono">
+                          {showKey === key.id ? `${key.prefix}xxxxxxxxxxxx` : `${key.prefix}••••••••••••`}
+                        </code>
+                        <button
+                          onClick={() => setShowKey(showKey === key.id ? null : key.id)}
+                          className="text-foreground0 hover:text-muted-foreground"
+                        >
+                          {showKey === key.id ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                        </button>
+                        <button
+                          onClick={() => copyToClipboard(key.id)}
+                          className="text-foreground0 hover:text-muted-foreground"
+                        >
+                          {copied === key.id ? (
+                            <Check className="h-4 w-4 text-green-500" />
+                          ) : (
+                            <Copy className="h-4 w-4" />
+                          )}
+                        </button>
+                      </div>
+                    </TableCell>
+                    <TableCell className="px-4 py-3 whitespace-nowrap">
+                      <span className="text-sm text-muted-foreground">{key.created}</span>
+                    </TableCell>
+                    <TableCell className="px-4 py-3 whitespace-nowrap">
+                      <span className="text-sm text-muted-foreground">{key.lastUsed}</span>
+                    </TableCell>
+                    <TableCell className="px-4 py-3 whitespace-nowrap text-right">
+                      <Button variant="ghost" size="sm" className="text-red-400 hover:text-red-300 hover:bg-red-950">
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </DataTable>
             </CardContent>
           </Card>
 
-          <Card className="bg-amber-950/30 border-amber-800/50">
+          <Card className="bg-blue-500/10 border-blue-500/20">
             <CardContent className="p-4 flex items-start gap-3">
-              <Shield className="h-5 w-5 text-amber-500 shrink-0 mt-0.5" />
+              <Shield className="h-5 w-5 text-blue-500 shrink-0 mt-0.5" />
               <div>
-                <p className="text-sm font-medium text-amber-200">Keep your API keys secure</p>
-                <p className="text-xs text-amber-300/70 mt-1">
+                <p className="text-sm font-medium text-blue-600 dark:text-blue-400">Keep your API keys secure</p>
+                <p className="text-xs text-muted-foreground mt-1">
                   Never share your API keys in public repositories or client-side code. Rotate keys regularly.
                 </p>
               </div>

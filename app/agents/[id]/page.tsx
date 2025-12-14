@@ -23,7 +23,7 @@ import {
   Plus,
   PanelRight,
   PanelRightClose,
-} from "lucide-react";
+} from "@/lib/icons";
 import {
   TriggersList,
   AgentStats,
@@ -67,7 +67,7 @@ export default function AgentDetailPage({ params }: AgentDetailPageProps) {
             variant="outline"
             className={
               agent.status === "active"
-                ? "bg-green-950 text-green-400 border-green-800"
+                ? "bg-green-500/10 border-green-500 text-green-600 dark:text-green-400"
                 : "bg-accent text-muted-foreground border"
             }
           >

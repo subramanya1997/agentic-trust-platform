@@ -24,7 +24,7 @@ import {
   Bot,
   Trash2,
   Settings,
-} from "lucide-react";
+} from "@/lib/icons";
 
 interface PageProps {
   params: Promise<{ id: string }>;

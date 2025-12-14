@@ -12,7 +12,7 @@ import {
   Plus,
   Bot,
   Wrench,
-} from "lucide-react";
+} from "@/lib/icons";
 
 type FilterType = "all" | "agent" | "custom";
 
@@ -85,7 +85,11 @@ export default function MCPRegistryPage() {
                 >
                   {filter.icon}
                   {filter.label}
-                  <span className="text-foreground0 ml-1">{counts[filter.type]}</span>
+                  {counts[filter.type] > 0 && (
+                    <span className="ml-1 text-[10px] bg-amber-600 text-white px-1.5 py-0.5 rounded">
+                      {counts[filter.type]}
+                    </span>
+                  )}
                 </button>
               ))}
             </div>

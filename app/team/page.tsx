@@ -7,7 +7,7 @@ import { MembersTab, TeamMember } from "@/components/team/members-tab";
 import { InvitedTab, Invitation } from "@/components/team/invited-tab";
 import { RolesTab, Role } from "@/components/team/roles-tab";
 import { PermissionsTab, Permission, RolePermission } from "@/components/team/permissions-tab";
-import { Users, Mail, Shield, Lock, Plus, RotateCcw } from "lucide-react";
+import { Users, Mail, Shield, Lock, Plus, RotateCcw } from "@/lib/icons";
 
 type TabType = "members" | "invited" | "roles" | "permissions";
 

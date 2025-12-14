@@ -7,7 +7,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { CheckCircle2, XCircle } from "lucide-react";
+import { CheckCircle2, XCircle } from "@/lib/icons";
 import type { MCPToolInvocation } from "@/lib/types";
 
 interface InvocationsTableProps {
@@ -42,20 +42,20 @@ export function InvocationsTable({ invocations }: InvocationsTableProps) {
             No invocations yet
           </p>
         ) : (
-          <Table>
-            <TableHeader>
-              <TableRow className="border hover:bg-transparent">
-                <TableHead className="text-muted-foreground">Status</TableHead>
-                <TableHead className="text-muted-foreground">Tool Name</TableHead>
-                <TableHead className="text-muted-foreground">Client ID</TableHead>
-                <TableHead className="text-muted-foreground text-right">Duration</TableHead>
-                <TableHead className="text-muted-foreground text-right">Time</TableHead>
+          <Table className="rounded-none">
+            <TableHeader className="!bg-card">
+              <TableRow className="hover:bg-transparent border-b border-border">
+                <TableHead className="px-4 py-2.5 text-white text-xs font-medium uppercase tracking-wider">Status</TableHead>
+                <TableHead className="px-4 py-2.5 text-white text-xs font-medium uppercase tracking-wider">Tool Name</TableHead>
+                <TableHead className="px-4 py-2.5 text-white text-xs font-medium uppercase tracking-wider">Client ID</TableHead>
+                <TableHead className="px-4 py-2.5 text-white text-xs font-medium uppercase tracking-wider text-right">Duration</TableHead>
+                <TableHead className="px-4 py-2.5 text-white text-xs font-medium uppercase tracking-wider text-right">Time</TableHead>
               </TableRow>
             </TableHeader>
-            <TableBody>
+            <TableBody className="!bg-card [&_tr]:!bg-card [&_tr:hover]:!bg-muted">
               {invocations.slice(0, 10).map((inv) => (
-                <TableRow key={inv.id} className="border hover:bg-accent/50">
-                  <TableCell>
+                <TableRow key={inv.id}>
+                  <TableCell className="px-4 py-3">
                     <div className="flex items-center gap-2">
                       {inv.status === "success" ? (
                         <CheckCircle2 className="h-4 w-4 text-green-400" />
@@ -67,12 +67,12 @@ export function InvocationsTable({ invocations }: InvocationsTableProps) {
                       </span>
                     </div>
                   </TableCell>
-                  <TableCell>
+                  <TableCell className="px-4 py-3">
                     <code className="text-sm font-mono text-foreground">{inv.toolName}</code>
                   </TableCell>
-                  <TableCell className="text-sm text-muted-foreground">{inv.clientId}</TableCell>
-                  <TableCell className="text-right text-sm text-muted-foreground">{inv.duration}ms</TableCell>
-                  <TableCell className="text-right text-sm text-foreground0" suppressHydrationWarning>
+                  <TableCell className="px-4 py-3 text-sm text-muted-foreground">{inv.clientId}</TableCell>
+                  <TableCell className="px-4 py-3 text-right text-sm text-muted-foreground">{inv.duration}ms</TableCell>
+                  <TableCell className="px-4 py-3 text-right text-sm text-foreground0" suppressHydrationWarning>
                     {formatRelativeTime(inv.timestamp)}
                   </TableCell>
                 </TableRow>

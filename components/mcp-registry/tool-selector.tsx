@@ -16,7 +16,7 @@ import {
   Bot,
   CheckSquare,
   Square,
-} from "lucide-react";
+} from "@/lib/icons";
 
 interface ToolSelectorProps {
   selectedTools: SelectedTool[];
@@ -191,7 +191,7 @@ export function ToolSelector({ selectedTools, onSelectionChange }: ToolSelectorP
       {/* Header with stats */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Badge variant="warning">
+          <Badge variant="outline" className="bg-yellow-500/10 border-yellow-500 text-yellow-600 dark:text-yellow-400">
             {selectedTools.length} selected
           </Badge>
           <span className="text-xs text-foreground0">
@@ -342,8 +342,14 @@ export function ToolSelector({ selectedTools, onSelectionChange }: ToolSelectorP
                                 {tool.toolName}
                               </code>
                               <Badge
-                                variant={tool.category === "read" ? "success" : tool.category === "write" ? "info" : "warning"}
-                                className="text-[10px] px-1.5 py-0"
+                                variant="outline"
+                                className={`text-[10px] px-1.5 py-0 ${
+                                  tool.category === "read" 
+                                    ? "bg-green-500/10 border-green-500 text-green-600 dark:text-green-400"
+                                    : tool.category === "write"
+                                    ? "bg-blue-500/10 border-blue-500 text-blue-600 dark:text-blue-400"
+                                    : "bg-yellow-500/10 border-yellow-500 text-yellow-600 dark:text-yellow-400"
+                                }`}
                               >
                                 {tool.category}
                               </Badge>

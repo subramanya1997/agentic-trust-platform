@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { formatRelativeTime, formatDuration, formatCurrency } from "@/lib/utils";
-import { CheckCircle2, XCircle, Loader2, Bot } from "lucide-react";
+import { CheckCircle2, XCircle, Loader2, Bot } from "@/lib/icons";
 import type { ExecutionTrace } from "@/lib/types";
 
 interface RecentActivityProps {

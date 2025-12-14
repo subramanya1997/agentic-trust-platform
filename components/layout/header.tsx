@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Bell, HelpCircle, ChevronRight, Sparkles, Clock, Copy, MoreHorizontal, PanelRight, PanelRightClose } from "lucide-react";
+import { Bell, HelpCircle, ChevronRight, Sparkles, Clock, Copy, MoreHorizontal, PanelRight, PanelRightClose } from "@/lib/icons";
 import { Button } from "@/components/ui/button";
 import { SidebarTrigger, useSidebar } from "@/components/ui/sidebar";
 import { Separator } from "@/components/ui/separator";

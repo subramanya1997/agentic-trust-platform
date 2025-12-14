@@ -19,7 +19,7 @@ import {
 } from "@/lib/data/analytics-data";
 import { mockExecutionTraces } from "@/lib/data/activity-data";
 import { formatCurrency, formatPercentage } from "@/lib/utils";
-import { Clock, AlertTriangle } from "lucide-react";
+import { Clock, AlertTriangle } from "@/lib/icons";
 
 export default function Home() {
   const [dateRange, setDateRange] = useState<"7d" | "14d" | "30d">("7d");

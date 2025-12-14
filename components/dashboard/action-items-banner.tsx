@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Clock, XCircle, ChevronRight } from "lucide-react";
+import { Clock, XCircle, ChevronRight } from "@/lib/icons";
 import { Button } from "@/components/ui/button";
 
 interface ActionItemsBannerProps {

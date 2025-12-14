@@ -6,7 +6,7 @@ import { Header } from "@/components/layout/header";
 import { GeneralTab } from "@/components/organization/general-tab";
 import { SecurityTab } from "@/components/organization/security-tab";
 import { BillingTab } from "@/components/organization/billing-tab";
-import { Settings, Shield, CreditCard } from "lucide-react";
+import { Settings, Shield, CreditCard } from "@/lib/icons";
 
 type TabType = "general" | "security" | "billing";
 

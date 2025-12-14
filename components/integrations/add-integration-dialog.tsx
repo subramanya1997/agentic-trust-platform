@@ -11,7 +11,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Plus, Link2, FileJson, Upload, Check, Loader2 } from "lucide-react";
+import { Plus, Link2, FileJson, Upload, Check, Loader2 } from "@/lib/icons";
 
 type IntegrationType = "mcp" | "openapi" | null;
 

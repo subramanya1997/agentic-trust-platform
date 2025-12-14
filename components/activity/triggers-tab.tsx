@@ -6,6 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { StatsCard } from "@/components/dashboard/stats-card";
+import { DataTable, TableRow, TableCell } from "@/components/data-table";
 import { mockTriggers, parseCronExpression } from "@/lib/data/triggers-data";
 import { formatRelativeTime } from "@/lib/utils";
 import type { AgentTrigger, ScheduledTriggerConfig, WebhookTriggerConfig, ApiTriggerConfig } from "@/lib/types";
@@ -16,7 +17,7 @@ import {
   Activity,
   ChevronLeft,
   ChevronRight,
-} from "lucide-react";
+} from "@/lib/icons";
 
 interface TriggersTabProps {
   searchQuery: string;
@@ -118,34 +119,19 @@ export function TriggersTab({ searchQuery, typeFilter, statusFilter }: TriggersT
       {/* Triggers Table */}
       <Card className="bg-card border">
         <CardContent className="p-0">
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-stone-800">
-              <thead className="bg-card">
-                <tr>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                    Trigger
-                  </th>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                    Type
-                  </th>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                    Agent
-                  </th>
-                  <th className="px-6 py-4 text-center text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                    Status
-                  </th>
-                  <th className="px-6 py-4 text-center text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                    Runs
-                  </th>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                    Last / Next
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-stone-800">
-                {paginatedTriggers.map((trigger) => (
-                  <tr key={trigger.id} className="hover:bg-accent/50 transition-colors">
-                    <td className="px-6 py-4 whitespace-nowrap">
+          <DataTable
+            headers={[
+              { label: 'Trigger', align: 'left' },
+              { label: 'Type', align: 'left' },
+              { label: 'Agent', align: 'left' },
+              { label: 'Status', align: 'center' },
+              { label: 'Runs', align: 'center' },
+              { label: 'Last / Next', align: 'left' },
+            ]}
+          >
+            {paginatedTriggers.map((trigger) => (
+              <TableRow key={trigger.id}>
+                <TableCell className="px-4 py-3 whitespace-nowrap">
                       <div>
                         <span className="text-sm font-medium text-foreground">
                           {trigger.name}
@@ -154,24 +140,24 @@ export function TriggersTab({ searchQuery, typeFilter, statusFilter }: TriggersT
                           {getTriggerDescription(trigger)}
                         </p>
                       </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    </TableCell>
+                    <TableCell className="px-4 py-3 whitespace-nowrap">
                       <Badge
-                        variant={
+                        variant="outline"
+                        className={`capitalize ${
                           trigger.type === "webhook"
-                            ? "purple"
+                            ? "bg-purple-500/10 border-purple-500 text-purple-600 dark:text-purple-400"
                             : trigger.type === "scheduled"
-                            ? "info"
+                            ? "bg-blue-500/10 border-blue-500 text-blue-600 dark:text-blue-400"
                             : trigger.type === "api"
-                            ? "success"
-                            : "warning"
-                        }
-                        className="capitalize"
+                            ? "bg-green-500/10 border-green-500 text-green-600 dark:text-green-400"
+                            : "bg-yellow-500/10 border-yellow-500 text-yellow-600 dark:text-yellow-400"
+                        }`}
                       >
                         {trigger.type}
                       </Badge>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    </TableCell>
+                    <TableCell className="px-4 py-3 whitespace-nowrap">
                       <Link
                         href={`/agents/${trigger.agentId}`}
                         className="text-sm text-muted-foreground hover:text-amber-500 transition-colors flex items-center gap-1"
@@ -179,20 +165,21 @@ export function TriggersTab({ searchQuery, typeFilter, statusFilter }: TriggersT
                         {trigger.agentName}
                         <ExternalLink className="h-3 w-3" />
                       </Link>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-center">
+                    </TableCell>
+                    <TableCell className="px-4 py-3 whitespace-nowrap text-center">
                       <Badge
-                        variant={trigger.enabled ? "success" : "outline"}
+                        variant="outline"
+                        className={trigger.enabled ? "bg-green-500/10 border-green-500 text-green-600 dark:text-green-400" : ""}
                       >
                         {trigger.enabled ? "Active" : "Inactive"}
                       </Badge>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-center">
+                    </TableCell>
+                    <TableCell className="px-4 py-3 whitespace-nowrap text-center">
                       <span className="text-sm font-medium text-foreground">
                         {trigger.triggerCount.toLocaleString()}
                       </span>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    </TableCell>
+                    <TableCell className="px-4 py-3 whitespace-nowrap">
                       <div className="space-y-1">
                         {trigger.lastTriggered && (
                           <div className="flex items-center gap-1 text-xs text-muted-foreground">
@@ -209,12 +196,10 @@ export function TriggersTab({ searchQuery, typeFilter, statusFilter }: TriggersT
                           </div>
                         )}
                       </div>
-                    </td>
-                  </tr>
+                    </TableCell>
+                  </TableRow>
                 ))}
-              </tbody>
-            </table>
-          </div>
+          </DataTable>
 
           {/* Pagination */}
           {totalPages > 1 && (

@@ -2,6 +2,7 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { StatsCard } from "@/components/dashboard/stats-card";
+import { DataTable, TableRow, TableCell } from "@/components/data-table";
 import {
   getHourlyUsage,
   getUsageByDay,
@@ -134,65 +135,47 @@ export function UsageTab({ dateRange }: UsageTabProps) {
 
       {/* Usage Table */}
       <Card className="bg-card border">
-        <CardHeader>
-          <CardTitle className="text-foreground">Daily Activity Summary</CardTitle>
-        </CardHeader>
         <CardContent className="p-0">
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-stone-800">
-              <thead className="bg-card">
-                <tr>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                    Day
-                  </th>
-                  <th className="px-6 py-4 text-right text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                    Executions
-                  </th>
-                  <th className="px-6 py-4 text-right text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                    Unique Agents
-                  </th>
-                  <th className="px-6 py-4 text-right text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                    Unique Users
-                  </th>
-                  <th className="px-6 py-4 text-center text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                    Activity Level
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-stone-800">
-                {usageByDay.map((day) => {
-                  const maxExec = Math.max(...usageByDay.map((d) => d.executions));
-                  const activityLevel = (day.executions / maxExec) * 100;
-                  return (
-                    <tr key={day.day} className="hover:bg-accent/50 transition-colors">
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <span className="text-sm font-medium text-foreground">{day.day}</span>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-right">
-                        <span className="text-sm text-foreground">{day.executions.toLocaleString()}</span>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-right">
-                        <span className="text-sm text-muted-foreground">{day.uniqueAgents}</span>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-right">
-                        <span className="text-sm text-muted-foreground">{day.uniqueUsers}</span>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="flex items-center justify-center">
-                          <div className="w-24 bg-accent rounded-full h-2">
-                            <div
-                              className="h-2 rounded-full bg-amber-500"
-                              style={{ width: `${activityLevel}%` }}
-                            />
-                          </div>
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
+          <DataTable
+            headers={[
+              { label: 'Day', align: 'left' },
+              { label: 'Executions', align: 'right' },
+              { label: 'Unique Agents', align: 'right' },
+              { label: 'Unique Users', align: 'right' },
+              { label: 'Activity Level', align: 'center' },
+            ]}
+          >
+            {usageByDay.map((day) => {
+              const maxExec = Math.max(...usageByDay.map((d) => d.executions));
+              const activityLevel = (day.executions / maxExec) * 100;
+              return (
+                <TableRow key={day.day}>
+                  <TableCell className="px-4 py-3 whitespace-nowrap">
+                    <span className="text-sm font-medium text-foreground">{day.day}</span>
+                  </TableCell>
+                  <TableCell className="px-4 py-3 whitespace-nowrap text-right">
+                    <span className="text-sm text-foreground">{day.executions.toLocaleString()}</span>
+                  </TableCell>
+                  <TableCell className="px-4 py-3 whitespace-nowrap text-right">
+                    <span className="text-sm text-muted-foreground">{day.uniqueAgents}</span>
+                  </TableCell>
+                  <TableCell className="px-4 py-3 whitespace-nowrap text-right">
+                    <span className="text-sm text-muted-foreground">{day.uniqueUsers}</span>
+                  </TableCell>
+                  <TableCell className="px-4 py-3 whitespace-nowrap">
+                    <div className="flex items-center justify-center">
+                      <div className="w-24 bg-accent rounded-full h-2">
+                        <div
+                          className="h-2 rounded-full bg-amber-500"
+                          style={{ width: `${activityLevel}%` }}
+                        />
+                      </div>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              );
+            })}
+          </DataTable>
         </CardContent>
       </Card>
     </div>

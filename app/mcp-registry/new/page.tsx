@@ -28,7 +28,7 @@ import {
   Shield,
   Gauge,
   Loader2,
-} from "lucide-react";
+} from "@/lib/icons";
 
 type Step = "config" | "tools" | "review";
 
@@ -374,8 +374,14 @@ export default function NewMCPServerPage() {
                                 {group.tools.map((tool) => (
                                   <Badge
                                     key={`${tool.sourceId}-${tool.toolName}`}
-                                    variant={tool.category === "read" ? "success" : tool.category === "write" ? "info" : "warning"}
-                                    className="text-xs"
+                                    variant="outline"
+                                    className={`text-xs ${
+                                      tool.category === "read" 
+                                        ? "bg-green-500/10 border-green-500 text-green-600 dark:text-green-400"
+                                        : tool.category === "write"
+                                        ? "bg-blue-500/10 border-blue-500 text-blue-600 dark:text-blue-400"
+                                        : "bg-yellow-500/10 border-yellow-500 text-yellow-600 dark:text-yellow-400"
+                                    }`}
                                   >
                                     {tool.toolName}
                                   </Badge>

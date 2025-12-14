@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Header } from "@/components/layout/header";
 import { AddIntegrationDialog } from "@/components/integrations/add-integration-dialog";
 import { IntegrationIcon } from "@/components/integration-icon";
-import { Search, Check } from "lucide-react";
+import { Search, Check } from "@/lib/icons";
 
 interface Integration {
   id: string;
@@ -111,8 +111,8 @@ function IntegrationCard({ integration }: { integration: Integration }) {
       href={`/integrations/${integration.id}`}
       className={`flex items-center gap-3 p-3 rounded-lg border transition-all ${
         integration.connected 
-          ? 'bg-card/50 border hover:border hover:bg-accent/50' 
-          : 'bg-card/30 border/50 hover:border hover:bg-accent/30'
+          ? 'bg-card border hover:border hover:bg-accent/50' 
+          : 'bg-card border hover:border hover:bg-accent/50'
       }`}
     >
       <div className="h-9 w-9 rounded-lg bg-accent flex items-center justify-center overflow-hidden shrink-0">

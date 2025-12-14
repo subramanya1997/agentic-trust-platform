@@ -3,7 +3,8 @@
 import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Edit2, Trash2 } from "lucide-react";
+import { DataTable, TableRow, TableCell } from "@/components/data-table";
+import { Edit2, Trash2 } from "@/lib/icons";
 
 export interface Role {
   id: string;
@@ -86,69 +87,56 @@ export function RolesTab({ roles, onAddRole, onEditRole, onDeleteRole }: RolesTa
       {/* Roles Table */}
       <Card className="bg-card border">
         <CardContent className="p-0">
-          <table className="min-w-full divide-y divide-stone-800">
-            <thead>
-              <tr>
-                <th className="px-6 py-4 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                  Role
-                </th>
-                <th className="px-6 py-4 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                  Description
-                </th>
-                <th className="px-6 py-4 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                  Members
-                </th>
-                <th className="px-6 py-4 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                  Type
-                </th>
-                <th className="px-6 py-4 text-right text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                  Actions
-                </th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-stone-800">
-              {roles.map((role) => (
-                <tr key={role.id} className="hover:bg-accent/50 transition-colors">
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className="text-sm font-medium text-foreground">{role.name}</span>
-                  </td>
-                  <td className="px-6 py-4">
-                    <span className="text-sm text-muted-foreground">{role.description}</span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className="text-sm text-muted-foreground">{role.memberCount}</span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className="text-sm text-foreground0">
-                      {role.isSystem ? "System" : role.isDefault ? "Default" : "Custom"}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-right">
-                    {!role.isSystem && (
-                      <div className="flex items-center justify-end gap-1">
-                        <Button 
-                          variant="ghost" 
-                          size="sm"
-                          className="text-foreground0 hover:text-muted-foreground"
-                          onClick={() => onEditRole?.(role.id)}
-                        >
-                          <Edit2 className="h-4 w-4" />
-                        </Button>
-                        <Button 
-                          variant="ghost" 
-                          size="sm"
-                          className="text-red-400 hover:text-red-300 hover:bg-red-950"
-                          onClick={() => onDeleteRole?.(role.id)}
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    )}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <DataTable
+            headers={[
+              { label: 'Role', align: 'left' },
+              { label: 'Description', align: 'left' },
+              { label: 'Members', align: 'left' },
+              { label: 'Type', align: 'left' },
+              { label: 'Actions', align: 'right' },
+            ]}
+          >
+            {roles.map((role) => (
+              <TableRow key={role.id}>
+                <TableCell className="px-4 py-3 whitespace-nowrap">
+                  <span className="text-sm font-medium text-foreground">{role.name}</span>
+                </TableCell>
+                <TableCell className="px-4 py-3">
+                  <span className="text-sm text-muted-foreground">{role.description}</span>
+                </TableCell>
+                <TableCell className="px-4 py-3 whitespace-nowrap">
+                  <span className="text-sm text-muted-foreground">{role.memberCount}</span>
+                </TableCell>
+                <TableCell className="px-4 py-3 whitespace-nowrap">
+                  <span className="text-sm text-foreground0">
+                    {role.isSystem ? "System" : role.isDefault ? "Default" : "Custom"}
+                  </span>
+                </TableCell>
+                <TableCell className="px-4 py-3 whitespace-nowrap text-right">
+                  {!role.isSystem && (
+                    <div className="flex items-center justify-end gap-1">
+                      <Button 
+                        variant="ghost" 
+                        size="sm"
+                        className="text-foreground0 hover:text-muted-foreground"
+                        onClick={() => onEditRole?.(role.id)}
+                      >
+                        <Edit2 className="h-4 w-4" />
+                      </Button>
+                      <Button 
+                        variant="ghost" 
+                        size="sm"
+                        className="text-red-400 hover:text-red-300 hover:bg-red-950"
+                        onClick={() => onDeleteRole?.(role.id)}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  )}
+                </TableCell>
+              </TableRow>
+            ))}
+          </DataTable>
         </CardContent>
       </Card>
     </div>

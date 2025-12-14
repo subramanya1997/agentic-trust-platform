@@ -13,7 +13,7 @@ import {
   Mail,
   Github,
   MessageSquare
-} from "lucide-react";
+} from "@/lib/icons";
 
 const supportChannels = [
   {

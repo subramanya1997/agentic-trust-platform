@@ -9,7 +9,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Clock, ChevronRight } from "lucide-react";
+import { Clock, ChevronRight } from "@/lib/icons";
 
 const auditLogs = [
   { event: "Login from new device", user: "sara@company.com", time: "2 hours ago" },
@@ -22,29 +22,29 @@ export function SecurityTab() {
     <div className="space-y-6 max-w-3xl">
       <Card className="bg-card border">
         <CardContent className="p-0">
-          <table className="min-w-full">
-            <tbody className="divide-y divide-stone-800">
-              <tr>
-                <td className="px-6 py-4 w-1/2">
+          <table className="min-w-full divide-y divide-border rounded-lg overflow-hidden">
+            <tbody className="bg-card divide-y divide-border">
+              <tr className="bg-card">
+                <td className="px-4 py-3 w-1/2">
                   <div>
                     <p className="text-sm font-medium text-muted-foreground">Two-Factor Authentication</p>
                     <p className="text-xs text-foreground0 mt-0.5">Require 2FA for all team members</p>
                   </div>
                 </td>
-                <td className="px-6 py-4 text-right">
+                <td className="px-4 py-3 text-right">
                   <button className="relative inline-flex h-6 w-11 items-center rounded-full bg-amber-600 transition-colors">
                     <span className="inline-block h-4 w-4 transform rounded-full bg-white transition-transform translate-x-6" />
                   </button>
                 </td>
               </tr>
-              <tr>
-                <td className="px-6 py-4 w-1/2">
+              <tr className="bg-card">
+                <td className="px-4 py-3 w-1/2">
                   <div>
                     <p className="text-sm font-medium text-muted-foreground">Session timeout</p>
                     <p className="text-xs text-foreground0 mt-0.5">Automatically log out after inactivity</p>
                   </div>
                 </td>
-                <td className="px-6 py-4 text-right">
+                <td className="px-4 py-3 text-right">
                   <Select defaultValue="1h">
                     <SelectTrigger className="w-[130px] border bg-accent text-foreground" size="sm">
                       <SelectValue />
@@ -66,14 +66,14 @@ export function SecurityTab() {
                   </Select>
                 </td>
               </tr>
-              <tr>
-                <td className="px-6 py-4 w-1/2">
+              <tr className="bg-card">
+                <td className="px-4 py-3 w-1/2">
                   <div>
                     <p className="text-sm font-medium text-muted-foreground">Active sessions</p>
                     <p className="text-xs text-foreground0 mt-0.5">Sign out from all other sessions</p>
                   </div>
                 </td>
-                <td className="px-6 py-4 text-right">
+                <td className="px-4 py-3 text-right">
                   <Button variant="outline" size="sm" className="border-red-800 text-red-400 hover:bg-red-950">
                     Sign Out All
                   </Button>
@@ -90,17 +90,17 @@ export function SecurityTab() {
           <CardDescription className="text-muted-foreground">View recent security events</CardDescription>
         </CardHeader>
         <CardContent className="p-0">
-          <table className="min-w-full">
-            <tbody className="divide-y divide-stone-800">
+          <table className="min-w-full divide-y divide-border rounded-lg overflow-hidden">
+            <tbody className="bg-card divide-y divide-border">
               {auditLogs.map((log, index) => (
-                <tr key={index}>
-                  <td className="px-6 py-4">
+                <tr key={index} className="bg-card">
+                  <td className="px-4 py-3">
                     <div>
                       <p className="text-sm text-foreground">{log.event}</p>
                       <p className="text-xs text-foreground0">{log.user}</p>
                     </div>
                   </td>
-                  <td className="px-6 py-4 text-right">
+                  <td className="px-4 py-3 text-right">
                     <span className="text-xs text-foreground0 flex items-center justify-end gap-1">
                       <Clock className="h-3 w-3" />
                       {log.time}

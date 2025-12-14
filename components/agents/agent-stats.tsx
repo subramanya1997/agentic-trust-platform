@@ -2,7 +2,7 @@
 
 import { Card } from "@/components/ui/card";
 import { cn, formatCurrency, formatPercentage } from "@/lib/utils";
-import { TrendingUp, TrendingDown } from "lucide-react";
+import { TrendingUp, TrendingDown } from "@/lib/icons";
 import type { Agent } from "@/lib/types";
 
 interface AgentStatsProps {

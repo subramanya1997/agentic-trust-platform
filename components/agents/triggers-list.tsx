@@ -20,7 +20,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Plus, Webhook, Calendar, Clock, Shield } from "lucide-react";
+import { Plus, Webhook, Calendar, Clock, Shield } from "@/lib/icons";
 import type { AgentTrigger } from "@/lib/types";
 import { MCPTrigger } from "./mcp-trigger";
 import { WebhookTrigger } from "./webhook-trigger";

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Paperclip, Send } from "lucide-react";
+import { Paperclip, Send } from "@/lib/icons";
 
 interface AgentBuilderPanelProps {
   agentName: string;

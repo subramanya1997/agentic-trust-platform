@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Header } from "@/components/layout/header";
 import { IntegrationIcon } from "@/components/integration-icon";
+import { DataTable, TableRow, TableCell } from "@/components/data-table";
 import { getIntegrationTools, Tool } from "@/lib/data/integration-tools";
 import { 
   ArrowLeft, 
@@ -21,7 +22,7 @@ import {
   ChevronRight,
   Save,
   X,
-} from "lucide-react";
+} from "@/lib/icons";
 
 // Mock connected status
 const connectedIntegrations: Record<string, { connected: boolean; usageCount: number }> = {
@@ -38,9 +39,9 @@ const connectedIntegrations: Record<string, { connected: boolean; usageCount: nu
 };
 
 const categoryColors = {
-  read: { bg: "bg-blue-950", text: "text-blue-400", border: "border-blue-800" },
-  write: { bg: "bg-green-950", text: "text-green-400", border: "border-green-800" },
-  action: { bg: "bg-amber-950", text: "text-amber-400", border: "border-amber-800" },
+  read: { bg: "bg-blue-500/10", text: "text-blue-600 dark:text-blue-400", border: "border-blue-500" },
+  write: { bg: "bg-green-500/10", text: "text-green-600 dark:text-green-400", border: "border-green-500" },
+  action: { bg: "bg-amber-500/10", text: "text-amber-600 dark:text-amber-400", border: "border-amber-500" },
 };
 
 const categoryIcons = {
@@ -147,7 +148,7 @@ function IntegrationContent({ integrationId }: { integrationId: string }) {
               <div className="flex items-center gap-3">
                 <h1 className="text-2xl font-bold text-foreground">{integration.name}</h1>
                 {connectionStatus?.connected && (
-                  <Badge variant="outline" className="text-xs bg-green-950 text-green-400 border-green-800">
+                  <Badge variant="outline" className="text-xs bg-green-500/10 border-green-500 text-green-600 dark:text-green-400">
                     <Check className="h-3 w-3 mr-1" />
                     Connected
                   </Badge>
@@ -217,53 +218,42 @@ function IntegrationContent({ integrationId }: { integrationId: string }) {
           {/* Tools Table */}
           <Card className="bg-card border">
             <CardContent className="p-0">
-              <table className="w-full">
-                <thead>
-                  <tr className="border-b border-border">
-                    <th className="w-10 px-4 py-3"></th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-foreground0 uppercase tracking-wider">
-                      Tool
-                    </th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-foreground0 uppercase tracking-wider">
-                      Description
-                    </th>
-                    <th className="px-4 py-3 text-center text-xs font-medium text-foreground0 uppercase tracking-wider w-24">
-                      Type
-                    </th>
-                    <th className="px-4 py-3 text-center text-xs font-medium text-foreground0 uppercase tracking-wider w-24">
-                      Params
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-stone-800">
-                  {filteredTools.length > 0 ? (
-                    filteredTools.map((tool) => (
-                      <ToolRow
-                        key={tool.name}
-                        tool={tool}
-                        expanded={expandedTools.has(tool.name)}
-                        onToggle={() => toggleTool(tool.name)}
-                        description={toolDescriptions[tool.name] || tool.description}
-                        isEditingDescription={editingTool === tool.name}
-                        onEditDescription={() => setEditingTool(tool.name)}
-                        onSaveDescription={(desc) => saveToolDescription(tool.name, desc)}
-                        onCancelEdit={() => setEditingTool(null)}
-                        paramDescriptions={paramDescriptions}
-                        editingParam={editingParam}
-                        onEditParam={(paramName) => setEditingParam({ tool: tool.name, param: paramName })}
-                        onSaveParamDescription={(paramName, desc) => saveParamDescription(tool.name, paramName, desc)}
-                        onCancelParamEdit={() => setEditingParam(null)}
-                      />
-                    ))
-                  ) : (
-                    <tr>
-                      <td colSpan={5} className="px-4 py-12 text-center text-foreground0">
-                        No tools found matching your search.
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
+              <DataTable
+                headers={[
+                  { label: '', align: 'left', className: 'w-10' },
+                  { label: 'Tool', align: 'left' },
+                  { label: 'Description', align: 'left' },
+                  { label: 'Type', align: 'center', className: 'w-24' },
+                  { label: 'Params', align: 'center', className: 'w-24' },
+                ]}
+              >
+                {filteredTools.length > 0 ? (
+                  filteredTools.map((tool) => (
+                    <ToolRow
+                      key={tool.name}
+                      tool={tool}
+                      expanded={expandedTools.has(tool.name)}
+                      onToggle={() => toggleTool(tool.name)}
+                      description={toolDescriptions[tool.name] || tool.description}
+                      isEditingDescription={editingTool === tool.name}
+                      onEditDescription={() => setEditingTool(tool.name)}
+                      onSaveDescription={(desc) => saveToolDescription(tool.name, desc)}
+                      onCancelEdit={() => setEditingTool(null)}
+                      paramDescriptions={paramDescriptions}
+                      editingParam={editingParam}
+                      onEditParam={(paramName) => setEditingParam({ tool: tool.name, param: paramName })}
+                      onSaveParamDescription={(paramName, desc) => saveParamDescription(tool.name, paramName, desc)}
+                      onCancelParamEdit={() => setEditingParam(null)}
+                    />
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell colSpan={5} className="px-4 py-12 text-center text-foreground0">
+                      No tools found matching your search.
+                    </TableCell>
+                  </TableRow>
+                )}
+              </DataTable>
             </CardContent>
           </Card>
 
@@ -333,11 +323,11 @@ function ToolRow({
   return (
     <>
       {/* Main Row */}
-      <tr 
-        className="hover:bg-accent/50 cursor-pointer transition-colors"
+      <TableRow 
+        className="cursor-pointer"
         onClick={onToggle}
       >
-        <td className="px-4 py-3">
+        <TableCell className="px-4 py-3">
           <button className="text-foreground0 hover:text-muted-foreground">
             {expanded ? (
               <ChevronDown className="h-4 w-4" />
@@ -345,8 +335,8 @@ function ToolRow({
               <ChevronRight className="h-4 w-4" />
             )}
           </button>
-        </td>
-        <td className="px-4 py-3">
+        </TableCell>
+        <TableCell className="px-4 py-3">
           <div className="flex items-center gap-3">
             <div className={`h-8 w-8 rounded-lg flex items-center justify-center shrink-0 ${colors.bg}`}>
               <Icon className={`h-4 w-4 ${colors.text}`} />
@@ -355,8 +345,8 @@ function ToolRow({
               {tool.name}
             </code>
           </div>
-        </td>
-        <td className="px-4 py-3">
+        </TableCell>
+        <TableCell className="px-4 py-3">
           {isEditingDescription ? (
             <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
               <input
@@ -392,26 +382,26 @@ function ToolRow({
               <Pencil className="inline h-3 w-3 ml-2 opacity-0 group-hover:opacity-50" />
             </span>
           )}
-        </td>
-        <td className="px-4 py-3 text-center">
+        </TableCell>
+        <TableCell className="px-4 py-3 text-center">
           <Badge 
             variant="outline" 
             className={`text-xs ${colors.bg} ${colors.text} ${colors.border}`}
           >
             {tool.category}
           </Badge>
-        </td>
-        <td className="px-4 py-3 text-center">
+        </TableCell>
+        <TableCell className="px-4 py-3 text-center">
           <span className="text-sm text-muted-foreground">
             {tool.parameters.length}
           </span>
-        </td>
-      </tr>
+        </TableCell>
+      </TableRow>
 
       {/* Expanded Parameters Row */}
       {expanded && tool.parameters.length > 0 && (
-        <tr>
-          <td colSpan={5} className="bg-background/50 px-4 py-0">
+        <TableRow>
+          <TableCell colSpan={5} className="bg-card px-4 py-0">
             <div className="py-4 pl-12">
               <h4 className="text-xs font-semibold text-foreground0 uppercase tracking-wider mb-3">
                 Parameters
@@ -450,7 +440,7 @@ function ToolRow({
                         </td>
                         <td className="py-2">
                           {param.required ? (
-                            <Badge variant="outline" className="text-xs bg-red-950 text-red-400 border-red-800">
+                            <Badge variant="outline" className="text-xs bg-red-500/10 border-red-500 text-red-600 dark:text-red-400">
                               required
                             </Badge>
                           ) : (
@@ -500,8 +490,8 @@ function ToolRow({
                 </tbody>
               </table>
             </div>
-          </td>
-        </tr>
+          </TableCell>
+        </TableRow>
       )}
     </>
   );

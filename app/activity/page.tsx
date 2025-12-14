@@ -19,7 +19,7 @@ import {
   Search,
   Download,
   Timer,
-} from "lucide-react";
+} from "@/lib/icons";
 import { ExecutionsTab, AuditLogTab, TriggersTab } from "@/components/activity";
 import { mockExecutionTraces, mockActivityEvents } from "@/lib/data/activity-data";
 import { mockTriggers } from "@/lib/data/triggers-data";
@@ -65,13 +65,6 @@ export default function ActivityPage() {
   const uniqueAgents = Array.from(
     new Set(mockExecutionTraces.map((t) => t.agentName))
   ).sort();
-
-  // Calculate counts for tabs
-  const tabCounts = {
-    executions: mockExecutionTraces.length,
-    triggers: mockTriggers.length,
-    audit: mockActivityEvents.length,
-  };
 
   const tabs = [
     { id: "executions" as const, label: "Executions", icon: Activity },
@@ -159,7 +152,6 @@ export default function ActivityPage() {
                 >
                   <tab.icon className="h-3.5 w-3.5" />
                   {tab.label}
-                  <span className="text-foreground0 ml-1">{tabCounts[tab.id]}</span>
                 </button>
               ))}
             </div>

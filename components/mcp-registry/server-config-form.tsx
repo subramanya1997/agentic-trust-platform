@@ -11,7 +11,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import type { MCPAuthType } from "@/lib/types";
-import { Shield, Server, FileText, Gauge } from "lucide-react";
+import { Shield, Server, FileText, Gauge } from "@/lib/icons";
 
 export interface ServerConfig {
   name: string;

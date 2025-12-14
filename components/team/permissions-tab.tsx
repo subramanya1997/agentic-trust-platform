@@ -2,7 +2,8 @@
 
 import { useState, Fragment } from "react";
 import { Card, CardContent } from "@/components/ui/card";
-import { Check, X, ChevronDown, ChevronRight } from "lucide-react";
+import { DataTable, TableRow, TableCell } from "@/components/data-table";
+import { Check, X, ChevronDown, ChevronRight } from "@/lib/icons";
 
 export interface Permission {
   id: string;
@@ -49,34 +50,26 @@ export function PermissionsTab({ permissions, roles, rolePermissions, onTogglePe
     return rolePerm?.permissions.includes(permissionId) ?? false;
   };
 
+  const headers = [
+    { label: 'Permission', align: 'left' as const, className: 'w-1/3' },
+    ...roles.map((role) => ({ label: role.name, align: 'center' as const })),
+  ];
+
   return (
     <Card className="bg-card border">
       <CardContent className="p-0">
-        <table className="min-w-full">
-          <thead>
-            <tr className="border-b border-border">
-              <th className="px-6 py-4 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider w-1/3">
-                Permission
-              </th>
-              {roles.map((role) => (
-                <th key={role.id} className="px-4 py-4 text-center text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                  {role.name}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
+        <DataTable headers={headers}>
             {Object.entries(permissionsByCategory).map(([category, perms]) => {
               const isExpanded = expandedCategories.includes(category);
               
               return (
                 <Fragment key={category}>
                   {/* Category Header */}
-                  <tr 
-                    className="bg-accent/30 cursor-pointer hover:bg-accent/50"
+                  <TableRow 
+                    className="cursor-pointer"
                     onClick={() => toggleCategory(category)}
                   >
-                    <td colSpan={roles.length + 1} className="px-6 py-3">
+                    <TableCell colSpan={roles.length + 1} className="px-4 py-2.5">
                       <div className="flex items-center gap-2">
                         {isExpanded ? (
                           <ChevronDown className="h-4 w-4 text-foreground0" />
@@ -86,25 +79,24 @@ export function PermissionsTab({ permissions, roles, rolePermissions, onTogglePe
                         <span className="text-sm font-medium text-muted-foreground">{category}</span>
                         <span className="text-xs text-foreground0">({perms.length})</span>
                       </div>
-                    </td>
-                  </tr>
+                    </TableCell>
+                  </TableRow>
                   
                   {/* Permission Rows */}
                   {isExpanded && perms.map((permission) => (
-                    <tr
+                    <TableRow
                       key={permission.id}
-                      className="border-b border/50 hover:bg-accent/30"
                     >
-                      <td className="px-6 py-3 pl-12">
+                      <TableCell className="px-4 py-3 pl-12">
                         <div>
                           <span className="text-sm text-muted-foreground">{permission.name}</span>
                           <p className="text-xs text-foreground0 mt-0.5">{permission.description}</p>
                         </div>
-                      </td>
+                      </TableCell>
                       {roles.map((role) => {
                         const hasPerm = hasPermission(role.id, permission.id);
                         return (
-                          <td key={role.id} className="px-4 py-3 text-center">
+                          <TableCell key={role.id} className="px-4 py-3 text-center">
                             <button
                               onClick={() => onTogglePermission?.(role.id, permission.id)}
                               className={`h-8 w-8 rounded-lg flex items-center justify-center mx-auto transition-colors ${
@@ -119,16 +111,15 @@ export function PermissionsTab({ permissions, roles, rolePermissions, onTogglePe
                                 <X className="h-4 w-4" />
                               )}
                             </button>
-                          </td>
+                          </TableCell>
                         );
                       })}
-                    </tr>
+                    </TableRow>
                   ))}
                 </Fragment>
               );
             })}
-          </tbody>
-        </table>
+        </DataTable>
       </CardContent>
     </Card>
   );

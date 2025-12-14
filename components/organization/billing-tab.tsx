@@ -3,7 +3,8 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Check, CreditCard, Download } from "lucide-react";
+import { DataTable, TableRow, TableCell } from "@/components/data-table";
+import { Check, CreditCard, Download } from "@/lib/icons";
 
 const plans = [
   {
@@ -85,12 +86,12 @@ export function BillingTab() {
             >
               {plan.popular && (
                 <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                  <Badge className="bg-amber-600 text-white border-0">Most Popular</Badge>
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500 text-amber-600 dark:text-amber-400">Most Popular</Badge>
                 </div>
               )}
               {plan.current && (
                 <div className="absolute -top-3 right-4">
-                  <Badge variant="outline" className="bg-card text-amber-400 border-amber-600">
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500 text-amber-600 dark:text-amber-400">
                     Current
                   </Badge>
                 </div>
@@ -195,36 +196,33 @@ export function BillingTab() {
           <CardTitle className="text-foreground text-base">Billing History</CardTitle>
         </CardHeader>
         <CardContent className="p-0">
-          <table className="min-w-full">
-            <thead>
-              <tr className="border-b border-border">
-                <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Date</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Invoice</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Amount</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Status</th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-muted-foreground uppercase tracking-wider"></th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-stone-800">
-              {billingHistory.map((invoice, index) => (
-                <tr key={index} className="hover:bg-accent/50 transition-colors">
-                  <td className="px-6 py-4 text-sm text-foreground">{invoice.date}</td>
-                  <td className="px-6 py-4 text-sm text-muted-foreground">{invoice.invoice}</td>
-                  <td className="px-6 py-4 text-sm text-foreground">{invoice.amount}</td>
-                  <td className="px-6 py-4">
-                    <Badge variant="outline" className="bg-amber-950/50 text-amber-400 border-amber-800/50">
-                      {invoice.status}
-                    </Badge>
-                  </td>
-                  <td className="px-6 py-4 text-right">
-                    <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground">
-                      <Download className="h-4 w-4" />
-                    </Button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <DataTable
+            headers={[
+              { label: 'Date', align: 'left' },
+              { label: 'Invoice', align: 'left' },
+              { label: 'Amount', align: 'left' },
+              { label: 'Status', align: 'left' },
+              { label: '', align: 'right' },
+            ]}
+          >
+            {billingHistory.map((invoice, index) => (
+              <TableRow key={index}>
+                <TableCell className="px-4 py-3 text-sm text-foreground">{invoice.date}</TableCell>
+                <TableCell className="px-4 py-3 text-sm text-muted-foreground">{invoice.invoice}</TableCell>
+                <TableCell className="px-4 py-3 text-sm text-foreground">{invoice.amount}</TableCell>
+                <TableCell className="px-4 py-3">
+                  <Badge variant="outline" className="bg-amber-500/10 border-amber-500 text-amber-600 dark:text-amber-400">
+                    {invoice.status}
+                  </Badge>
+                </TableCell>
+                <TableCell className="px-4 py-3 text-right">
+                  <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground">
+                    <Download className="h-4 w-4" />
+                  </Button>
+                </TableCell>
+              </TableRow>
+            ))}
+          </DataTable>
         </CardContent>
       </Card>
     </div>

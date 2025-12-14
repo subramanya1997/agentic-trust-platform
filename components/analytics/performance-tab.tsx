@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { StatsCard } from "@/components/dashboard/stats-card";
+import { DataTable, TableRow, TableCell } from "@/components/data-table";
 import {
   getAgentPerformance,
   getAnalyticsSummary,
@@ -12,7 +13,7 @@ import {
   TrendingDown,
   TrendingUp,
   Minus,
-} from "lucide-react";
+} from "@/lib/icons";
 import {
   BarChart,
   Bar,
@@ -67,136 +68,118 @@ export function PerformanceTab({ dateRange }: PerformanceTabProps) {
 
       {/* Agent Performance Table */}
       <Card className="bg-card border">
-        <CardHeader>
-          <CardTitle className="text-foreground">Agent Performance</CardTitle>
-        </CardHeader>
         <CardContent className="p-0">
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-stone-800">
-              <thead className="bg-card">
-                <tr>
-                  <th className="px-6 py-4 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                    Agent
-                  </th>
-                  <th className="px-6 py-4 text-right text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                    Executions
-                  </th>
-                  <th className="px-6 py-4 text-right text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                    Success Rate
-                  </th>
-                  <th className="px-6 py-4 text-right text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                    Avg Duration
-                  </th>
-                  <th className="px-6 py-4 text-right text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                    Avg Cost
-                  </th>
-                  <th className="px-6 py-4 text-right text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                    Trend
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-stone-800">
-                {sortedByExecutions.map((agent) => (
-                  <tr key={agent.agentId} className="hover:bg-accent/50 transition-colors">
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <Link
-                        href={`/agents/${agent.agentId}`}
-                        className="text-sm font-medium text-foreground hover:text-amber-500 transition-colors"
-                      >
-                        {agent.agentName}
-                      </Link>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-right">
-                      <span className="text-sm text-foreground">
-                        {agent.executions.toLocaleString()}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-right">
-                      <span
-                        className={`text-sm font-medium ${
-                          agent.successRate >= 95
-                            ? "text-foreground"
-                            : agent.successRate >= 90
-                            ? "text-amber-400"
-                            : "text-red-400"
-                        }`}
-                      >
-                        {agent.successRate.toFixed(1)}%
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-right">
-                      <span className="text-sm text-muted-foreground">{formatDuration(agent.avgDuration)}</span>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-right">
-                      <span className="text-sm text-muted-foreground">{formatCurrency(agent.avgCost)}</span>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-right">
-                      <div className="flex items-center justify-end gap-1">
-                        {agent.trend === "up" && (
-                          <>
-                            <TrendingUp className="h-4 w-4 text-green-400" />
-                            <span className="text-sm text-green-400">+{agent.trendValue}%</span>
-                          </>
-                        )}
-                        {agent.trend === "down" && (
-                          <>
-                            <TrendingDown className="h-4 w-4 text-red-400" />
-                            <span className="text-sm text-red-400">{agent.trendValue}%</span>
-                          </>
-                        )}
-                        {agent.trend === "stable" && (
-                          <>
-                            <Minus className="h-4 w-4 text-foreground0" />
-                            <span className="text-sm text-foreground0">0%</span>
-                          </>
-                        )}
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <DataTable
+            headers={[
+              { label: 'Agent', align: 'left' },
+              { label: 'Executions', align: 'right' },
+              { label: 'Success Rate', align: 'right' },
+              { label: 'Avg Duration', align: 'right' },
+              { label: 'Avg Cost', align: 'right' },
+              { label: 'Trend', align: 'right' },
+            ]}
+          >
+            {sortedByExecutions.map((agent) => (
+              <TableRow key={agent.agentId}>
+                <TableCell className="px-4 py-3 whitespace-nowrap">
+                  <Link
+                    href={`/agents/${agent.agentId}`}
+                    className="text-sm font-medium text-foreground hover:text-amber-500 transition-colors"
+                  >
+                    {agent.agentName}
+                  </Link>
+                </TableCell>
+                <TableCell className="px-4 py-3 whitespace-nowrap text-right">
+                  <span className="text-sm text-foreground">
+                    {agent.executions.toLocaleString()}
+                  </span>
+                </TableCell>
+                <TableCell className="px-4 py-3 whitespace-nowrap text-right">
+                  <span
+                    className={`text-sm font-medium ${
+                      agent.successRate >= 95
+                        ? "text-foreground"
+                        : agent.successRate >= 90
+                        ? "text-amber-400"
+                        : "text-red-400"
+                    }`}
+                  >
+                    {agent.successRate.toFixed(1)}%
+                  </span>
+                </TableCell>
+                <TableCell className="px-4 py-3 whitespace-nowrap text-right">
+                  <span className="text-sm text-muted-foreground">{formatDuration(agent.avgDuration)}</span>
+                </TableCell>
+                <TableCell className="px-4 py-3 whitespace-nowrap text-right">
+                  <span className="text-sm text-muted-foreground">{formatCurrency(agent.avgCost)}</span>
+                </TableCell>
+                <TableCell className="px-4 py-3 whitespace-nowrap text-right">
+                  <div className="flex items-center justify-end gap-1">
+                    {agent.trend === "up" && (
+                      <>
+                        <TrendingUp className="h-4 w-4 text-green-400" />
+                        <span className="text-sm text-green-400">+{agent.trendValue}%</span>
+                      </>
+                    )}
+                    {agent.trend === "down" && (
+                      <>
+                        <TrendingDown className="h-4 w-4 text-red-400" />
+                        <span className="text-sm text-red-400">{agent.trendValue}%</span>
+                      </>
+                    )}
+                    {agent.trend === "stable" && (
+                      <>
+                        <Minus className="h-4 w-4 text-foreground0" />
+                        <span className="text-sm text-foreground0">0%</span>
+                      </>
+                    )}
+                  </div>
+                </TableCell>
+              </TableRow>
+            ))}
+          </DataTable>
         </CardContent>
       </Card>
 
       {/* Success Rate Distribution */}
-      <Card className="bg-card border">
-        <CardHeader>
-          <CardTitle className="text-foreground">Success Rate by Agent</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <ResponsiveContainer width="100%" height={300}>
-            <BarChart
-              data={sortedByExecutions}
-              layout="vertical"
-              margin={{ left: 120 }}
-            >
-              <CartesianGrid strokeDasharray="3 3" stroke="#374151" horizontal={false} />
-              <XAxis type="number" domain={[90, 100]} stroke="#9ca3af" fontSize={12} tickLine={false} />
-              <YAxis
-                type="category"
-                dataKey="agentName"
-                stroke="#9ca3af"
-                fontSize={12}
-                tickLine={false}
-                width={120}
-                tick={{ fill: "#a8a29e" }}
-              />
-              <Tooltip
-                contentStyle={{
-                  backgroundColor: "#1c1917",
-                  border: "1px solid #374151",
-                  borderRadius: "8px",
-                  color: "#f5f5f4",
-                }}
-                formatter={(value: number) => [`${value.toFixed(1)}%`, "Success Rate"]}
-              />
-              <Bar dataKey="successRate" fill={PRIMARY_COLOR} radius={[0, 4, 4, 0]} />
-            </BarChart>
-          </ResponsiveContainer>
-        </CardContent>
-      </Card>
+      <div className="w-1/2">
+        <Card className="bg-card border">
+          <CardHeader>
+            <CardTitle className="text-foreground">Success Rate by Agent</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ResponsiveContainer width="100%" height={300}>
+              <BarChart
+                data={sortedByExecutions}
+                layout="vertical"
+                margin={{ left: 120 }}
+              >
+                <CartesianGrid strokeDasharray="3 3" stroke="#374151" horizontal={false} />
+                <XAxis type="number" domain={[90, 100]} stroke="#9ca3af" fontSize={12} tickLine={false} />
+                <YAxis
+                  type="category"
+                  dataKey="agentName"
+                  stroke="#9ca3af"
+                  fontSize={12}
+                  tickLine={false}
+                  width={120}
+                  tick={{ fill: "#a8a29e" }}
+                />
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: "#1c1917",
+                    border: "1px solid #374151",
+                    borderRadius: "8px",
+                    color: "#f5f5f4",
+                  }}
+                  formatter={(value: number) => [`${value.toFixed(1)}%`, "Success Rate"]}
+                />
+                <Bar dataKey="successRate" fill={PRIMARY_COLOR} radius={[0, 4, 4, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }
