@@ -11,7 +11,7 @@ export const sampleAgentConfigs: AgentConfiguration[] = [
   {
     id: "feature-spec-generator",
     name: "Feature Spec Generator",
-    model: "Claude 4 Sonnet",
+    model: "Sonnet 4.5",
     markdown: `# Feature Spec Generator
 
 ## Goal
@@ -64,7 +64,7 @@ Generate comprehensive feature specifications that include market research, user
   {
     id: "lead-enrichment",
     name: "Lead Enrichment Agent",
-    model: "Claude 4 Sonnet",
+    model: "Sonnet 4.5",
     markdown: `# Lead Enrichment Agent
 
 ## Goal

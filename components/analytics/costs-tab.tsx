@@ -11,8 +11,8 @@ import {
   AreaChart,
   Area,
 } from "recharts";
-import { StatsCard } from "@/components/dashboard/stats-card";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { StatsCard } from "@/components/ui/stats-card";
 import { getCostBreakdown, getAnalyticsSummary } from "@/lib/data/analytics-data";
 import { formatCurrency } from "@/lib/utils";
 

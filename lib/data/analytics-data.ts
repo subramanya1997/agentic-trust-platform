@@ -85,13 +85,7 @@ export function getCostBreakdown(range: "7d" | "14d" | "30d"): CostBreakdownItem
   const currentSum = normalizedPercentages.slice(0, -1).reduce((a, b) => a + b, 0);
   normalizedPercentages[normalizedPercentages.length - 1] = 100 - currentSum;
 
-  const models = [
-    "Claude Sonnet 4.5",
-    "GPT-5.1",
-    "Claude Opus 4.5",
-    "Gemini 3 Pro",
-    "Other Models",
-  ];
+  const models = ["Sonnet 4.5", "GPT-5.2", "Opus 4.5", "Gemini 3 Pro", "Other Models"];
 
   return models.map((name, idx) => ({
     name,

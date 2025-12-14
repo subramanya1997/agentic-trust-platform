@@ -11,9 +11,9 @@ import {
   AreaChart,
   Area,
 } from "recharts";
-import { StatsCard } from "@/components/dashboard/stats-card";
 import { DataTable, TableRow, TableCell } from "@/components/data-table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { StatsCard } from "@/components/ui/stats-card";
 import { getHourlyUsage, getUsageByDay, getAnalyticsSummary } from "@/lib/data/analytics-data";
 
 const PRIMARY_COLOR = "#f59e0b";

@@ -221,6 +221,7 @@ export const Console = createIcon(ConsoleIcon);
 export const Database = createIcon(DatabaseIcon);
 export const Notification = createIcon(Notification01Icon);
 export const Record = createIcon(RecordIcon);
+export const ArrowUp = createIcon(ArrowUp01Icon);
 
 // Type for icon props (replaces LucideIcon)
 export type LucideIcon = React.ComponentType<IconProps>;

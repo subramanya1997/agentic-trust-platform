@@ -26,7 +26,7 @@ export const mockAgents: Agent[] = [
     avgCost: 0.052,
     lastRun: new Date(Date.now() - 2 * 60 * 1000).toISOString(),
     createdAt: "2024-09-15T10:30:00Z",
-    model: "Claude Sonnet 4.5",
+    model: "Sonnet 4.5",
     integrations: [
       { name: "Salesforce", type: "API", connected: true },
       { name: "Clearbit", type: "API", connected: true },
@@ -78,7 +78,7 @@ export const mockAgents: Agent[] = [
     avgCost: 0.087,
     lastRun: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
     createdAt: "2024-10-01T09:00:00Z",
-    model: "Claude Opus 4.5",
+    model: "Opus 4.5",
     integrations: [
       { name: "Salesforce", type: "API", connected: true },
       { name: "Notion", type: "API", connected: true },
@@ -105,7 +105,7 @@ export const mockAgents: Agent[] = [
     avgCost: 0.156,
     lastRun: new Date(Date.now() - 8 * 60 * 1000).toISOString(),
     createdAt: "2024-07-10T16:45:00Z",
-    model: "Claude Sonnet 4.5",
+    model: "Sonnet 4.5",
     integrations: [
       { name: "GitHub", type: "API", connected: true },
       { name: "Linear", type: "API", connected: true },
@@ -132,7 +132,7 @@ export const mockAgents: Agent[] = [
     avgCost: 0.045,
     lastRun: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
     createdAt: "2024-11-05T11:20:00Z",
-    model: "GPT-5.1",
+    model: "GPT-5.2",
     integrations: [
       { name: "Gmail", type: "API", connected: true },
       { name: "QuickBooks", type: "API", connected: false },
@@ -158,7 +158,7 @@ export const mockAgents: Agent[] = [
     avgCost: 0.089,
     lastRun: new Date(Date.now() - 45 * 60 * 1000).toISOString(),
     createdAt: "2024-10-20T08:30:00Z",
-    model: "Claude Sonnet 4.5",
+    model: "Sonnet 4.5",
     integrations: [
       { name: "Zoom", type: "API", connected: true },
       { name: "Notion", type: "API", connected: true },
@@ -186,7 +186,7 @@ export const mockAgents: Agent[] = [
     avgCost: 0.12,
     lastRun: new Date(Date.now() - 12 * 60 * 60 * 1000).toISOString(),
     createdAt: "2024-09-28T13:00:00Z",
-    model: "GPT-5.1",
+    model: "GPT-5.2",
     integrations: [
       { name: "Notion", type: "API", connected: true },
       { name: "Slack", type: "API", connected: true },

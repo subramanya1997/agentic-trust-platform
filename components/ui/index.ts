@@ -18,6 +18,7 @@ export * from "./sheet";
 export * from "./sidebar";
 export * from "./skeleton";
 export * from "./sonner";
+export * from "./stats-card";
 export * from "./switch";
 export * from "./table";
 export * from "./tabs";

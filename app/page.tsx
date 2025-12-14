@@ -2,9 +2,10 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { ExecutionTrend, QuickActions, RecentActivity, StatsCard } from "@/components/dashboard";
+import { ExecutionTrend, QuickActions, RecentActivity } from "@/components/dashboard";
 import { Header } from "@/components/layout/header";
 import { Badge } from "@/components/ui/badge";
+import { StatsCard } from "@/components/ui/stats-card";
 import { DEFAULT_DATE_RANGE } from "@/lib/constants";
 import { mockExecutionTraces } from "@/lib/data/activity-data";
 import { getAnalyticsData } from "@/lib/data/analytics-data";

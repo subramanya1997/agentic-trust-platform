@@ -2,11 +2,11 @@
 
 import Link from "next/link";
 import { useState, Fragment } from "react";
-import { StatsCard } from "@/components/dashboard/stats-card";
 import { DataTable, TableRow, TableCell } from "@/components/data-table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { StatsCard } from "@/components/ui/stats-card";
 import {
   mockExecutionTraces,
   filterExecutionTraces,
@@ -117,7 +117,7 @@ export function ExecutionsTab({
         <StatsCard
           title="Successful"
           value={summary.successfulExecutions.toString()}
-          change={`${Math.round((summary.successfulExecutions / summary.totalExecutions) * 100)}% of total`}
+          change={`${Math.round((summary.successfulExecutions / summary.totalExecutions) * 100)}% success rate`}
           changeType="positive"
         />
         <StatsCard

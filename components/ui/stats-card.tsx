@@ -1,5 +1,6 @@
 "use client";
 
+import { ReactNode } from "react";
 import { AreaChart, Area, ResponsiveContainer } from "recharts";
 import { Card } from "@/components/ui/card";
 import { TrendIndicator, TrendType } from "@/components/ui/trend-indicator";
@@ -25,6 +26,9 @@ interface StatsCardProps {
     data: SparklineDataPoint[];
     color?: string;
   };
+  // Optional footer and children (from basic stat-card)
+  footer?: ReactNode;
+  children?: ReactNode;
 }
 
 export function StatsCard({
@@ -34,6 +38,8 @@ export function StatsCard({
   changeType = "neutral",
   usage,
   sparkline,
+  footer,
+  children,
 }: StatsCardProps) {
   const sparklineColor = sparkline?.color || "#f59e0b";
 
@@ -68,28 +74,34 @@ export function StatsCard({
         </div>
       )}
 
+      {/* Custom children (e.g., for custom backgrounds) */}
+      {children}
+
       <div className="relative z-10 px-4">
         <p className="text-muted-foreground text-xs font-medium">{title}</p>
         <p className="text-foreground mt-0.5 text-xl font-bold">{value}</p>
 
-        {/* Change indicator or Usage bar */}
+        {/* Usage bar (right-aligned, right half only) OR Trend indicator - mutually exclusive */}
         {usage ? (
-          <div className="mt-2">
-            <div className="mb-1 flex items-center justify-between">
-              {change && <TrendIndicator value={change} type={changeType} />}
+          <div className="mt-2 flex justify-end">
+            {/* Right half: Text above bar, both right-aligned */}
+            <div className="flex w-1/2 flex-col items-end gap-1">
+              <span className="text-muted-foreground text-xs whitespace-nowrap">
+                {usage.label || `${usage.current}/${usage.max}`}
+              </span>
+              <div className="w-full">
+                <UsageBar current={usage.current} max={usage.max} showLabel={false} />
+              </div>
             </div>
-            <UsageBar
-              current={usage.current}
-              max={usage.max}
-              label={usage.label}
-              showLabel={false}
-            />
           </div>
         ) : change ? (
           <div className="mt-1.5">
             <TrendIndicator value={change} type={changeType} />
           </div>
         ) : null}
+
+        {/* Footer content */}
+        {footer}
       </div>
     </Card>
   );

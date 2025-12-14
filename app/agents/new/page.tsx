@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState, useRef, useEffect, useCallback } from "react";
+import { AgentBuilderPanel } from "@/components/agents";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -23,6 +24,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
+import { INTEGRATIONS, getIntegrationIcon } from "@/lib/data/integrations";
+import { LLM_PROVIDERS } from "@/lib/data/models";
 import {
   Sparkles,
   Play,
@@ -30,11 +33,8 @@ import {
   X,
   Plus,
   Paperclip,
-  Send,
   Check,
   Zap,
-  Brain,
-  Globe,
   Clock,
   Copy,
   PanelRight,
@@ -44,107 +44,11 @@ import {
   Webhook,
   Calendar,
 } from "@/lib/icons";
-import { getIntegrationIcon } from "@/lib/integration-icons";
+import type { LLMModel } from "@/lib/types/models";
 
-// Available integrations for @ mentions
-const availableIntegrations = [
-  { id: "notion", name: "Notion", type: "API", description: "Workspace for notes and docs" },
-  { id: "linear", name: "Linear", type: "API", description: "Issue tracking" },
-  { id: "github", name: "GitHub", type: "API", description: "Code repository" },
-  { id: "slack", name: "Slack", type: "API", description: "Team communication" },
-  { id: "salesforce", name: "Salesforce", type: "API", description: "CRM platform" },
-  { id: "clearbit", name: "Clearbit", type: "API", description: "Data enrichment" },
-  { id: "gmail", name: "Gmail", type: "API", description: "Email service" },
-  { id: "zendesk", name: "Zendesk", type: "API", description: "Customer support" },
-  { id: "zoom", name: "Zoom", type: "API", description: "Video meetings" },
-  { id: "quickbooks", name: "QuickBooks", type: "MCP", description: "Accounting" },
-];
-
-// LLM Models data
-const llmProviders = [
-  {
-    name: "Anthropic",
-    icon: Sparkles,
-    color: "text-orange-500",
-    models: [
-      {
-        id: "claude-opus-4.5",
-        name: "Claude Opus 4.5",
-        description: "Most capable",
-        speed: "Medium",
-        cost: "$$$",
-      },
-      {
-        id: "claude-sonnet-4.5",
-        name: "Claude Sonnet 4.5",
-        description: "Best balance",
-        speed: "Fast",
-        cost: "$$",
-      },
-    ],
-  },
-  {
-    name: "OpenAI",
-    icon: Brain,
-    color: "text-green-500",
-    models: [
-      {
-        id: "gpt-5.1",
-        name: "GPT-5.1",
-        description: "Latest flagship",
-        speed: "Fast",
-        cost: "$$$",
-      },
-      {
-        id: "gpt-5.1-mini",
-        name: "GPT-5.1 Mini",
-        description: "Cost-effective",
-        speed: "Fast",
-        cost: "$$",
-      },
-    ],
-  },
-  {
-    name: "Google",
-    icon: Globe,
-    color: "text-blue-500",
-    models: [
-      {
-        id: "gemini-3-pro",
-        name: "Gemini 3 Pro",
-        description: "Advanced multimodal",
-        speed: "Medium",
-        cost: "$$$",
-      },
-      {
-        id: "gemini-3-flash",
-        name: "Gemini 3 Flash",
-        description: "Fast multimodal",
-        speed: "Fast",
-        cost: "$$",
-      },
-    ],
-  },
-  {
-    name: "xAI",
-    icon: Zap,
-    color: "text-red-500",
-    models: [
-      {
-        id: "grok-4.1",
-        name: "Grok 4.1",
-        description: "Real-time knowledge",
-        speed: "Fast",
-        cost: "$$$",
-      },
-    ],
-  },
-];
-
-const getProviderColor = (providerName: string) => {
-  const provider = llmProviders.find((p) => p.name === providerName);
-  return provider?.color || "text-purple-500";
-};
+// Use centralized integrations and models
+const availableIntegrations = INTEGRATIONS;
+const llmProviders = LLM_PROVIDERS;
 
 // Schedule trigger type
 interface ScheduleTrigger {
@@ -158,12 +62,11 @@ interface ScheduleTrigger {
 export default function NewAgentPage() {
   const [agentName, setAgentName] = useState("New Agent");
   const [contexts, setContexts] = useState<{ name: string; type: string }[]>([]);
-  const [chatMessage, setChatMessage] = useState("");
   const [isBuilderOpen, setIsBuilderOpen] = useState(true);
   const [isModelDropdownOpen, setIsModelDropdownOpen] = useState(false);
   const [selectedModel, setSelectedModel] = useState({
     provider: "Anthropic",
-    model: llmProviders[0].models[1],
+    model: LLM_PROVIDERS[0].models[1],
   });
 
   // Integration mentions
@@ -212,7 +115,7 @@ export default function NewAgentPage() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const selectModel = (providerName: string, model: (typeof llmProviders)[0]["models"][0]) => {
+  const selectModel = (providerName: string, model: LLMModel) => {
     setSelectedModel({ provider: providerName, model });
     setIsModelDropdownOpen(false);
   };
@@ -387,9 +290,6 @@ export default function NewAgentPage() {
     );
   };
 
-  const selectedProvider = llmProviders.find((p) => p.name === selectedModel.provider);
-  const ProviderIcon = selectedProvider?.icon || Sparkles;
-
   return (
     <div className="bg-background flex h-screen flex-col">
       {/* Header */}
@@ -466,7 +366,6 @@ export default function NewAgentPage() {
                   onClick={() => setIsModelDropdownOpen(!isModelDropdownOpen)}
                   className="bg-accent text-foreground hover:border-accent flex items-center gap-2 rounded-lg border px-3 py-1.5 text-sm transition-colors"
                 >
-                  <ProviderIcon className={`h-4 w-4 ${getProviderColor(selectedModel.provider)}`} />
                   {selectedModel.model.name}
                   <ChevronDown
                     className={`text-muted-foreground h-4 w-4 transition-transform ${isModelDropdownOpen ? "rotate-180" : ""}`}
@@ -478,12 +377,11 @@ export default function NewAgentPage() {
                     {llmProviders.map((provider) => (
                       <div key={provider.name}>
                         <div className="bg-accent border-border sticky top-0 flex items-center gap-2 border-b px-3 py-2">
-                          <provider.icon className={`h-4 w-4 ${provider.color}`} />
                           <span className="text-muted-foreground text-xs font-semibold tracking-wide uppercase">
                             {provider.name}
                           </span>
                         </div>
-                        {provider.models.map((model) => (
+                        {provider.models.map((model: LLMModel) => (
                           <button
                             key={model.id}
                             onClick={() => selectModel(provider.name, model)}
@@ -847,80 +745,7 @@ export default function NewAgentPage() {
         </div>
 
         {/* Right Panel - Agent Builder Chat */}
-        <div
-          className={`border-border bg-card flex flex-col border-l transition-all duration-300 ease-in-out ${
-            isBuilderOpen ? "w-[340px]" : "w-0"
-          } overflow-hidden`}
-        >
-          <div className="flex h-full w-[340px] flex-col">
-            <div className="border-border shrink-0 border-b p-5">
-              <h2 className="text-foreground font-semibold">Agent builder</h2>
-              <p className="text-muted-foreground mt-1 text-sm">
-                I&apos;ll help you create {agentName || "your agent"}
-              </p>
-            </div>
-
-            <div className="border-border space-y-2 border-b p-4">
-              <Button
-                variant="outline"
-                size="sm"
-                className="text-muted-foreground hover:bg-accent w-full justify-start border"
-              >
-                Suggest integrations
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                className="text-muted-foreground hover:bg-accent w-full justify-start border"
-              >
-                Generate instructions
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                className="text-muted-foreground hover:bg-accent w-full justify-start border"
-              >
-                Add error handling
-              </Button>
-            </div>
-
-            <div className="bg-background flex-1 overflow-y-auto p-4">
-              <div className="bg-card rounded-lg border p-3">
-                <p className="text-muted-foreground text-sm">
-                  I can help you build this agent. Try:
-                </p>
-                <ul className="text-muted-foreground mt-2 space-y-1 text-sm">
-                  <li>- &quot;Create an agent that monitors competitors&quot;</li>
-                  <li>- &quot;Add Slack notifications&quot;</li>
-                  <li>- &quot;What integrations should I use?&quot;</li>
-                </ul>
-              </div>
-            </div>
-
-            <div className="bg-card shrink-0 p-4">
-              <div className="relative">
-                <textarea
-                  value={chatMessage}
-                  onChange={(e) => setChatMessage(e.target.value)}
-                  placeholder="Describe what you want to build..."
-                  rows={2}
-                  className="bg-accent text-foreground placeholder:text-foreground0 w-full resize-none rounded-xl border px-4 py-3 pr-20 text-sm focus:border-amber-500 focus:ring-1 focus:ring-amber-500 focus:outline-none"
-                />
-                <div className="absolute right-3 bottom-3 flex items-center gap-1">
-                  <button className="text-muted-foreground hover:text-muted-foreground rounded-lg p-1.5 transition-colors">
-                    <Paperclip className="h-4 w-4" />
-                  </button>
-                  <button
-                    className="text-muted-foreground rounded-lg p-1.5 transition-colors hover:text-amber-500"
-                    onClick={() => setChatMessage("")}
-                  >
-                    <Send className="h-4 w-4" />
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        <AgentBuilderPanel isOpen={isBuilderOpen} agentName={agentName} />
       </div>
     </div>
   );

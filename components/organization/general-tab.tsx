@@ -9,6 +9,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { getAllModels } from "@/lib/data/models";
 import { Mail } from "@/lib/icons";
 
 const emailNotifications = [
@@ -35,6 +36,9 @@ const emailNotifications = [
 ];
 
 export function GeneralTab() {
+  // Get all available models from centralized constants
+  const allModels = getAllModels();
+
   return (
     <div className="grid grid-cols-2 gap-6">
       {/* Left Column - General Settings */}
@@ -119,41 +123,20 @@ export function GeneralTab() {
                     </span>
                   </td>
                   <td className="px-4 py-3">
-                    <Select defaultValue="claude-sonnet">
+                    <Select defaultValue="sonnet-4.5">
                       <SelectTrigger className="bg-accent text-foreground w-full border">
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent className="bg-card border">
-                        <SelectItem
-                          value="claude-sonnet"
-                          className="text-muted-foreground focus:bg-accent focus:text-foreground"
-                        >
-                          Claude Sonnet 4.5
-                        </SelectItem>
-                        <SelectItem
-                          value="claude-opus"
-                          className="text-muted-foreground focus:bg-accent focus:text-foreground"
-                        >
-                          Claude Opus 4.5
-                        </SelectItem>
-                        <SelectItem
-                          value="gpt-5.1"
-                          className="text-muted-foreground focus:bg-accent focus:text-foreground"
-                        >
-                          GPT-5.1
-                        </SelectItem>
-                        <SelectItem
-                          value="gpt-5.1-mini"
-                          className="text-muted-foreground focus:bg-accent focus:text-foreground"
-                        >
-                          GPT-5.1 Mini
-                        </SelectItem>
-                        <SelectItem
-                          value="gemini-3-pro"
-                          className="text-muted-foreground focus:bg-accent focus:text-foreground"
-                        >
-                          Gemini 3 Pro
-                        </SelectItem>
+                        {allModels.map((model) => (
+                          <SelectItem
+                            key={model.id}
+                            value={model.id}
+                            className="text-muted-foreground focus:bg-accent focus:text-foreground"
+                          >
+                            {model.name}
+                          </SelectItem>
+                        ))}
                       </SelectContent>
                     </Select>
                   </td>

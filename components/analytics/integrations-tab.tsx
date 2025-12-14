@@ -1,15 +1,14 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
-import { StatsCard } from "@/components/dashboard/stats-card";
 import { DataTable, TableRow, TableCell } from "@/components/data-table";
+import { IntegrationIcon } from "@/components/integration-icon";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { StatsCard } from "@/components/ui/stats-card";
 import { getIntegrationUsage, getAnalyticsSummary } from "@/lib/data/analytics-data";
 import { AlertTriangle } from "@/lib/icons";
-import { getIntegrationIcon } from "@/lib/integration-icons";
 import { formatCurrency } from "@/lib/utils";
 
 const PRIMARY_COLOR = "#f59e0b";
@@ -42,7 +41,7 @@ export function IntegrationsTab({ dateRange }: IntegrationsTabProps) {
         <StatsCard
           title="Error Rate"
           value={`${summary.overallErrorRate}%`}
-          change="-0.2% improvement"
+          change="-0.2%"
           changeType="positive"
         />
         <StatsCard
@@ -74,8 +73,8 @@ export function IntegrationsTab({ dateRange }: IntegrationsTabProps) {
                     className="flex items-center gap-3 transition-opacity hover:opacity-80"
                   >
                     <div className="bg-accent flex h-8 w-8 items-center justify-center overflow-hidden rounded-lg">
-                      <Image
-                        src={getIntegrationIcon(integration.integrationId)}
+                      <IntegrationIcon
+                        integrationId={integration.integrationId}
                         alt={integration.integrationName}
                         width={20}
                         height={20}

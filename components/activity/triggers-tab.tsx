@@ -2,11 +2,11 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { StatsCard } from "@/components/dashboard/stats-card";
 import { DataTable, TableRow, TableCell } from "@/components/data-table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { StatsCard } from "@/components/ui/stats-card";
 import { mockTriggers, parseCronExpression } from "@/lib/data/triggers-data";
 import { Zap, ExternalLink, Clock, Activity, ChevronLeft, ChevronRight } from "@/lib/icons";
 import type {

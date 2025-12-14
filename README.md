@@ -109,7 +109,7 @@ All data is mocked across multiple files in `/lib/data/`:
 
 ### Dashboard
 
-- `components/dashboard/stats-card.tsx` - Metric cards with trends
+- `components/ui/stats-card.tsx` - Unified metric cards with trends, sparklines, and usage bars
 - `components/dashboard/recent-executions.tsx` - Recent executions table
 - `components/dashboard/active-agents.tsx` - Active agents list
 

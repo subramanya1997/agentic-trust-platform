@@ -1,4 +1,3 @@
-export { StatsCard } from "./stats-card";
 export { RecentExecutions } from "./recent-executions";
 export { ActiveAgents } from "./active-agents";
 export { ActionItemsBanner } from "./action-items-banner";

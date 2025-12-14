@@ -1,4 +1,4 @@
-import { StatsCard } from "@/components/dashboard/stats-card";
+import { StatsCard } from "@/components/ui/stats-card";
 import type { CustomMCPServer } from "@/lib/types";
 
 interface ServerStatsProps {

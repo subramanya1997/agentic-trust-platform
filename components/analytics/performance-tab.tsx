@@ -2,9 +2,9 @@
 
 import Link from "next/link";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
-import { StatsCard } from "@/components/dashboard/stats-card";
 import { DataTable, TableRow, TableCell } from "@/components/data-table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { StatsCard } from "@/components/ui/stats-card";
 import { getAgentPerformance, getAnalyticsSummary } from "@/lib/data/analytics-data";
 import { TrendingDown, TrendingUp, Minus } from "@/lib/icons";
 import { formatCurrency, formatDuration } from "@/lib/utils";
@@ -47,7 +47,7 @@ export function PerformanceTab({ dateRange }: PerformanceTabProps) {
         <StatsCard
           title="Failure Rate"
           value={`${(100 - avgSuccessRate).toFixed(1)}%`}
-          change="-0.5% improvement"
+          change="-0.5%"
           changeType="positive"
         />
       </div>
