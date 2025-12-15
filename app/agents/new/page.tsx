@@ -1,751 +1,271 @@
 "use client";
 
-import Image from "next/image";
-import Link from "next/link";
-import { useState, useRef, useEffect, useCallback } from "react";
-import { AgentBuilderPanel } from "@/components/agents";
-import { Badge } from "@/components/ui/badge";
+import { useState, useCallback } from "react";
+import {
+  AgentBuilderPanel,
+  AgentHeader,
+  ModelSelector,
+  TriggersEditor,
+  IntegrationsBar,
+  ContentEditor,
+  ContextSection,
+  AgentDiffView,
+} from "@/components/agents";
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Switch } from "@/components/ui/switch";
-import { INTEGRATIONS, getIntegrationIcon } from "@/lib/data/integrations";
 import { LLM_PROVIDERS } from "@/lib/data/models";
-import {
-  Sparkles,
-  Play,
-  ChevronDown,
-  X,
-  Plus,
-  Paperclip,
-  Check,
-  Zap,
-  Clock,
-  Copy,
-  PanelRight,
-  PanelRightClose,
-  ArrowLeft,
-  Code,
-  Webhook,
-  Calendar,
-} from "@/lib/icons";
-import type { LLMModel } from "@/lib/types/models";
+import { Play, Check, X } from "@/lib/icons";
+import type { GeneratedAgent } from "@/lib/types/agent";
+import type {
+  TriggersState,
+  SelectedModel,
+  ContextFile,
+  ScheduleTrigger,
+} from "@/lib/types/agent-form";
 
-// Use centralized integrations and models
-const availableIntegrations = INTEGRATIONS;
-const llmProviders = LLM_PROVIDERS;
+// Default model selection
+const DEFAULT_MODEL: SelectedModel = {
+  provider: "Anthropic",
+  model: LLM_PROVIDERS[0].models[1], // Sonnet 4.5
+};
 
-// Schedule trigger type
-interface ScheduleTrigger {
-  id: string;
-  name: string;
-  cron: string;
-  timezone: string;
-  enabled: boolean;
-}
+// Default triggers state
+const DEFAULT_TRIGGERS: TriggersState = {
+  api: true,
+  mcp: false,
+  webhook: false,
+  scheduled: [],
+};
+
+// Default content for the editor
+const DEFAULT_CONTENT = `<p><strong>Goal</strong></p>
+<p>Describe what this agent should accomplish...</p>
+<br/>
+<p><strong>Instructions</strong></p>
+<p>1. When triggered, perform the main task</p>
+<p>2. Process the data and extract relevant information</p>
+<p>3. Take action based on the results</p>
+<br/>
+<p><strong>Notes</strong></p>
+<p>Add any additional notes here</p>`;
 
 export default function NewAgentPage() {
+  // Form state
   const [agentName, setAgentName] = useState("New Agent");
-  const [contexts, setContexts] = useState<{ name: string; type: string }[]>([]);
-  const [isBuilderOpen, setIsBuilderOpen] = useState(true);
-  const [isModelDropdownOpen, setIsModelDropdownOpen] = useState(false);
-  const [selectedModel, setSelectedModel] = useState({
-    provider: "Anthropic",
-    model: LLM_PROVIDERS[0].models[1],
-  });
-
-  // Integration mentions
+  const [selectedModel, setSelectedModel] = useState<SelectedModel>(DEFAULT_MODEL);
+  const [triggers, setTriggers] = useState<TriggersState>(DEFAULT_TRIGGERS);
   const [connectedIntegrations, setConnectedIntegrations] = useState<string[]>([]);
-  const [showMentionDropdown, setShowMentionDropdown] = useState(false);
-  const [mentionFilter, setMentionFilter] = useState("");
-  const [mentionPosition, setMentionPosition] = useState({ top: 0, left: 0 });
-  const [selectedMentionIndex, setSelectedMentionIndex] = useState(0);
+  const [contexts, setContexts] = useState<ContextFile[]>([]);
+  const [editorContent, setEditorContent] = useState<string>(DEFAULT_CONTENT);
 
-  // Triggers state
-  const [apiEnabled, setApiEnabled] = useState(true);
-  const [mcpEnabled, setMcpEnabled] = useState(false);
-  const [webhookEnabled, setWebhookEnabled] = useState(false);
-  const [scheduledTriggers, setScheduledTriggers] = useState<ScheduleTrigger[]>([]);
-  const [isAddScheduleOpen, setIsAddScheduleOpen] = useState(false);
-  const [newScheduleName, setNewScheduleName] = useState("");
-  const [newScheduleCron, setNewScheduleCron] = useState("");
-  const [newScheduleTimezone, setNewScheduleTimezone] = useState("utc");
+  // UI state
+  const [isBuilderOpen, setIsBuilderOpen] = useState(true);
 
-  const modelDropdownRef = useRef<HTMLDivElement>(null);
-  const contentRef = useRef<HTMLDivElement>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const mentionDropdownRef = useRef<HTMLDivElement>(null);
+  // Preview/Diff state - when set, shows the diff view instead of the editor
+  const [pendingAgent, setPendingAgent] = useState<GeneratedAgent | null>(null);
 
-  // Get filtered integrations
-  const filteredIntegrations = availableIntegrations.filter(
-    (i) =>
-      i.name.toLowerCase().includes(mentionFilter.toLowerCase()) &&
-      !connectedIntegrations.includes(i.name)
-  );
-
-  // Close dropdowns when clicking outside
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (modelDropdownRef.current && !modelDropdownRef.current.contains(event.target as Node)) {
-        setIsModelDropdownOpen(false);
-      }
-      if (
-        mentionDropdownRef.current &&
-        !mentionDropdownRef.current.contains(event.target as Node)
-      ) {
-        setShowMentionDropdown(false);
-      }
-    }
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+  // Integration handlers
+  const handleAddIntegration = useCallback((name: string) => {
+    setConnectedIntegrations((prev) => (prev.includes(name) ? prev : [...prev, name]));
   }, []);
 
-  const selectModel = (providerName: string, model: LLMModel) => {
-    setSelectedModel({ provider: providerName, model });
-    setIsModelDropdownOpen(false);
-  };
-
-  const removeIntegration = (name: string) => {
+  const handleRemoveIntegration = useCallback((name: string) => {
     setConnectedIntegrations((prev) => prev.filter((i) => i !== name));
-  };
-
-  const addIntegration = useCallback(
-    (name: string) => {
-      if (!connectedIntegrations.includes(name)) {
-        setConnectedIntegrations((prev) => [...prev, name]);
-      }
-      setShowMentionDropdown(false);
-      setMentionFilter("");
-      setSelectedMentionIndex(0);
-
-      // Remove the @mention text from the content
-      if (contentRef.current) {
-        const selection = window.getSelection();
-        if (selection && selection.rangeCount > 0) {
-          const range = selection.getRangeAt(0);
-          const textNode = range.startContainer;
-          if (textNode.nodeType === Node.TEXT_NODE) {
-            const text = textNode.textContent || "";
-            const cursorPos = range.startOffset;
-            const textBefore = text.substring(0, cursorPos);
-            const lastAtIndex = textBefore.lastIndexOf("@");
-            if (lastAtIndex !== -1) {
-              // Replace @mention with just the integration name
-              const newText =
-                text.substring(0, lastAtIndex) +
-                `@${name.toLowerCase()} ` +
-                text.substring(cursorPos);
-              textNode.textContent = newText;
-              // Move cursor after the inserted text
-              const newCursorPos = lastAtIndex + name.length + 2;
-              range.setStart(textNode, newCursorPos);
-              range.setEnd(textNode, newCursorPos);
-            }
-          }
-        }
-      }
-    },
-    [connectedIntegrations]
-  );
-
-  // Handle input in contentEditable
-  const handleInput = useCallback(() => {
-    const selection = window.getSelection();
-    if (!selection || selection.rangeCount === 0) {
-      return;
-    }
-
-    const range = selection.getRangeAt(0);
-    const textNode = range.startContainer;
-
-    if (textNode.nodeType !== Node.TEXT_NODE) {
-      setShowMentionDropdown(false);
-      return;
-    }
-
-    const text = textNode.textContent || "";
-    const cursorPos = range.startOffset;
-    const textBeforeCursor = text.substring(0, cursorPos);
-    const lastAtIndex = textBeforeCursor.lastIndexOf("@");
-
-    if (lastAtIndex !== -1) {
-      const textAfterAt = textBeforeCursor.substring(lastAtIndex + 1);
-      // Check if we're still typing the mention (no space after @)
-      if (/^[a-zA-Z0-9]*$/.test(textAfterAt)) {
-        setMentionFilter(textAfterAt);
-        setSelectedMentionIndex(0);
-
-        // Get cursor position for dropdown
-        const rect = range.getBoundingClientRect();
-        const containerRect = contentRef.current?.getBoundingClientRect();
-
-        if (containerRect) {
-          setMentionPosition({
-            top: rect.top - containerRect.top - 10, // Position above cursor
-            left: rect.left - containerRect.left,
-          });
-        }
-        setShowMentionDropdown(true);
-        return;
-      }
-    }
-    setShowMentionDropdown(false);
   }, []);
 
-  // Handle keyboard navigation in mention dropdown
-  const handleKeyDown = useCallback(
-    (e: React.KeyboardEvent) => {
-      if (!showMentionDropdown || filteredIntegrations.length === 0) {
-        return;
-      }
+  // Context handlers
+  const handleAddContexts = useCallback((files: ContextFile[]) => {
+    setContexts((prev) => [...prev, ...files]);
+  }, []);
 
-      switch (e.key) {
-        case "ArrowDown":
-          e.preventDefault();
-          setSelectedMentionIndex((prev) =>
-            prev < filteredIntegrations.length - 1 ? prev + 1 : prev
-          );
-          break;
-        case "ArrowUp":
-          e.preventDefault();
-          setSelectedMentionIndex((prev) => (prev > 0 ? prev - 1 : 0));
-          break;
-        case "Enter":
-          e.preventDefault();
-          if (filteredIntegrations[selectedMentionIndex]) {
-            addIntegration(filteredIntegrations[selectedMentionIndex].name);
-          }
-          break;
-        case "Escape":
-          e.preventDefault();
-          setShowMentionDropdown(false);
-          break;
-        case "Tab":
-          e.preventDefault();
-          if (filteredIntegrations[selectedMentionIndex]) {
-            addIntegration(filteredIntegrations[selectedMentionIndex].name);
-          }
-          break;
-      }
-    },
-    [showMentionDropdown, filteredIntegrations, selectedMentionIndex, addIntegration]
-  );
-
-  // Handle file upload for context
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (files) {
-      const newContexts = Array.from(files).map((file) => ({
-        name: file.name,
-        type: file.type.split("/")[1] || "file",
-      }));
-      setContexts((prev) => [...prev, ...newContexts]);
-    }
-  };
-
-  const removeContext = (name: string) => {
+  const handleRemoveContext = useCallback((name: string) => {
     setContexts((prev) => prev.filter((c) => c.name !== name));
-  };
+  }, []);
 
-  const addScheduledTrigger = () => {
-    if (!newScheduleName || !newScheduleCron) {
+  // Handle content change from editor
+  const handleContentChange = useCallback((content: string) => {
+    setEditorContent(content);
+  }, []);
+
+  // Handle receiving generated agent from builder panel - shows diff view
+  const handleGeneratedAgent = useCallback((agent: GeneratedAgent) => {
+    setPendingAgent(agent);
+  }, []);
+
+  // Apply the pending agent configuration
+  const applyPendingAgent = useCallback(() => {
+    if (!pendingAgent) {
       return;
     }
-    const newTrigger: ScheduleTrigger = {
-      id: `schedule-${Date.now()}`,
-      name: newScheduleName,
-      cron: newScheduleCron,
-      timezone: newScheduleTimezone,
-      enabled: true,
-    };
-    setScheduledTriggers((prev) => [...prev, newTrigger]);
-    setNewScheduleName("");
-    setNewScheduleCron("");
-    setNewScheduleTimezone("utc");
-    setIsAddScheduleOpen(false);
-  };
 
-  const removeScheduledTrigger = (id: string) => {
-    setScheduledTriggers((prev) => prev.filter((t) => t.id !== id));
-  };
+    // Update agent name
+    if (pendingAgent.title) {
+      setAgentName(pendingAgent.title);
+    }
 
-  const toggleScheduledTrigger = (id: string) => {
-    setScheduledTriggers((prev) =>
-      prev.map((t) => (t.id === id ? { ...t, enabled: !t.enabled } : t))
-    );
-  };
+    // Update integrations
+    if (pendingAgent.integrations && pendingAgent.integrations.length > 0) {
+      setConnectedIntegrations(pendingAgent.integrations);
+    }
+
+    // Update triggers
+    const newScheduled: ScheduleTrigger[] = [...triggers.scheduled];
+
+    // Add scheduled trigger if provided
+    if (pendingAgent.triggers?.scheduled?.enabled) {
+      const newScheduledTrigger: ScheduleTrigger = {
+        id: `schedule-ai-${Date.now()}`,
+        name: pendingAgent.triggers.scheduled.description || "AI Generated Schedule",
+        cron: pendingAgent.triggers.scheduled.cron || "0 0 * * *",
+        timezone: "utc",
+        enabled: true,
+      };
+      newScheduled.push(newScheduledTrigger);
+    }
+
+    setTriggers({
+      api: pendingAgent.triggers?.api || false,
+      mcp: pendingAgent.triggers?.mcp || false,
+      webhook: pendingAgent.triggers?.webhook || false,
+      scheduled: newScheduled,
+    });
+
+    // Update content editor with formatted content
+    const formattedContent = `<p><strong>Goal</strong></p>
+<p>${pendingAgent.goal || ""}</p>
+<br/>
+<p><strong>Instructions</strong></p>
+${(pendingAgent.instructions || []).map((inst, idx) => `<p>${idx + 1}. ${inst}</p>`).join("\n")}
+${pendingAgent.notes ? `<br/>\n<p><strong>Notes</strong></p>\n<p>${pendingAgent.notes}</p>` : ""}`;
+
+    setEditorContent(formattedContent);
+
+    // Clear the pending agent to exit diff mode
+    setPendingAgent(null);
+  }, [pendingAgent, triggers.scheduled]);
+
+  // Dismiss the pending agent (cancel the diff)
+  const dismissPendingAgent = useCallback(() => {
+    setPendingAgent(null);
+  }, []);
+
+  const handleRun = useCallback(() => {
+    // TODO: Implement agent run logic
+
+    console.warn("Running agent:", {
+      name: agentName,
+      model: selectedModel,
+      triggers,
+      integrations: connectedIntegrations,
+      contexts,
+      content: editorContent,
+    });
+  }, [agentName, selectedModel, triggers, connectedIntegrations, contexts, editorContent]);
+
+  // Are we in diff/preview mode?
+  const isInDiffMode = pendingAgent !== null;
+
+  // Header action buttons - changes based on mode
+  const headerActions = isInDiffMode ? (
+    <>
+      <Button
+        variant="outline"
+        className="border-border text-muted-foreground"
+        onClick={dismissPendingAgent}
+      >
+        <X className="mr-2 h-4 w-4" />
+        Dismiss
+      </Button>
+      <Button className="bg-green-600 text-white hover:bg-green-500" onClick={applyPendingAgent}>
+        <Check className="mr-2 h-4 w-4" />
+        Apply Changes
+      </Button>
+    </>
+  ) : (
+    <Button className="bg-amber-600 text-white hover:bg-amber-500" onClick={handleRun}>
+      <Play className="mr-2 h-4 w-4 fill-current" />
+      Run agent
+    </Button>
+  );
 
   return (
     <div className="bg-background flex h-screen flex-col">
       {/* Header */}
-      <header className="border-border bg-background sticky top-0 z-10 flex h-14 shrink-0 items-center justify-between border-b px-4">
-        <div className="flex items-center gap-4">
-          <Link
-            href="/agents"
-            className="text-muted-foreground hover:text-foreground flex items-center text-sm transition-colors"
-          >
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Agents
-          </Link>
-          <span className="text-stone-600">/</span>
-          <div className="flex items-center gap-2">
-            <Sparkles className="h-4 w-4 text-amber-500" />
-            <span className="text-foreground font-medium">New Agent</span>
-          </div>
-        </div>
-        <div className="flex items-center gap-2">
-          <Button
-            variant="ghost"
-            size="icon"
-            className="text-muted-foreground hover:text-foreground h-8 w-8"
-          >
-            <Clock className="h-4 w-4" />
-          </Button>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="text-muted-foreground hover:text-foreground h-8 w-8"
-          >
-            <Copy className="h-4 w-4" />
-          </Button>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="text-muted-foreground hover:text-foreground h-8 w-8"
-            onClick={() => setIsBuilderOpen(!isBuilderOpen)}
-          >
-            {isBuilderOpen ? (
-              <PanelRightClose className="h-4 w-4" />
-            ) : (
-              <PanelRight className="h-4 w-4" />
-            )}
-          </Button>
-        </div>
-      </header>
+      <AgentHeader
+        agentName={isInDiffMode ? pendingAgent?.title || "New Agent" : "New Agent"}
+        isBuilderOpen={isBuilderOpen}
+        onBuilderToggle={() => setIsBuilderOpen(!isBuilderOpen)}
+        backHref="/agents"
+        backLabel="Agents"
+        actions={headerActions}
+      />
 
       {/* Main Content */}
       <div className="flex min-w-0 flex-1 overflow-hidden">
-        {/* Left Panel - Document View */}
+        {/* Left Panel - Document View or Diff View */}
         <div className="min-w-0 flex-1 overflow-x-hidden overflow-y-auto">
           <div className="mx-auto max-w-3xl px-8 py-10">
-            {/* Agent Title + Run Button */}
-            <div className="mb-6 flex items-center justify-between">
-              <input
-                type="text"
-                value={agentName}
-                onChange={(e) => setAgentName(e.target.value)}
-                placeholder="Agent Name"
-                className="text-foreground w-full border-none bg-transparent text-3xl font-bold focus:ring-0 focus:outline-none"
+            {isInDiffMode ? (
+              /* Diff View */
+              <AgentDiffView
+                agent={pendingAgent}
+                currentName={agentName}
+                currentTriggers={triggers}
+                currentIntegrations={connectedIntegrations}
               />
-              <Button className="ml-4 shrink-0 bg-amber-600 text-white hover:bg-amber-500">
-                <Play className="mr-2 h-4 w-4 fill-current" />
-                Run agent
-              </Button>
-            </div>
-
-            {/* Model Row */}
-            <div className="mb-6 flex items-center gap-4">
-              {/* Model Selector Dropdown */}
-              <div className="relative" ref={modelDropdownRef}>
-                <button
-                  onClick={() => setIsModelDropdownOpen(!isModelDropdownOpen)}
-                  className="bg-accent text-foreground hover:border-accent flex items-center gap-2 rounded-lg border px-3 py-1.5 text-sm transition-colors"
-                >
-                  {selectedModel.model.name}
-                  <ChevronDown
-                    className={`text-muted-foreground h-4 w-4 transition-transform ${isModelDropdownOpen ? "rotate-180" : ""}`}
+            ) : (
+              /* Normal Editor View */
+              <>
+                {/* Agent Title */}
+                <div className="mb-6">
+                  <input
+                    type="text"
+                    value={agentName}
+                    onChange={(e) => setAgentName(e.target.value)}
+                    placeholder="Agent Name"
+                    className="text-foreground w-full border-none bg-transparent text-3xl font-bold focus:ring-0 focus:outline-none"
                   />
-                </button>
-
-                {isModelDropdownOpen && (
-                  <div className="bg-card absolute top-full left-0 z-50 mt-2 max-h-[400px] w-72 overflow-y-auto rounded-lg border shadow-xl">
-                    {llmProviders.map((provider) => (
-                      <div key={provider.name}>
-                        <div className="bg-accent border-border sticky top-0 flex items-center gap-2 border-b px-3 py-2">
-                          <span className="text-muted-foreground text-xs font-semibold tracking-wide uppercase">
-                            {provider.name}
-                          </span>
-                        </div>
-                        {provider.models.map((model: LLMModel) => (
-                          <button
-                            key={model.id}
-                            onClick={() => selectModel(provider.name, model)}
-                            className="hover:bg-accent flex w-full items-center justify-between px-3 py-2 text-left transition-colors"
-                          >
-                            <div>
-                              <span className="text-foreground text-sm font-medium">
-                                {model.name}
-                              </span>
-                              <p className="text-muted-foreground text-xs">{model.description}</p>
-                            </div>
-                            {selectedModel.model.id === model.id && (
-                              <Check className="h-4 w-4 text-green-500" />
-                            )}
-                          </button>
-                        ))}
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* Triggers Section */}
-            <div className="border-border mb-6 border-b pb-6">
-              <div className="mb-3 flex items-center justify-between">
-                <h2 className="text-foreground font-semibold">Triggers</h2>
-                <button
-                  onClick={() => setIsAddScheduleOpen(true)}
-                  className="flex items-center gap-1 text-sm text-amber-500 transition-colors hover:text-amber-400"
-                >
-                  <Plus className="h-4 w-4" />
-                  Add schedule
-                </button>
-              </div>
-
-              <div className="space-y-2">
-                {/* Manual API Trigger */}
-                <div className="bg-card/50 flex items-center justify-between rounded-lg border p-3">
-                  <div className="flex items-center gap-3">
-                    <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-green-950">
-                      <Code className="h-4 w-4 text-green-400" />
-                    </div>
-                    <div>
-                      <p className="text-foreground text-sm font-medium">Manual API</p>
-                      <p className="text-foreground0 text-xs">Invoke via REST API</p>
-                    </div>
-                  </div>
-                  <Switch checked={apiEnabled} onCheckedChange={setApiEnabled} />
                 </div>
 
-                {/* MCP Server Trigger */}
-                <div className="bg-card/50 flex items-center justify-between rounded-lg border p-3">
-                  <div className="flex items-center gap-3">
-                    <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-950">
-                      <Zap className="h-4 w-4 text-amber-400" />
-                    </div>
-                    <div>
-                      <p className="text-foreground text-sm font-medium">MCP Server</p>
-                      <p className="text-foreground0 text-xs">Expose as MCP tool</p>
-                    </div>
-                  </div>
-                  <Switch checked={mcpEnabled} onCheckedChange={setMcpEnabled} />
+                {/* Model Selector */}
+                <div className="mb-6 flex items-center gap-4">
+                  <ModelSelector selectedModel={selectedModel} onModelChange={setSelectedModel} />
                 </div>
 
-                {/* Webhook Trigger */}
-                <div className="bg-card/50 flex items-center justify-between rounded-lg border p-3">
-                  <div className="flex items-center gap-3">
-                    <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-purple-950">
-                      <Webhook className="h-4 w-4 text-purple-400" />
-                    </div>
-                    <div>
-                      <p className="text-foreground text-sm font-medium">Webhook</p>
-                      <p className="text-foreground0 text-xs">Trigger via HTTP webhook</p>
-                    </div>
-                  </div>
-                  <Switch checked={webhookEnabled} onCheckedChange={setWebhookEnabled} />
-                </div>
+                {/* Triggers Section */}
+                <TriggersEditor triggers={triggers} onTriggersChange={setTriggers} />
 
-                {/* Scheduled Triggers */}
-                {scheduledTriggers.map((trigger) => (
-                  <div
-                    key={trigger.id}
-                    className="bg-card/50 flex items-center justify-between rounded-lg border p-3"
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-950">
-                        <Calendar className="h-4 w-4 text-blue-400" />
-                      </div>
-                      <div>
-                        <p className="text-foreground text-sm font-medium">{trigger.name}</p>
-                        <p className="text-foreground0 font-mono text-xs">{trigger.cron}</p>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Switch
-                        checked={trigger.enabled}
-                        onCheckedChange={() => toggleScheduledTrigger(trigger.id)}
-                      />
-                      <button
-                        onClick={() => removeScheduledTrigger(trigger.id)}
-                        className="text-foreground0 p-1 transition-colors hover:text-red-400"
-                      >
-                        <X className="h-4 w-4" />
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
+                {/* Connected Integrations Row */}
+                <IntegrationsBar
+                  integrations={connectedIntegrations}
+                  onAdd={handleAddIntegration}
+                  onRemove={handleRemoveIntegration}
+                />
 
-            {/* Add Schedule Dialog */}
-            <Dialog open={isAddScheduleOpen} onOpenChange={setIsAddScheduleOpen}>
-              <DialogContent className="bg-card border sm:max-w-[500px]">
-                <DialogHeader>
-                  <DialogTitle className="text-foreground">Add Scheduled Trigger</DialogTitle>
-                  <DialogDescription className="text-muted-foreground">
-                    Configure a cron-based schedule for this agent.
-                  </DialogDescription>
-                </DialogHeader>
-                <div className="space-y-4 py-4">
-                  <div className="space-y-2">
-                    <Label className="text-foreground">Name</Label>
-                    <Input
-                      value={newScheduleName}
-                      onChange={(e) => setNewScheduleName(e.target.value)}
-                      placeholder="e.g., Daily Report Generation"
-                      className="bg-accent text-foreground placeholder:text-foreground0 border"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label className="text-foreground">Schedule (Cron Expression)</Label>
-                    <Input
-                      value={newScheduleCron}
-                      onChange={(e) => setNewScheduleCron(e.target.value)}
-                      placeholder="0 8 * * 1"
-                      className="bg-accent text-foreground placeholder:text-foreground0 border font-mono"
-                    />
-                    <p className="text-foreground0 text-xs">
-                      Example: &quot;0 8 * * 1&quot; = Every Monday at 8 AM
-                    </p>
-                  </div>
-                  <div className="space-y-2">
-                    <Label className="text-foreground">Timezone</Label>
-                    <Select value={newScheduleTimezone} onValueChange={setNewScheduleTimezone}>
-                      <SelectTrigger className="bg-accent text-foreground border">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent className="bg-accent border">
-                        <SelectItem value="utc" className="text-foreground focus:bg-muted">
-                          UTC
-                        </SelectItem>
-                        <SelectItem
-                          value="america_new_york"
-                          className="text-foreground focus:bg-muted"
-                        >
-                          America/New_York (EST)
-                        </SelectItem>
-                        <SelectItem
-                          value="america_los_angeles"
-                          className="text-foreground focus:bg-muted"
-                        >
-                          America/Los_Angeles (PST)
-                        </SelectItem>
-                        <SelectItem
-                          value="europe_london"
-                          className="text-foreground focus:bg-muted"
-                        >
-                          Europe/London (GMT)
-                        </SelectItem>
-                        <SelectItem value="asia_tokyo" className="text-foreground focus:bg-muted">
-                          Asia/Tokyo (JST)
-                        </SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div className="rounded-lg border border-blue-800/50 bg-blue-950/30 p-3">
-                    <div className="flex items-start gap-2">
-                      <Clock className="mt-0.5 h-4 w-4 shrink-0 text-blue-400" />
-                      <div>
-                        <p className="text-xs font-medium text-blue-200">Next Run Preview</p>
-                        <p className="mt-0.5 text-xs text-blue-300/70">
-                          Will be calculated after creation
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <DialogFooter>
-                  <Button
-                    variant="outline"
-                    onClick={() => setIsAddScheduleOpen(false)}
-                    className="text-muted-foreground border"
-                  >
-                    Cancel
-                  </Button>
-                  <Button
-                    className="bg-amber-600 text-white hover:bg-amber-500"
-                    onClick={addScheduledTrigger}
-                    disabled={!newScheduleName || !newScheduleCron}
-                  >
-                    Add Schedule
-                  </Button>
-                </DialogFooter>
-              </DialogContent>
-            </Dialog>
+                {/* Main Content Editor */}
+                <ContentEditor
+                  content={editorContent}
+                  onContentChange={handleContentChange}
+                  onIntegrationAdd={handleAddIntegration}
+                  connectedIntegrations={connectedIntegrations}
+                />
 
-            {/* Connected Integrations Row */}
-            <div className="border-border mb-6 flex flex-wrap items-center gap-2 border-b pb-6">
-              {connectedIntegrations.map((name) => (
-                <Badge
-                  key={name}
-                  variant="outline"
-                  className="bg-accent text-foreground flex items-center gap-2 border px-3 py-1.5"
-                >
-                  <Image
-                    src={getIntegrationIcon(name.toLowerCase())}
-                    alt={name}
-                    width={14}
-                    height={14}
-                    className="rounded"
-                  />
-                  {name}
-                  <button
-                    onClick={() => removeIntegration(name)}
-                    className="ml-1 transition-colors hover:text-red-400"
-                  >
-                    <X className="h-3 w-3" />
-                  </button>
-                </Badge>
-              ))}
-              {connectedIntegrations.length === 0 && (
-                <span className="text-foreground0 text-sm">Type @ to add integrations</span>
-              )}
-            </div>
-
-            {/* Main Content */}
-            <div className="relative mb-8">
-              <div
-                ref={contentRef}
-                contentEditable
-                onInput={handleInput}
-                onKeyDown={handleKeyDown}
-                className="text-muted-foreground min-h-[400px] w-full text-sm leading-relaxed focus:outline-none"
-                suppressContentEditableWarning
-              >
-                <p>
-                  <strong>Goal</strong>
-                </p>
-                <p>Describe what this agent should accomplish...</p>
-                <br />
-                <p>
-                  <strong>Instructions</strong>
-                </p>
-                <p>1. When triggered, perform the main task</p>
-                <p>2. Process the data and extract relevant information</p>
-                <p>3. Take action based on the results</p>
-                <br />
-                <p>
-                  <strong>Notes</strong>
-                </p>
-                <p>Add any additional notes here</p>
-              </div>
-
-              {/* @ Mention Dropdown - Positioned above cursor */}
-              {showMentionDropdown && filteredIntegrations.length > 0 && (
-                <div
-                  ref={mentionDropdownRef}
-                  className="bg-card absolute z-50 max-h-64 w-72 overflow-y-auto rounded-lg border shadow-xl"
-                  style={{
-                    bottom: `calc(100% - ${mentionPosition.top}px + 20px)`,
-                    left: mentionPosition.left,
-                  }}
-                >
-                  <div className="p-2">
-                    <div className="text-foreground0 mb-1 px-2 py-1 text-xs font-semibold">
-                      Select Integration
-                    </div>
-                    {filteredIntegrations.map((integration, index) => (
-                      <button
-                        key={integration.id}
-                        onClick={() => addIntegration(integration.name)}
-                        className={`flex w-full items-center gap-3 rounded px-2 py-2 text-left transition-colors ${
-                          index === selectedMentionIndex ? "bg-muted" : "hover:bg-accent"
-                        }`}
-                      >
-                        <Image
-                          src={getIntegrationIcon(integration.id)}
-                          alt={integration.name}
-                          width={20}
-                          height={20}
-                          className="rounded"
-                        />
-                        <div className="min-w-0 flex-1">
-                          <div className="flex items-center gap-2">
-                            <span className="text-foreground text-sm font-medium">
-                              @{integration.name.toLowerCase()}
-                            </span>
-                            <Badge
-                              variant="outline"
-                              className="bg-accent text-muted-foreground border text-xs"
-                            >
-                              {integration.type}
-                            </Badge>
-                          </div>
-                          <p className="text-foreground0 truncate text-xs">
-                            {integration.description}
-                          </p>
-                        </div>
-                        {index === selectedMentionIndex && (
-                          <span className="text-foreground0 text-xs">Enter</span>
-                        )}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* Context Section */}
-            <div className="mb-8">
-              <input
-                type="file"
-                ref={fileInputRef}
-                onChange={handleFileUpload}
-                className="hidden"
-                multiple
-              />
-              {contexts.length > 0 && (
-                <div className="mb-4">
-                  <h2 className="text-foreground mb-3 font-semibold">Context</h2>
-                  <div className="flex flex-wrap gap-2">
-                    {contexts.map((ctx) => (
-                      <Badge
-                        key={ctx.name}
-                        variant="outline"
-                        className="bg-accent text-foreground flex items-center gap-2 border px-3 py-1.5"
-                      >
-                        <Paperclip className="h-3 w-3" />
-                        {ctx.name}
-                        <button
-                          onClick={() => removeContext(ctx.name)}
-                          className="ml-1 transition-colors hover:text-red-400"
-                        >
-                          <X className="h-3 w-3" />
-                        </button>
-                      </Badge>
-                    ))}
-                  </div>
-                </div>
-              )}
-              <button
-                onClick={() => fileInputRef.current?.click()}
-                className="text-foreground0 hover:text-muted-foreground flex items-center gap-1.5 text-sm transition-colors"
-              >
-                <Plus className="h-4 w-4" />
-                Add context
-              </button>
-            </div>
+                {/* Context Section */}
+                <ContextSection
+                  contexts={contexts}
+                  onAdd={handleAddContexts}
+                  onRemove={handleRemoveContext}
+                />
+              </>
+            )}
           </div>
         </div>
 
         {/* Right Panel - Agent Builder Chat */}
-        <AgentBuilderPanel isOpen={isBuilderOpen} agentName={agentName} />
+        <AgentBuilderPanel
+          isOpen={isBuilderOpen}
+          agentName={agentName}
+          onApplyAgent={handleGeneratedAgent}
+        />
       </div>
     </div>
   );
