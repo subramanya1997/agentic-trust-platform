@@ -2,6 +2,7 @@ import { Raleway } from "next/font/google";
 import { cookies } from "next/headers";
 import "./globals.css";
 import { AppSidebar } from "@/components/app-sidebar";
+import { DynamicFavicon } from "@/components/dynamic-favicon";
 import { ThemeProvider } from "@/components/theme-provider";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import type { Metadata } from "next";
@@ -34,6 +35,7 @@ export default async function RootLayout({
           enableSystem={false}
           disableTransitionOnChange
         >
+          <DynamicFavicon />
           <SidebarProvider defaultOpen={defaultOpen}>
             <AppSidebar />
             <SidebarInset>{children}</SidebarInset>

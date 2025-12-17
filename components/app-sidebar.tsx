@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useTheme } from "next-themes";
 import * as React from "react";
 import { NavMain } from "@/components/nav-main";
 import { NavUser } from "@/components/nav-user";
@@ -125,7 +126,17 @@ const data = {
 
 function SidebarHeaderContent() {
   const { state } = useSidebar();
+  const { theme } = useTheme();
   const isCollapsed = state === "collapsed";
+  const [mounted, setMounted] = React.useState(false);
+
+  // Avoid hydration mismatch by only rendering after mount
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Determine which logo to use based on theme
+  const logoSrc = theme === "light" ? "/logo/light.png" : "/logo/dark.png";
 
   return (
     <SidebarHeader>
@@ -135,10 +146,17 @@ function SidebarHeaderContent() {
             <SidebarTrigger className="mx-auto size-8" />
           ) : (
             <SidebarMenuButton size="lg" asChild>
-              <Link href="/">
-                <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-medium">Agentic Trust</span>
-                </div>
+              <Link href="/" className="flex items-center gap-2 py-3">
+                {mounted && (
+                  <Image
+                    src={logoSrc}
+                    alt="Agentic Trust"
+                    width={256}
+                    height={64}
+                    className="shrink-0"
+                    priority
+                  />
+                )}
               </Link>
             </SidebarMenuButton>
           )}
