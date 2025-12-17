@@ -92,6 +92,7 @@ import {
   RecordIcon,
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
+import Image from "next/image";
 import React from "react";
 import type { IconSvgElement } from "@hugeicons/react";
 
@@ -225,3 +226,16 @@ export const ArrowUp = createIcon(ArrowUp01Icon);
 
 // Type for icon props (replaces LucideIcon)
 export type LucideIcon = React.ComponentType<IconProps>;
+
+// Custom MCP icon component
+export function McpIcon({ className }: { className?: string }) {
+  return (
+    <Image
+      src="/icons/mcp.svg"
+      alt="MCP"
+      width={16}
+      height={16}
+      className={`shrink-0 brightness-0 dark:invert ${className || ""}`}
+    />
+  );
+}

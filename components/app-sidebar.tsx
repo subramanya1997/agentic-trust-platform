@@ -12,116 +12,15 @@ import {
   SidebarContent,
   SidebarFooter,
   SidebarHeader,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
   SidebarTrigger,
   useSidebar,
 } from "@/components/ui/sidebar";
-import {
-  Activity,
-  BarChart3,
-  BookOpen,
-  Bot,
-  Building2,
-  HelpCircle,
-  Key,
-  LayoutDashboard,
-  Users,
-  Webhook,
-  Zap,
-} from "@/lib/icons";
+import { NAVIGATION, ROUTES } from "@/lib/constants";
 
-// Custom MCP icon component to match Lucide icon interface
-// Using inline SVG to ensure proper sizing in collapsed sidebar state
-function McpIcon({ className }: { className?: string }) {
-  return (
-    <Image
-      src="/icons/mcp.svg"
-      alt="MCP"
-      width={16}
-      height={16}
-      className={`shrink-0 brightness-0 dark:invert ${className || ""}`}
-    />
-  );
-}
-
-const data = {
-  user: {
-    name: "Sara Klein",
-    email: "sara@company.com",
-    avatar: "",
-  },
-  build: [
-    {
-      title: "Agents",
-      url: "/agents",
-      icon: Bot,
-    },
-    {
-      title: "Integrations",
-      url: "/integrations",
-      icon: Zap,
-    },
-    {
-      title: "Webhooks",
-      url: "/webhooks",
-      icon: Webhook,
-    },
-    {
-      title: "MCP Registry",
-      url: "/mcp-registry",
-      icon: McpIcon,
-    },
-  ],
-  dashboard: [
-    {
-      title: "Dashboard",
-      url: "/",
-      icon: LayoutDashboard,
-    },
-  ],
-  run: [
-    {
-      title: "Activity",
-      url: "/activity",
-      icon: Activity,
-    },
-    {
-      title: "Analytics",
-      url: "/analytics",
-      icon: BarChart3,
-    },
-  ],
-  access: [
-    {
-      title: "Organization",
-      url: "/organization",
-      icon: Building2,
-    },
-    {
-      title: "API Keys",
-      url: "/api-keys",
-      icon: Key,
-    },
-    {
-      title: "Team",
-      url: "/team",
-      icon: Users,
-    },
-  ],
-  resources: [
-    {
-      title: "Documentation",
-      url: "/docs",
-      icon: BookOpen,
-    },
-    {
-      title: "Help",
-      url: "/help",
-      icon: HelpCircle,
-    },
-  ],
+const userData = {
+  name: "Sara Klein",
+  email: "sara@company.com",
+  avatar: "",
 };
 
 function SidebarHeaderContent() {
@@ -140,28 +39,22 @@ function SidebarHeaderContent() {
 
   return (
     <SidebarHeader>
-      <SidebarMenu>
-        <SidebarMenuItem>
-          {isCollapsed ? (
-            <SidebarTrigger className="mx-auto size-8" />
-          ) : (
-            <SidebarMenuButton size="lg" asChild>
-              <Link href="/" className="flex items-center gap-2 py-3">
-                {mounted && (
-                  <Image
-                    src={logoSrc}
-                    alt="Agentic Trust"
-                    width={256}
-                    height={64}
-                    className="shrink-0"
-                    priority
-                  />
-                )}
-              </Link>
-            </SidebarMenuButton>
+      {isCollapsed ? (
+        <SidebarTrigger className="mx-auto size-8" />
+      ) : (
+        <Link href={ROUTES.HOME} className="block px-2 py-2">
+          {mounted && (
+            <Image
+              src={logoSrc}
+              alt="Agentic Trust"
+              width={192}
+              height={48}
+              className="shrink-0"
+              priority
+            />
           )}
-        </SidebarMenuItem>
-      </SidebarMenu>
+        </Link>
+      )}
     </SidebarHeader>
   );
 }
@@ -171,15 +64,15 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeaderContent />
       <SidebarContent>
-        <NavMain items={data.dashboard} />
-        <NavMain items={data.build} label="Build" />
-        <NavMain items={data.run} label="Run" />
-        <NavMain items={data.access} label="Access" />
-        <NavMain items={data.resources} label="Resources" />
+        <NavMain items={NAVIGATION.dashboard.items} />
+        <NavMain items={NAVIGATION.build.items} label={NAVIGATION.build.label} />
+        <NavMain items={NAVIGATION.run.items} label={NAVIGATION.run.label} />
+        <NavMain items={NAVIGATION.access.items} label={NAVIGATION.access.label} />
+        <NavMain items={NAVIGATION.resources.items} label={NAVIGATION.resources.label} />
       </SidebarContent>
       <SidebarFooter>
         <ThemeSwitcher />
-        <NavUser user={data.user} />
+        <NavUser user={userData} />
       </SidebarFooter>
     </Sidebar>
   );

@@ -1,3 +1,3 @@
 export * from "./ui";
-export * from "./routes";
+export * from "./navigation";
 export * from "./statuses";
