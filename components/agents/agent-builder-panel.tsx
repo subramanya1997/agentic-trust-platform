@@ -68,7 +68,7 @@ export function AgentBuilderPanel({
   onApplyAgent,
 }: AgentBuilderPanelProps) {
   const [selectedModel, setSelectedModel] = useState("Sonnet 4.5");
-  const [panelWidth, setPanelWidth] = useState(340);
+  const [panelWidth, setPanelWidth] = useState(480);
   const [isResizing, setIsResizing] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
@@ -246,8 +246,8 @@ export function AgentBuilderPanel({
       const panelRect = panelRef.current.getBoundingClientRect();
       const newWidth = panelRect.right - e.clientX;
 
-      // Min width: 280px, Max width: 600px
-      if (newWidth >= 280 && newWidth <= 600) {
+      // Min width: 280px, Max width: 800px
+      if (newWidth >= 280 && newWidth <= 800) {
         setPanelWidth(newWidth);
       }
     };
@@ -287,7 +287,7 @@ export function AgentBuilderPanel({
         />
       )}
 
-      <div className="flex h-full flex-col" style={{ width: `${panelWidth}px` }}>
+      <div className="flex h-full flex-col">
         {/* Messages Section */}
         <div className="flex-1 overflow-y-auto p-4">
           {messages.length === 0 ? (
@@ -374,7 +374,7 @@ export function AgentBuilderPanel({
         </div>
 
         {/* Chat Input */}
-        <div className="border-sidebar-border shrink-0 border-t p-4">
+        <div className="shrink-0 p-4">
           <form onSubmit={handleSubmit}>
             <InputGroup className="bg-sidebar-accent/50 border-sidebar-border">
               <InputGroupTextarea
