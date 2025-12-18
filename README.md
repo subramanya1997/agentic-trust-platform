@@ -102,9 +102,14 @@ npm run db:down     # Stop databases
 npm run db:migrate  # Run migrations
 npm run db:reset    # Reset database (destroys data)
 
-# Linting & Formatting
-npm run lint        # Lint all
-npm run format      # Format all
+# Code Quality
+npm run lint           # Lint all
+npm run format         # Format all
+npm run format:check   # Check formatting
+npm run type-check     # Type check all
+npm run security       # Security scan
+npm run spell-check    # Spell check
+npm run validate       # Run all checks
 
 # Testing
 npm run test        # Run all tests
@@ -117,6 +122,7 @@ npm run test        # Run all tests
 - [Database Schema](./docs/database-schema.md)
 - [Monorepo Setup](./docs/monorepo-setup.md)
 - [Product Requirements](./docs/product_requirements.md)
+- [Code Quality & Pre-commit Setup](./CODE_QUALITY.md)
 
 ## 🔐 Authentication
 

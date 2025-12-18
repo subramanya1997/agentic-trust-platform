@@ -1,0 +1,14 @@
+{
+  "web/**/*.{ts,tsx}": [
+    "cd web && eslint --fix --max-warnings 0",
+    "cd web && prettier --write"
+  ],
+  "web/**/*.{json,css}": ["cd web && prettier --write"],
+  "web/**/*.md": ["cd web && prettier --write", "cspell"],
+  "backend/**/*.py": [
+    "cd backend && uv run ruff check --fix",
+    "cd backend && uv run ruff format"
+  ],
+  "*.{md,yaml,yml}": ["cspell"]
+}
+

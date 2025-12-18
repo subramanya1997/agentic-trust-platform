@@ -8,6 +8,7 @@
     "url": "git+https://github.com/subramanya1997/agentic-trust-platform.git"
   },
   "scripts": {
+    "prepare": "husky",
     "dev": "concurrently \"npm run dev:backend\" \"npm run dev:web\"",
     "dev:web": "cd web && npm run dev",
     "dev:backend": "cd backend && uv run uvicorn app.main:app --reload --port 8000",
@@ -19,6 +20,18 @@
     "format": "concurrently \"npm run format:web\" \"npm run format:backend\"",
     "format:web": "cd web && npm run format",
     "format:backend": "cd backend && uv run ruff format .",
+    "format:check": "concurrently \"npm run format:check:web\" \"npm run format:check:backend\"",
+    "format:check:web": "cd web && npm run format:check",
+    "format:check:backend": "cd backend && uv run ruff format --check .",
+    "type-check": "concurrently \"npm run type-check:web\" \"npm run type-check:backend\"",
+    "type-check:web": "cd web && npm run type-check",
+    "type-check:backend": "cd backend && uv run mypy app/",
+    "security": "concurrently \"npm run security:web\" \"npm run security:backend\"",
+    "security:web": "cd web && npm audit",
+    "security:backend": "cd backend && uv run bandit -c pyproject.toml -r app/",
+    "spell-check": "cspell \"**/*.{md,ts,tsx,py}\" --no-progress --config cspell.json",
+    "pre-commit": "cd backend && uv run pre-commit run --all-files",
+    "validate": "npm run lint && npm run format:check && npm run type-check && npm run security",
     "db:up": "docker-compose up -d postgres redis",
     "db:down": "docker-compose down",
     "db:migrate": "cd backend && uv run alembic upgrade head",
@@ -29,7 +42,12 @@
     "clean": "rm -rf node_modules web/node_modules web/.next backend/.venv backend/__pycache__"
   },
   "devDependencies": {
-    "concurrently": "^9.1.0"
+    "@commitlint/cli": "^20.2.0",
+    "@commitlint/config-conventional": "^20.2.0",
+    "concurrently": "^9.1.0",
+    "cspell": "^8.17.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.7"
   },
   "engines": {
     "node": ">=20.0.0"

@@ -24,7 +24,9 @@ dependencies = [
 
 [dependency-groups]
 dev = [
+    "bandit>=1.8.3",
     "mypy>=1.19.1",
+    "pre-commit>=4.0.1",
     "pytest>=9.0.2",
     "pytest-asyncio>=1.3.0",
     "pytest-cov>=7.0.0",
@@ -50,3 +52,7 @@ testpaths = ["tests"]
 python_version = "3.12"
 strict = true
 ignore_missing_imports = true
+
+[tool.bandit]
+exclude_dirs = ["tests", ".venv"]
+skips = ["B101"]  # Skip assert_used check (needed for tests)
