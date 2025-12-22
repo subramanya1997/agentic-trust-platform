@@ -6,7 +6,6 @@ import { useTheme } from "next-themes";
 import * as React from "react";
 import { NavMain } from "@/components/nav-main";
 import { NavUser } from "@/components/nav-user";
-import { ThemeSwitcher } from "@/components/theme-switcher";
 import {
   Sidebar,
   SidebarContent,
@@ -15,13 +14,8 @@ import {
   SidebarTrigger,
   useSidebar,
 } from "@/components/ui/sidebar";
+import { api } from "@/lib/api";
 import { NAVIGATION, ROUTES } from "@/lib/constants";
-
-const userData = {
-  name: "Sara Klein",
-  email: "sara@company.com",
-  avatar: "",
-};
 
 function SidebarHeaderContent() {
   const { state } = useSidebar();
@@ -60,6 +54,39 @@ function SidebarHeaderContent() {
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const [user, setUser] = React.useState<{
+    name: string;
+    email: string;
+    avatar: string;
+  } | null>(null);
+
+  React.useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const userData = await api.auth.me();
+        const displayName = userData.first_name && userData.last_name
+          ? `${userData.first_name} ${userData.last_name}`
+          : userData.first_name || userData.email.split("@")[0];
+
+        setUser({
+          name: displayName,
+          email: userData.email,
+          avatar: userData.avatar_url || "",
+        });
+      } catch (error) {
+        console.error("Failed to fetch user:", error);
+        // Fallback to email from cookie or default
+        setUser({
+          name: "User",
+          email: "",
+          avatar: "",
+        });
+      }
+    };
+
+    fetchUser();
+  }, []);
+
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeaderContent />
@@ -71,8 +98,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavMain items={NAVIGATION.resources.items} label={NAVIGATION.resources.label} />
       </SidebarContent>
       <SidebarFooter>
-        <ThemeSwitcher />
-        <NavUser user={userData} />
+        {user && <NavUser user={user} />}
       </SidebarFooter>
     </Sidebar>
   );

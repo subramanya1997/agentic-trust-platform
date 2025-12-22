@@ -1,0 +1,116 @@
+name: Backend CI
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - 'backend/**'
+      - '.github/workflows/backend-ci.yml'
+  pull_request:
+    branches: [main, develop]
+    paths:
+      - 'backend/**'
+      - '.github/workflows/backend-ci.yml'
+
+jobs:
+  lint:
+    name: Lint Backend Code
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend/auth-service
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install uv
+        run: pip install uv
+
+      - name: Install dependencies
+        run: |
+          uv venv
+          uv pip install ruff mypy bandit
+
+      - name: Run Ruff linter
+        run: uv run ruff check .
+
+      - name: Run Ruff formatter check
+        run: uv run ruff format --check .
+
+      - name: Run mypy type checker
+        run: uv run mypy app/ --ignore-missing-imports
+
+      - name: Run Bandit security scanner
+        run: uv run bandit -r app/ -ll
+
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend/auth-service
+
+    services:
+      postgres:
+        image: postgres:15-alpine
+        env:
+          POSTGRES_USER: agentic
+          POSTGRES_PASSWORD: agentic_test_password
+          POSTGRES_DB: agentic_trust_test
+        options: >-
+          --health-cmd "pg_isready -U agentic -d agentic_trust_test"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+      redis:
+        image: redis:7-alpine
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install uv
+        run: pip install uv
+
+      - name: Install dependencies
+        run: uv sync
+
+      - name: Run tests with coverage
+        env:
+          DATABASE_URL: postgresql+asyncpg://agentic:agentic_test_password@localhost:5432/agentic_trust_test
+          WORKOS_API_KEY: test_key_at_least_32_characters_long_for_ci
+          WORKOS_CLIENT_ID: test_client_id_32_characters_long_ci
+          WORKOS_COOKIE_PASSWORD: test_cookie_password_32_chars_minimum_ci
+          ENCRYPTION_KEY: test_encryption_key_32_chars_minimum_ci
+          REDIS_URL: redis://localhost:6379
+        run: uv run pytest --cov=app --cov-report=xml --cov-report=term
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          files: ./backend/auth-service/coverage.xml
+          flags: backend
+          name: backend-coverage
+        if: github.event_name == 'pull_request'
+

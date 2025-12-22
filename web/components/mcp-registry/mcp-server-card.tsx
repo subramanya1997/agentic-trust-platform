@@ -6,9 +6,8 @@ import { IntegrationIcon } from "@/components/integration-icon";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Bot, Copy, Check } from "@/lib/icons";
+import { Bot, Copy, Check, McpIcon } from "@/lib/icons";
 import type { CustomMCPServer } from "@/lib/types";
-import { MCPIcon } from "./mcp-icon";
 
 interface MCPServerCardProps {
   server: CustomMCPServer;
@@ -38,7 +37,7 @@ export function MCPServerCard({ server }: MCPServerCardProps) {
                 {server.type === "agent" ? (
                   <Bot className="h-4 w-4 text-amber-500" />
                 ) : (
-                  <MCPIcon className="h-4 w-4 text-blue-500" />
+                  <McpIcon size={16} className="text-blue-500" />
                 )}
               </div>
               <div className="min-w-0">

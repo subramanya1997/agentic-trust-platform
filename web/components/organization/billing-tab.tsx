@@ -4,6 +4,7 @@ import { DataTable, TableRow, TableCell } from "@/components/data-table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Check, CreditCard, Download } from "@/lib/icons";
 
 const plans = [
@@ -243,6 +244,124 @@ export function BillingTab() {
                   >
                     <Download className="h-4 w-4" />
                   </Button>
+                </TableCell>
+              </TableRow>
+            ))}
+          </DataTable>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+
+export function BillingTabSkeleton() {
+  return (
+    <div className="space-y-8">
+      {/* Plans */}
+      <div>
+        <Skeleton className="h-6 w-16 mb-4" />
+        <div className="grid grid-cols-3 gap-4">
+          {[1, 2, 3].map((i) => (
+            <Card key={i} className="bg-card border">
+              <CardContent className="p-6 pt-8">
+                <div className="mb-6 text-center space-y-3">
+                  <Skeleton className="h-5 w-20 mx-auto" />
+                  <Skeleton className="h-9 w-32 mx-auto" />
+                  <Skeleton className="h-4 w-48 mx-auto" />
+                </div>
+                <div className="mb-6 space-y-3">
+                  {[1, 2, 3, 4, 5].map((j) => (
+                    <Skeleton key={j} className="h-4 w-full" />
+                  ))}
+                </div>
+                <Skeleton className="h-10 w-full" />
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
+
+      {/* Usage & Payment in two columns */}
+      <div className="grid grid-cols-2 gap-6">
+        {/* Usage This Month */}
+        <Card className="bg-card border">
+          <CardHeader className="pb-4">
+            <Skeleton className="h-5 w-32" />
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {[1, 2, 3].map((i) => (
+              <div key={i}>
+                <div className="mb-2 flex items-center justify-between">
+                  <Skeleton className="h-4 w-24" />
+                  <Skeleton className="h-4 w-32" />
+                </div>
+                <Skeleton className="h-2 w-full rounded-full" />
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+
+        {/* Payment Method */}
+        <Card className="bg-card border">
+          <CardHeader className="pb-4">
+            <Skeleton className="h-5 w-32" />
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-3">
+                <Skeleton className="h-12 w-18 rounded-lg" />
+                <div className="space-y-2">
+                  <Skeleton className="h-4 w-32" />
+                  <Skeleton className="h-3 w-24" />
+                </div>
+              </div>
+              <Skeleton className="h-8 w-16" />
+            </div>
+            <div className="pt-4 space-y-2">
+              <div className="flex items-center justify-between">
+                <Skeleton className="h-4 w-32" />
+                <Skeleton className="h-4 w-24" />
+              </div>
+              <div className="flex items-center justify-between">
+                <Skeleton className="h-4 w-20" />
+                <Skeleton className="h-4 w-16" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Billing History */}
+      <Card className="bg-card border">
+        <CardHeader className="pb-4">
+          <Skeleton className="h-5 w-32" />
+        </CardHeader>
+        <CardContent className="p-0">
+          <DataTable
+            headers={[
+              { label: "Date", align: "left" },
+              { label: "Invoice", align: "left" },
+              { label: "Amount", align: "left" },
+              { label: "Status", align: "left" },
+              { label: "", align: "right" },
+            ]}
+          >
+            {[1, 2, 3].map((i) => (
+              <TableRow key={i}>
+                <TableCell className="px-4 py-3">
+                  <Skeleton className="h-4 w-24" />
+                </TableCell>
+                <TableCell className="px-4 py-3">
+                  <Skeleton className="h-4 w-28" />
+                </TableCell>
+                <TableCell className="px-4 py-3">
+                  <Skeleton className="h-4 w-16" />
+                </TableCell>
+                <TableCell className="px-4 py-3">
+                  <Skeleton className="h-6 w-16 rounded-full" />
+                </TableCell>
+                <TableCell className="px-4 py-3 text-right">
+                  <Skeleton className="h-8 w-8 ml-auto" />
                 </TableCell>
               </TableRow>
             ))}

@@ -1,0 +1,80 @@
+[project]
+name = "agentic-trust-auth-service"
+version = "0.1.0"
+description = "Agentic Trust - Authentication Service"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "agentic-trust-shared",
+    "alembic>=1.17.2",
+    "anthropic>=0.75.0",
+    "asyncpg>=0.31.0",
+    "bleach>=6.1.0",
+    "circuitbreaker>=1.4.0",
+    "colorlog>=6.9.0",
+    "email-validator>=2.3.0",
+    "fastapi>=0.126.0",
+    "greenlet>=3.3.0",
+    "httpx>=0.28.1",
+    "nanoid>=2.0.0",
+    "openai>=2.14.0",
+    "pydantic-settings>=2.12.0",
+    "pyjwt>=2.10.1",
+    "python-dateutil>=2.9.0.post0",
+    "python-multipart>=0.0.21",
+    "pyyaml>=6.0.2",
+    "redis>=7.1.0",
+    "slowapi>=0.1.9",
+    "prometheus-client>=0.21.0",
+    "starlette-prometheus>=0.10.0",
+    "opentelemetry-api>=1.28.0",
+    "opentelemetry-sdk>=1.28.0",
+    "opentelemetry-instrumentation-fastapi>=0.49b0",
+    "opentelemetry-instrumentation-sqlalchemy>=0.49b0",
+    "opentelemetry-exporter-otlp>=1.28.0",
+    "sqlalchemy>=2.0.45",
+    "sqlmodel>=0.0.27",
+    "uvicorn[standard]>=0.38.0",
+    "workos>=5.37.0",
+]
+
+[tool.uv.sources]
+agentic-trust-shared = { path = "../shared", editable = true }
+
+[tool.uv.workspace]
+members = []
+
+[dependency-groups]
+dev = [
+    "bandit>=1.8.3",
+    "mypy>=1.19.1",
+    "pre-commit>=4.0.1",
+    "pytest>=9.0.2",
+    "pytest-asyncio>=1.3.0",
+    "pytest-cov>=7.0.0",
+    "ruff>=0.14.10",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "W", "UP", "B", "C4"]
+ignore = ["E501"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["app", "shared"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+ignore_missing_imports = true
+
+[tool.bandit]
+exclude_dirs = ["tests", ".venv"]
+skips = ["B101"]  # Skip assert_used check (needed for tests)

@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
@@ -24,7 +23,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-import { Settings, Copy, Check, ExternalLink } from "@/lib/icons";
+import { Settings, Copy, Check, ExternalLink, McpIcon } from "@/lib/icons";
 
 interface MCPTriggerProps {
   agentId: string;
@@ -55,16 +54,9 @@ export function MCPTrigger({ agentId, agentName, enabled, onEnabledChange }: MCP
             enabled ? "bg-orange-950" : "bg-accent"
           }`}
         >
-          <Image
-            src="/icons/mcp.svg"
-            alt="MCP"
-            width={16}
-            height={16}
-            style={{
-              filter: enabled
-                ? "invert(67%) sepia(74%) saturate(1200%) hue-rotate(346deg) brightness(101%) contrast(101%)"
-                : "invert(50%)",
-            }}
+          <McpIcon 
+            size={16}
+            className={enabled ? "text-orange-500" : "text-muted-foreground"}
           />
         </div>
         <div>
@@ -114,16 +106,7 @@ export function MCPTrigger({ agentId, agentName, enabled, onEnabledChange }: MCP
               <DialogContent className="bg-card border sm:max-w-[450px]">
                 <DialogHeader>
                   <DialogTitle className="text-foreground flex items-center gap-2">
-                    <Image
-                      src="/icons/mcp.svg"
-                      alt="MCP"
-                      width={20}
-                      height={20}
-                      style={{
-                        filter:
-                          "invert(67%) sepia(74%) saturate(1200%) hue-rotate(346deg) brightness(101%) contrast(101%)",
-                      }}
-                    />
+                    <McpIcon size={20} className="text-orange-500" />
                     MCP Server Configuration
                   </DialogTitle>
                   <DialogDescription className="text-muted-foreground">

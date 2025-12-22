@@ -45,7 +45,17 @@
     "mypy",
     "pytest",
     "dateutil",
-    "cloudbuild"
+    "cloudbuild",
+    "venv",
+    "isready",
+    "commitizen",
+    "asctime",
+    "levelname",
+    "httpx",
+    "httpcore",
+    "healthcheck",
+    "psql",
+    "pythonpath"
   ],
   "ignorePaths": [
     "node_modules/**",

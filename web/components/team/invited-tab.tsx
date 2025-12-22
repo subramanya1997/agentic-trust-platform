@@ -5,14 +5,8 @@ import { DataTable, TableRow, TableCell } from "@/components/data-table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { X, RefreshCw, Mail, Clock, ChevronLeft, ChevronRight, XCircle } from "@/lib/icons";
+import { Skeleton } from "@/components/ui/skeleton";
+import { X, RefreshCw, Mail, Clock, ChevronLeft, ChevronRight, XCircle, CheckCircle } from "@/lib/icons";
 
 export interface Invitation {
   id: string;
@@ -21,7 +15,7 @@ export interface Invitation {
   invitedBy: string;
   invitedAt: string;
   expiresAt: string;
-  status: "pending" | "expired";
+  status: "pending" | "accepted" | "expired" | "revoked";
 }
 
 interface InvitedTabProps {
@@ -29,100 +23,40 @@ interface InvitedTabProps {
   roles: { id: string; name: string }[];
   onResend?: (invitationId: string) => void;
   onRevoke?: (invitationId: string) => void;
-  onInvite?: (email: string, role: string) => void;
 }
+
+// Helper to get role display name from slug
+const getRoleDisplayName = (roleSlug: string, roles: { id: string; name: string }[]) => {
+  const role = roles.find(r => r.id?.toLowerCase() === roleSlug?.toLowerCase());
+  return role?.name || roleSlug;
+};
 
 const ITEMS_PER_PAGE = 25;
 
-export function InvitedTab({ invitations, roles, onResend, onRevoke, onInvite }: InvitedTabProps) {
+export function InvitedTab({ invitations, roles, onResend, onRevoke }: InvitedTabProps) {
   const [currentPage, setCurrentPage] = useState(1);
-  const [showInviteForm, setShowInviteForm] = useState(false);
-  const [newEmail, setNewEmail] = useState("");
-  const [newRole, setNewRole] = useState("Editor");
 
   const totalPages = Math.ceil(invitations.length / ITEMS_PER_PAGE);
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const paginatedInvitations = invitations.slice(startIndex, startIndex + ITEMS_PER_PAGE);
 
-  const handleInvite = () => {
-    if (newEmail && onInvite) {
-      onInvite(newEmail, newRole);
-      setNewEmail("");
-      setNewRole("Editor");
-      setShowInviteForm(false);
-    }
-  };
-
   return (
-    <div className="space-y-4">
-      {/* Invite Form */}
-      {showInviteForm && (
-        <Card className="bg-card border">
-          <CardContent className="p-4">
-            <div className="flex items-end gap-4">
-              <div className="flex-1">
-                <label className="text-muted-foreground mb-2 block text-sm font-medium">
-                  Email Address
-                </label>
-                <input
-                  type="email"
-                  value={newEmail}
-                  onChange={(e) => setNewEmail(e.target.value)}
-                  placeholder="colleague@company.com"
-                  className="bg-accent text-foreground w-full rounded-lg border px-4 py-2 text-sm focus:border-amber-500 focus:ring-1 focus:ring-amber-500 focus:outline-none"
-                />
-              </div>
-              <div className="w-[140px]">
-                <label className="text-muted-foreground mb-2 block text-sm font-medium">Role</label>
-                <Select value={newRole} onValueChange={setNewRole}>
-                  <SelectTrigger className="bg-accent text-foreground border">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent className="bg-card border">
-                    {roles.map((role) => (
-                      <SelectItem
-                        key={role.id}
-                        value={role.name}
-                        className="text-muted-foreground focus:bg-accent focus:text-foreground"
-                      >
-                        {role.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              <Button className="bg-amber-600 text-white hover:bg-amber-500" onClick={handleInvite}>
-                Send Invite
-              </Button>
-              <Button
-                variant="ghost"
-                className="text-muted-foreground"
-                onClick={() => setShowInviteForm(false)}
-              >
-                Cancel
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-      )}
-
-      {/* Invitations Table */}
-      <Card className="bg-card border">
-        <CardContent className="p-0">
-          {invitations.length === 0 ? (
-            <div className="p-8 text-center">
-              <Mail className="mx-auto mb-3 h-12 w-12 text-stone-600" />
-              <p className="text-muted-foreground">No pending invitations</p>
-              <p className="text-foreground0 mt-1 text-sm">Invite team members to collaborate</p>
-            </div>
-          ) : (
+    <Card className="bg-card border">
+      <CardContent className="p-0">
+        {invitations.length === 0 ? (
+          <div className="p-8 text-center">
+            <Mail className="mx-auto mb-3 h-12 w-12 text-stone-600" />
+            <p className="text-muted-foreground">No pending invitations</p>
+            <p className="text-foreground0 mt-1 text-sm">Invite team members to collaborate</p>
+          </div>
+        ) : (
             <>
               <DataTable
                 headers={[
                   { label: "Email", align: "left" },
                   { label: "Role", align: "left" },
-                  { label: "Invited By", align: "left" },
                   { label: "Status", align: "left" },
+                  { label: "Expires", align: "left" },
                   { label: "Actions", align: "right" },
                 ]}
               >
@@ -133,54 +67,54 @@ export function InvitedTab({ invitations, roles, onResend, onRevoke, onInvite }:
                     </TableCell>
                     <TableCell className="px-4 py-3 whitespace-nowrap">
                       <Badge variant="outline" className="bg-accent text-muted-foreground border">
-                        {invitation.role}
+                        {getRoleDisplayName(invitation.role, roles)}
                       </Badge>
                     </TableCell>
                     <TableCell className="px-4 py-3 whitespace-nowrap">
-                      <span className="text-muted-foreground text-sm">{invitation.invitedBy}</span>
+                      <Badge
+                        variant="outline"
+                        className={
+                          invitation.status === "pending"
+                            ? "border-yellow-500 bg-yellow-500/10 text-yellow-600 dark:text-yellow-400"
+                            : invitation.status === "accepted"
+                              ? "border-green-500 bg-green-500/10 text-green-600 dark:text-green-400"
+                              : "border-red-500 bg-red-500/10 text-red-600 dark:text-red-400"
+                        }
+                      >
+                        {invitation.status === "pending" && <Clock className="mr-1 h-3 w-3" />}
+                        {invitation.status === "accepted" && <CheckCircle className="mr-1 h-3 w-3" />}
+                        {(invitation.status === "revoked" || invitation.status === "expired") && <XCircle className="mr-1 h-3 w-3" />}
+                        {invitation.status.charAt(0).toUpperCase() + invitation.status.slice(1)}
+                      </Badge>
                     </TableCell>
                     <TableCell className="px-4 py-3 whitespace-nowrap">
-                      <div className="flex items-center gap-2">
-                        <Badge
-                          variant="outline"
-                          className={
-                            invitation.status === "pending"
-                              ? "border-yellow-500 bg-yellow-500/10 text-yellow-600 dark:text-yellow-400"
-                              : invitation.status === "expired"
-                                ? "border-red-500 bg-red-500/10 text-red-600 dark:text-red-400"
-                                : ""
-                          }
-                        >
-                          {invitation.status === "pending" && <Clock className="mr-1 h-3 w-3" />}
-                          {invitation.status === "expired" && <XCircle className="mr-1 h-3 w-3" />}
-                          {invitation.status}
-                        </Badge>
-                        <span className="text-foreground0 flex items-center gap-1 text-xs">
-                          <Clock className="h-3 w-3" />
-                          Expires {invitation.expiresAt}
-                        </span>
-                      </div>
+                      <span className="text-muted-foreground text-sm">{invitation.expiresAt}</span>
                     </TableCell>
                     <TableCell className="px-4 py-3 text-right whitespace-nowrap">
-                      <div className="flex items-center justify-end gap-2">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="text-muted-foreground hover:text-foreground"
-                          onClick={() => onResend?.(invitation.id)}
-                        >
-                          <RefreshCw className="mr-1 h-4 w-4" />
-                          Resend
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="text-red-400 hover:bg-red-950 hover:text-red-300"
-                          onClick={() => onRevoke?.(invitation.id)}
-                        >
-                          <X className="h-4 w-4" />
-                        </Button>
-                      </div>
+                      {invitation.status === "pending" ? (
+                        <div className="flex items-center justify-end gap-2">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="text-muted-foreground hover:text-foreground"
+                            onClick={() => onResend?.(invitation.id)}
+                            title="Resend invitation"
+                          >
+                            <RefreshCw className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="text-red-400 hover:bg-red-950 hover:text-red-300"
+                            onClick={() => onRevoke?.(invitation.id)}
+                            title="Revoke invitation"
+                          >
+                            <X className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      ) : (
+                        <span className="text-foreground0 text-xs">—</span>
+                      )}
                     </TableCell>
                   </TableRow>
                 ))}
@@ -221,8 +155,48 @@ export function InvitedTab({ invitations, roles, onResend, onRevoke, onInvite }:
               )}
             </>
           )}
-        </CardContent>
-      </Card>
-    </div>
+      </CardContent>
+    </Card>
+  );
+}
+
+export function InvitedTabSkeleton() {
+  return (
+    <Card className="bg-card border">
+      <CardContent className="p-0">
+        <DataTable
+            headers={[
+              { label: "Email", align: "left" },
+              { label: "Role", align: "left" },
+              { label: "Status", align: "left" },
+              { label: "Expires", align: "left" },
+              { label: "Actions", align: "right" },
+            ]}
+          >
+            {[1, 2, 3].map((i) => (
+              <TableRow key={i}>
+                <TableCell className="px-4 py-3 whitespace-nowrap">
+                  <Skeleton className="h-4 w-48" />
+                </TableCell>
+                <TableCell className="px-4 py-3 whitespace-nowrap">
+                  <Skeleton className="h-6 w-16 rounded-full" />
+                </TableCell>
+                <TableCell className="px-4 py-3 whitespace-nowrap">
+                  <Skeleton className="h-6 w-20 rounded-full" />
+                </TableCell>
+                <TableCell className="px-4 py-3 whitespace-nowrap">
+                  <Skeleton className="h-4 w-24" />
+                </TableCell>
+                <TableCell className="px-4 py-3 text-right whitespace-nowrap">
+                  <div className="flex items-center justify-end gap-2">
+                    <Skeleton className="h-9 w-9" />
+                    <Skeleton className="h-9 w-9" />
+                  </div>
+                </TableCell>
+              </TableRow>
+            ))}
+          </DataTable>
+      </CardContent>
+    </Card>
   );
 }

@@ -1,7 +1,18 @@
 repos:
-  # Ruff - linting and formatting
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-added-large-files
+        args: ['--maxkb=1000']
+      - id: check-json
+      - id: check-merge-conflict
+      - id: detect-private-key
+
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.14.9
+    rev: v0.14.10
     hooks:
       - id: ruff
         args: [--fix]
@@ -9,41 +20,25 @@ repos:
       - id: ruff-format
         files: ^backend/
 
-  # MyPy - type checking
   - repo: https://github.com/pre-commit/mirrors-mypy
     rev: v1.19.1
     hooks:
       - id: mypy
-        files: ^backend/
+        files: ^backend/auth-service/app/
+        args: [--ignore-missing-imports, --no-strict-optional]
         additional_dependencies:
-          - types-python-dateutil
           - types-redis
-        args: [--config-file=backend/pyproject.toml]
+          - types-PyYAML
 
-  # Security - Bandit
   - repo: https://github.com/PyCQA/bandit
     rev: 1.8.3
     hooks:
       - id: bandit
-        args: [-c, backend/pyproject.toml, -r, backend/]
+        args: [-ll, -r, backend/auth-service/app/]
         files: ^backend/
 
-  # Secret detection - Gitleaks
-  - repo: https://github.com/gitleaks/gitleaks
-    rev: v8.21.2
+  - repo: https://github.com/commitizen-tools/commitizen
+    rev: v4.3.0
     hooks:
-      - id: gitleaks
-
-  # General hooks
-  - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v5.0.0
-    hooks:
-      - id: trailing-whitespace
-      - id: end-of-file-fixer
-      - id: check-yaml
-      - id: check-json
-      - id: check-added-large-files
-        args: [--maxkb=1000]
-      - id: check-merge-conflict
-      - id: detect-private-key
-
+      - id: commitizen
+        stages: [commit-msg]

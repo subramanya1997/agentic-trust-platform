@@ -1,0 +1,16 @@
+# Auth Service specific logging configuration
+# Inherits from base.yaml and overrides specific settings
+
+service:
+  name: "auth-service"
+  environment: "development"
+
+logging:
+  # Override file path for auth service
+  file:
+    path: "logs/auth-service.log"
+  
+  # Auth service may want more detailed sqlalchemy logs
+  # libraries:
+  #   sqlalchemy.engine: "INFO"
+

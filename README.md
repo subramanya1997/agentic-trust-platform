@@ -1,137 +1,153 @@
 # Agentic Trust Platform
 
-> AI Agent Infrastructure Platform - Build, deploy, and manage AI agents with confidence.
+AI Agent Infrastructure Platform with microservices architecture.
 
-## 🏗️ Project Structure
+## Quick Start
+
+1. **Clone the repository:**
+   ```bash
+   git clone <repository-url>
+   cd agentic-trust-platform
+   ```
+
+2. **Set up environment variables:**
+   ```bash
+   cp env.example .env
+   # Edit .env with your values
+   ```
+
+3. **Start backend services:**
+   ```bash
+   cd backend
+   docker-compose up -d
+   ```
+
+4. **Start frontend (separate terminal):**
+   ```bash
+   cd web
+   npm install
+   npm run dev
+   ```
+
+5. **Access the application:**
+   - Frontend: http://localhost:3000
+   - Auth Service API: http://localhost:8000
+   - API Docs: http://localhost:8000/docs
+
+## Project Structure
 
 ```
 agentic-trust-platform/
-├── web/                    # Next.js frontend (→ Vercel)
-│   ├── app/                # App Router pages
-│   ├── components/         # React components
-│   └── lib/                # Utilities & types
-├── backend/                # Python FastAPI (→ GCP Cloud Run)
-│   ├── app/                # Application code
-│   │   ├── core/           # Core utilities (auth, config)
-│   │   ├── models/         # SQLModel database models
-│   │   ├── routers/        # API route handlers
-│   │   ├── schemas/        # Pydantic schemas
-│   │   └── services/       # Business logic
-│   ├── alembic/            # Database migrations
-│   └── tests/              # Backend tests
-├── docs/                   # Documentation
-└── docker-compose.yml      # Local development services
+├── backend/                    # Backend microservices
+│   ├── configs/               # Centralized configurations
+│   ├── shared/                # Shared libraries
+│   ├── auth-service/          # Authentication service
+│   └── docker-compose.yml     # Backend services (postgres, redis, auth-service)
+├── web/                       # Next.js frontend (runs with npm, no Docker)
+├── docs/                      # Documentation
+└── env.example                # Environment variables template
 ```
 
-## 🚀 Getting Started
+## Environment Configuration
+
+All services use a **single centralized `.env` file** at the project root.
+
+```bash
+# Copy the example file
+cp env.example .env
+
+# Edit with your values
+nano .env
+```
+
+Key variables:
+- `DATABASE_URL` - PostgreSQL connection string
+- `WORKOS_API_KEY` - WorkOS authentication
+- `JWT_SECRET` - Cross-service authentication
+- `SERVICE_NAME` - Current service identifier
+- `LOG_LEVEL` - Logging level (DEBUG, INFO, WARNING, ERROR)
+
+See `env.example` for all available options.
+
+## Services
+
+### Backend Services
+
+- **Auth Service** (Port 8000) - Authentication and user management
+- **Agent Service** (Planned) - AI agent orchestration
+- **MCP Gateway** (Planned) - MCP server and tool registry
+
+See [backend/README.md](backend/README.md) for detailed documentation.
+
+### Frontend
+
+- **Web App** (Port 3000) - Next.js application
+
+See [web/README.md](web/README.md) for frontend documentation.
+
+## Development
 
 ### Prerequisites
 
-- Node.js 20+
-- Python 3.12+
-- [uv](https://docs.astral.sh/uv/) (Python package manager)
-- Docker & Docker Compose
+- Docker and Docker Compose
+- Node.js 18+ (for frontend)
+- Python 3.12+ (for backend)
+- uv (Python package manager)
 
-### Quick Start
+### Running Locally
 
+**Backend (Auth Service):**
 ```bash
-# 1. Clone the repository
-git clone https://github.com/subramanya1997/agentic-trust-platform.git
-cd agentic-trust-platform
+cd backend/auth-service
+uv sync
+uv run uvicorn app.main:app --reload --port 8000
+```
 
-# 2. Install root dependencies
+**Frontend:**
+```bash
+cd web
 npm install
-
-# 3. Install frontend dependencies
-cd web && npm install && cd ..
-
-# 4. Set up backend
-cd backend && uv sync && cd ..
-
-# 5. Copy environment files
-cp web/.env.example web/.env.local
-cp backend/.env.example backend/.env
-
-# 6. Start databases
-npm run db:up
-
-# 7. Run database migrations
-npm run db:migrate
-
-# 8. Start development servers
 npm run dev
 ```
 
-### Access Points
-
-| Service | URL |
-|---------|-----|
-| Frontend | http://localhost:3000 |
-| Backend API | http://localhost:8000 |
-| API Docs | http://localhost:8000/docs |
-
-## 📦 Deployment
-
-### Frontend → Vercel
-
-The `web/` directory auto-deploys to Vercel:
-- **Production**: Push to `main` branch
-- **Preview**: Push to any other branch
-
-### Backend → GCP Cloud Run
-
-The `backend/` directory deploys via Cloud Build:
-- Trigger: Push to `main` with changes in `backend/**`
-- Config: `backend/cloudbuild.yaml`
-
-## 🛠️ Development Commands
+### Database Migrations
 
 ```bash
-# Start everything
-npm run dev
+cd backend/auth-service
 
-# Start only frontend
-npm run dev:web
+# Create migration
+uv run alembic revision --autogenerate -m "description"
 
-# Start only backend
-npm run dev:backend
-
-# Database
-npm run db:up       # Start PostgreSQL + Redis
-npm run db:down     # Stop databases
-npm run db:migrate  # Run migrations
-npm run db:reset    # Reset database (destroys data)
-
-# Code Quality
-npm run lint           # Lint all
-npm run format         # Format all
-npm run format:check   # Check formatting
-npm run type-check     # Type check all
-npm run security       # Security scan
-npm run spell-check    # Spell check
-npm run validate       # Run all checks
-
-# Testing
-npm run test        # Run all tests
+# Apply migrations
+uv run alembic upgrade head
 ```
 
-## 📚 Documentation
+## Documentation
 
-- [20-Day MVP Plan](./docs/20-day-mvp-plan.md)
-- [Days 1-5 Detailed Guide](./docs/days-1-5-detailed.md)
-- [Database Schema](./docs/database-schema.md)
-- [Monorepo Setup](./docs/monorepo-setup.md)
-- [Product Requirements](./docs/product_requirements.md)
-- [Code Quality & Pre-commit Setup](./CODE_QUALITY.md)
+- [Backend Architecture](backend/README.md)
+- [Migration Guide](backend/MIGRATION_GUIDE.md)
+- [Product Requirements](docs/product_requirements.md)
+- [MVP Implementation Guide](docs/mvp-implementation-guide.md)
 
-## 🔐 Authentication
+## Testing
 
-This platform uses [WorkOS](https://workos.com/) for authentication:
-- Email + Password
-- Social login (Google, GitHub)
-- Enterprise SSO (SAML/OIDC)
+```bash
+# Backend tests
+cd backend/auth-service
+uv run pytest
 
-## 📄 License
+# Frontend tests
+cd web
+npm test
+```
 
-Private - All rights reserved.
+## Contributing
 
+1. Create a feature branch
+2. Make your changes
+3. Run tests
+4. Submit a pull request
+
+## License
+
+[Your License Here]

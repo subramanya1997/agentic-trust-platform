@@ -1,10 +1,9 @@
 "use client";
 
-import { useState } from "react";
 import { DataTable, TableRow, TableCell } from "@/components/data-table";
-import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import { Edit2, Trash2 } from "@/lib/icons";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export interface Role {
   id: string;
@@ -18,86 +17,18 @@ export interface Role {
 
 interface RolesTabProps {
   roles: Role[];
-  onAddRole?: () => void;
-  onEditRole?: (roleId: string) => void;
-  onDeleteRole?: (roleId: string) => void;
 }
 
-export function RolesTab({ roles, onAddRole, onEditRole, onDeleteRole }: RolesTabProps) {
-  const [newRoleName, setNewRoleName] = useState("");
-  const [newRoleDescription, setNewRoleDescription] = useState("");
-  const [showAddForm, setShowAddForm] = useState(false);
-
-  const handleAddRole = () => {
-    if (newRoleName) {
-      onAddRole?.();
-      setNewRoleName("");
-      setNewRoleDescription("");
-      setShowAddForm(false);
-    }
-  };
-
+export function RolesTab({ roles }: RolesTabProps) {
   return (
-    <div className="space-y-4">
-      {/* Add Role Form */}
-      {showAddForm && (
-        <Card className="bg-card border">
-          <CardContent className="p-4">
-            <div className="space-y-4">
-              <div>
-                <label className="text-muted-foreground mb-2 block text-sm font-medium">
-                  Role Name
-                </label>
-                <input
-                  type="text"
-                  value={newRoleName}
-                  onChange={(e) => setNewRoleName(e.target.value)}
-                  placeholder="e.g., Developer"
-                  className="bg-accent text-foreground w-full rounded-lg border px-4 py-2 text-sm focus:border-amber-500 focus:ring-1 focus:ring-amber-500 focus:outline-none"
-                />
-              </div>
-              <div>
-                <label className="text-muted-foreground mb-2 block text-sm font-medium">
-                  Description
-                </label>
-                <input
-                  type="text"
-                  value={newRoleDescription}
-                  onChange={(e) => setNewRoleDescription(e.target.value)}
-                  placeholder="What can this role do?"
-                  className="bg-accent text-foreground w-full rounded-lg border px-4 py-2 text-sm focus:border-amber-500 focus:ring-1 focus:ring-amber-500 focus:outline-none"
-                />
-              </div>
-              <div className="flex items-center gap-2">
-                <Button
-                  className="bg-amber-600 text-white hover:bg-amber-500"
-                  onClick={handleAddRole}
-                >
-                  Create Role
-                </Button>
-                <Button
-                  variant="ghost"
-                  className="text-muted-foreground"
-                  onClick={() => setShowAddForm(false)}
-                >
-                  Cancel
-                </Button>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      )}
-
-      {/* Roles Table */}
-      <Card className="bg-card border">
+    <Card className="bg-card border">
         <CardContent className="p-0">
           <DataTable
             headers={[
               { label: "Role", align: "left" },
               { label: "Description", align: "left" },
-              { label: "Members", align: "left" },
-              { label: "Type", align: "left" },
-              { label: "Actions", align: "right" },
+              { label: "Members", align: "center" },
+              { label: "Type", align: "center" },
             ]}
           >
             {roles.map((role) => (
@@ -108,41 +39,63 @@ export function RolesTab({ roles, onAddRole, onEditRole, onDeleteRole }: RolesTa
                 <TableCell className="px-4 py-3">
                   <span className="text-muted-foreground text-sm">{role.description}</span>
                 </TableCell>
-                <TableCell className="px-4 py-3 whitespace-nowrap">
-                  <span className="text-muted-foreground text-sm">{role.memberCount}</span>
+                <TableCell className="px-4 py-3 whitespace-nowrap text-center">
+                  <Badge variant="outline" className="bg-accent text-muted-foreground">
+                    {role.memberCount} {role.memberCount === 1 ? "member" : "members"}
+                  </Badge>
                 </TableCell>
-                <TableCell className="px-4 py-3 whitespace-nowrap">
-                  <span className="text-foreground0 text-sm">
+                <TableCell className="px-4 py-3 whitespace-nowrap text-center">
+                  <Badge 
+                    variant="outline" 
+                    className={
+                      role.isSystem 
+                        ? "border-amber-500/30 bg-amber-500/10 text-amber-400" 
+                        : role.isDefault 
+                          ? "border-blue-500/30 bg-blue-500/10 text-blue-400"
+                          : "border-slate-500/30 bg-slate-500/10 text-slate-400"
+                    }
+                  >
                     {role.isSystem ? "System" : role.isDefault ? "Default" : "Custom"}
-                  </span>
-                </TableCell>
-                <TableCell className="px-4 py-3 text-right whitespace-nowrap">
-                  {!role.isSystem && (
-                    <div className="flex items-center justify-end gap-1">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="text-foreground0 hover:text-muted-foreground"
-                        onClick={() => onEditRole?.(role.id)}
-                      >
-                        <Edit2 className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="text-red-400 hover:bg-red-950 hover:text-red-300"
-                        onClick={() => onDeleteRole?.(role.id)}
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  )}
+                  </Badge>
                 </TableCell>
               </TableRow>
             ))}
           </DataTable>
         </CardContent>
       </Card>
-    </div>
+  );
+}
+
+export function RolesTabSkeleton() {
+  return (
+    <Card className="bg-card border">
+        <CardContent className="p-0">
+          <DataTable
+            headers={[
+              { label: "Role", align: "left" },
+              { label: "Description", align: "left" },
+              { label: "Members", align: "center" },
+              { label: "Type", align: "center" },
+            ]}
+          >
+            {[1, 2, 3].map((i) => (
+              <TableRow key={i}>
+                <TableCell className="px-4 py-3 whitespace-nowrap">
+                  <Skeleton className="h-4 w-24" />
+                </TableCell>
+                <TableCell className="px-4 py-3">
+                  <Skeleton className="h-4 w-56" />
+                </TableCell>
+                <TableCell className="px-4 py-3 whitespace-nowrap text-center">
+                  <Skeleton className="h-6 w-20 mx-auto rounded-full" />
+                </TableCell>
+                <TableCell className="px-4 py-3 whitespace-nowrap text-center">
+                  <Skeleton className="h-6 w-16 mx-auto rounded-full" />
+                </TableCell>
+              </TableRow>
+            ))}
+          </DataTable>
+        </CardContent>
+      </Card>
   );
 }

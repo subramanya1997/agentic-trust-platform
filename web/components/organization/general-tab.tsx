@@ -9,6 +9,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Skeleton } from "@/components/ui/skeleton";
 import { getAllModels } from "@/lib/data/models";
 import { Mail } from "@/lib/icons";
 
@@ -35,7 +36,23 @@ const emailNotifications = [
   },
 ];
 
-export function GeneralTab() {
+interface GeneralTabProps {
+  name: string;
+  logoUrl: string;
+  billingEmail: string;
+  onNameChange: (value: string) => void;
+  onLogoUrlChange: (value: string) => void;
+  onBillingEmailChange: (value: string) => void;
+}
+
+export function GeneralTab({
+  name,
+  logoUrl,
+  billingEmail,
+  onNameChange,
+  onLogoUrlChange,
+  onBillingEmailChange,
+}: GeneralTabProps) {
   // Get all available models from centralized constants
   const allModels = getAllModels();
 
@@ -59,7 +76,22 @@ export function GeneralTab() {
                   <td className="px-4 py-3">
                     <input
                       type="text"
-                      defaultValue="Acme Corp"
+                      value={name}
+                      onChange={(e) => onNameChange(e.target.value)}
+                      className="bg-accent text-foreground w-full rounded-lg border px-3 py-2 text-sm focus:border-amber-500 focus:ring-1 focus:ring-amber-500 focus:outline-none"
+                    />
+                  </td>
+                </tr>
+                <tr className="bg-card">
+                  <td className="w-2/5 px-4 py-3">
+                    <span className="text-muted-foreground text-sm font-medium">Logo URL</span>
+                  </td>
+                  <td className="px-4 py-3">
+                    <input
+                      type="text"
+                      value={logoUrl}
+                      onChange={(e) => onLogoUrlChange(e.target.value)}
+                      placeholder="https://example.com/logo.png"
                       className="bg-accent text-foreground w-full rounded-lg border px-3 py-2 text-sm focus:border-amber-500 focus:ring-1 focus:ring-amber-500 focus:outline-none"
                     />
                   </td>
@@ -67,13 +99,15 @@ export function GeneralTab() {
                 <tr className="bg-card">
                   <td className="w-2/5 px-4 py-3">
                     <span className="text-muted-foreground text-sm font-medium">
-                      Organization Slug
+                      Billing Email
                     </span>
                   </td>
                   <td className="px-4 py-3">
                     <input
-                      type="text"
-                      defaultValue="acme-corp"
+                      type="email"
+                      value={billingEmail}
+                      onChange={(e) => onBillingEmailChange(e.target.value)}
+                      placeholder="billing@example.com"
                       className="bg-accent text-foreground w-full rounded-lg border px-3 py-2 text-sm focus:border-amber-500 focus:ring-1 focus:ring-amber-500 focus:outline-none"
                     />
                   </td>
@@ -211,6 +245,75 @@ export function GeneralTab() {
               <Mail className="mr-2 h-4 w-4" />
               Connect Slack
             </Button>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  );
+}
+
+export function GeneralTabSkeleton() {
+  return (
+    <div className="grid grid-cols-2 gap-6">
+      {/* Left Column - General Settings */}
+      <div className="space-y-6">
+        <Card className="bg-card border">
+          <CardHeader className="pb-4">
+            <Skeleton className="h-5 w-32" />
+          </CardHeader>
+          <CardContent className="p-0">
+            <table className="divide-border min-w-full divide-y overflow-hidden rounded-lg">
+              <tbody className="bg-card divide-border divide-y">
+                {[1, 2, 3, 4, 5, 6].map((i) => (
+                  <tr key={i} className="bg-card">
+                    <td className="w-2/5 px-4 py-3">
+                      <Skeleton className="h-4 w-32" />
+                    </td>
+                    <td className="px-4 py-3">
+                      <Skeleton className="h-10 w-full" />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Right Column - Notifications */}
+      <div className="space-y-6">
+        <Card className="bg-card border">
+          <CardHeader className="pb-4">
+            <Skeleton className="h-5 w-40" />
+          </CardHeader>
+          <CardContent className="p-0">
+            <table className="divide-border min-w-full divide-y overflow-hidden rounded-lg">
+              <tbody className="bg-card divide-border divide-y">
+                {[1, 2, 3, 4].map((i) => (
+                  <tr key={i} className="bg-card">
+                    <td className="px-4 py-3">
+                      <div className="space-y-2">
+                        <Skeleton className="h-4 w-32" />
+                        <Skeleton className="h-3 w-48" />
+                      </div>
+                    </td>
+                    <td className="px-4 py-3 text-right">
+                      <Skeleton className="h-6 w-11 rounded-full" />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-card border">
+          <CardHeader className="pb-4">
+            <Skeleton className="h-5 w-40" />
+            <Skeleton className="h-4 w-56 mt-2" />
+          </CardHeader>
+          <CardContent>
+            <Skeleton className="h-10 w-40" />
           </CardContent>
         </Card>
       </div>

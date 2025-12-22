@@ -1,0 +1,73 @@
+services:
+  # PostgreSQL - Backend database server
+  postgres:
+    image: postgres:15-alpine
+    container_name: agentic-postgres
+    environment:
+      POSTGRES_USER: agentic
+      POSTGRES_PASSWORD: agentic_dev_password
+      POSTGRES_DB: agentic_trust
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U agentic -d agentic_trust"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # Redis - Backend cache/session store
+  redis:
+    image: redis:7-alpine
+    container_name: agentic-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # Auth Service - Authentication and user management
+  auth-service:
+    build:
+      context: .
+      dockerfile: ./auth-service/Dockerfile
+    container_name: agentic-auth-service
+    env_file:
+      - .env
+    environment:
+      - DATABASE_URL=${DATABASE_URL:-postgresql+asyncpg://agentic:agentic_dev_password@postgres:5432/agentic_trust}
+      - REDIS_URL=redis://redis:6379
+      - SERVICE_NAME=${SERVICE_NAME:-auth-service}
+      - SERVICE_ENV=${SERVICE_ENV:-development}
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+      - ENCRYPTION_KEY=${ENCRYPTION_KEY}
+      - WORKOS_API_KEY=${WORKOS_API_KEY}
+      - WORKOS_CLIENT_ID=${WORKOS_CLIENT_ID}
+      - WORKOS_COOKIE_PASSWORD=${WORKOS_COOKIE_PASSWORD}
+      - WORKOS_REDIRECT_URI=${WORKOS_REDIRECT_URI:-http://localhost:3000/auth/callback}
+      - FRONTEND_URL=${FRONTEND_URL:-http://localhost:3000}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+    ports:
+      - "${AUTH_SERVICE_PORT:-8000}:8000"
+    volumes:
+      - ./auth-service/app:/app/app
+      - ./shared:/app/shared
+      - ./configs:/app/configs
+      - ./logs:/app/logs
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    command: /app/.venv/bin/uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+
+volumes:
+  postgres_data:
+  redis_data:
+

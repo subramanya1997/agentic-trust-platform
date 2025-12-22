@@ -1,9 +1,6 @@
 import { Raleway } from "next/font/google";
-import { cookies } from "next/headers";
 import "./globals.css";
-import { AppSidebar } from "@/components/app-sidebar";
 import { ThemeProvider } from "@/components/theme-provider";
-import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import type { Metadata } from "next";
 
 const raleway = Raleway({
@@ -21,15 +18,11 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const cookieStore = await cookies();
-  const sidebarState = cookieStore.get("sidebar_state");
-  const defaultOpen = sidebarState ? sidebarState.value === "true" : true;
-
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${raleway.variable} font-sans antialiased`}>
@@ -39,10 +32,7 @@ export default async function RootLayout({
           enableSystem={false}
           disableTransitionOnChange
         >
-          <SidebarProvider defaultOpen={defaultOpen}>
-            <AppSidebar />
-            <SidebarInset>{children}</SidebarInset>
-          </SidebarProvider>
+          {children}
         </ThemeProvider>
       </body>
     </html>

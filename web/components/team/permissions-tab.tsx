@@ -3,6 +3,7 @@
 import { useState, Fragment } from "react";
 import { DataTable, TableRow, TableCell } from "@/components/data-table";
 import { Card, CardContent } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Check, X, ChevronDown, ChevronRight } from "@/lib/icons";
 
 export interface Permission {
@@ -22,14 +23,12 @@ interface PermissionsTabProps {
   permissions: Permission[];
   roles: { id: string; name: string; color: string }[];
   rolePermissions: RolePermission[];
-  onTogglePermission?: (roleId: string, permissionId: string) => void;
 }
 
 export function PermissionsTab({
   permissions,
   roles,
   rolePermissions,
-  onTogglePermission,
 }: PermissionsTabProps) {
   const [expandedCategories, setExpandedCategories] = useState<string[]>([
     "Agents",
@@ -66,8 +65,8 @@ export function PermissionsTab({
 
   return (
     <Card className="bg-card border">
-      <CardContent className="p-0">
-        <DataTable headers={headers}>
+        <CardContent className="p-0">
+          <DataTable headers={headers}>
           {Object.entries(permissionsByCategory).map(([category, perms]) => {
             const isExpanded = expandedCategories.includes(category);
 
@@ -104,16 +103,15 @@ export function PermissionsTab({
                         const hasPerm = hasPermission(role.id, permission.id);
                         return (
                           <TableCell key={role.id} className="px-4 py-3 text-center">
-                            <button
-                              onClick={() => onTogglePermission?.(role.id, permission.id)}
-                              className={`mx-auto flex h-8 w-8 items-center justify-center rounded-lg transition-colors ${
+                            <div
+                              className={`mx-auto flex h-8 w-8 items-center justify-center rounded-lg ${
                                 hasPerm
-                                  ? "bg-green-950 text-green-400 hover:bg-green-900"
-                                  : "bg-accent hover:bg-muted hover:text-muted-foreground text-stone-600"
+                                  ? "bg-green-950 text-green-400"
+                                  : "bg-accent text-stone-600"
                               }`}
                             >
                               {hasPerm ? <Check className="h-4 w-4" /> : <X className="h-4 w-4" />}
-                            </button>
+                            </div>
                           </TableCell>
                         );
                       })}
@@ -122,6 +120,55 @@ export function PermissionsTab({
               </Fragment>
             );
           })}
+        </DataTable>
+      </CardContent>
+    </Card>
+  );
+}
+
+export function PermissionsTabSkeleton() {
+  return (
+    <Card className="bg-card border">
+      <CardContent className="p-0">
+        <DataTable
+          headers={[
+            { label: "Permission", align: "left", className: "w-1/3" },
+            { label: <Skeleton className="h-4 w-16 mx-auto" />, align: "center" },
+            { label: <Skeleton className="h-4 w-16 mx-auto" />, align: "center" },
+          ]}
+        >
+          {[1, 2].map((category) => (
+            <Fragment key={category}>
+              {/* Category Header */}
+              <TableRow>
+                <TableCell colSpan={3} className="px-4 py-2.5">
+                  <div className="flex items-center gap-2">
+                    <Skeleton className="h-4 w-4" />
+                    <Skeleton className="h-4 w-24" />
+                    <Skeleton className="h-3 w-8" />
+                  </div>
+                </TableCell>
+              </TableRow>
+              
+              {/* Permission Rows */}
+              {[1, 2, 3].map((perm) => (
+                <TableRow key={perm}>
+                  <TableCell className="px-4 py-3 pl-12">
+                    <div className="space-y-2">
+                      <Skeleton className="h-4 w-40" />
+                      <Skeleton className="h-3 w-56" />
+                    </div>
+                  </TableCell>
+                  <TableCell className="px-4 py-3 text-center">
+                    <Skeleton className="h-8 w-8 mx-auto rounded-lg" />
+                  </TableCell>
+                  <TableCell className="px-4 py-3 text-center">
+                    <Skeleton className="h-8 w-8 mx-auto rounded-lg" />
+                  </TableCell>
+                </TableRow>
+              ))}
+            </Fragment>
+          ))}
         </DataTable>
       </CardContent>
     </Card>

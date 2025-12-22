@@ -1,9 +1,8 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Plus, Activity, Download, Zap, Webhook } from "@/lib/icons";
+import { Plus, Activity, Download, Zap, Webhook, McpIcon } from "@/lib/icons";
 
 export function QuickActions() {
   return (
@@ -41,13 +40,7 @@ export function QuickActions() {
             variant="outline"
             className="text-muted-foreground hover:bg-accent hover:text-foreground border"
           >
-            <Image
-              src="/icons/mcp.svg"
-              alt="MCP"
-              width={16}
-              height={16}
-              className="h-4 w-4 opacity-70 brightness-0 invert sm:mr-2"
-            />
+            <McpIcon size={16} className="h-4 w-4 opacity-70 sm:mr-2" />
             <span className="hidden sm:inline">Create Server</span>
           </Button>
         </Link>
