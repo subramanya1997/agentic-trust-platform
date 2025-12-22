@@ -1,4 +1,37 @@
-"""Team management routes."""
+"""Team management routes.
+
+This module provides endpoints for managing team members within an organization.
+It handles invitations, role updates, member removal, and listing team members.
+
+Endpoints:
+    - GET /team/members: List all team members
+    - POST /team/invite: Invite a new team member
+    - PATCH /team/members/{membership_id}/role: Update member's role
+    - DELETE /team/members/{membership_id}: Remove a member
+    - GET /team/invitations: List pending invitations
+    - POST /team/invitations/{invitation_id}/resend: Resend invitation
+    - DELETE /team/invitations/{invitation_id}: Revoke invitation
+
+Key Features:
+    - Role-based access control (admin, member, viewer)
+    - Batch user fetching to avoid N+1 queries
+    - Rate limiting on invitation endpoints
+    - WorkOS integration for membership management
+    - Automatic user syncing from WorkOS
+
+Permissions:
+    - List members: admin, member, viewer
+    - Invite members: admin, member
+    - Update roles: admin only
+    - Remove members: admin only
+
+Usage:
+    These endpoints are used by the frontend team management UI to:
+    - Display team member list
+    - Send invitations
+    - Manage member roles
+    - Remove team members
+"""
 
 import logging
 from typing import Annotated
@@ -11,7 +44,7 @@ from sqlalchemy.exc import SQLAlchemyError
 
 from app.config import settings
 from app.core import workos_client
-from app.core.exceptions import DatabaseError, WorkOSError
+from shared.exceptions import DatabaseError, WorkOSError
 from app.core.permissions import require_role
 from app.core.roles import normalize_role
 from app.dependencies import get_current_org, get_current_user
@@ -39,7 +72,54 @@ async def list_team_members(
     """
     List all members of the current organization.
     
-    Uses batch fetching to avoid N+1 query problem.
+    This endpoint returns all team members for the current organization with
+    their roles, status, and activity information. It uses batch fetching
+    to optimize database queries and avoid N+1 query problems.
+    
+    Process:
+        1. Fetches organization memberships from WorkOS
+        2. Batch fetches all users from local database
+        3. Syncs missing users from WorkOS if needed
+        4. Combines membership and user data
+        5. Returns enriched team member information
+    
+    Authentication:
+        Required (session cookie)
+    
+    Authorization:
+        Requires admin, member, or viewer role
+        
+    Headers:
+        X-Organization-ID: Current organization ID
+        
+    Returns:
+        list[TeamMemberResponse]: List of team members with:
+            - User information (email, name, avatar)
+            - Role information (slug and display name)
+            - Status (active, pending, inactive)
+            - Activity tracking (last_active, joined_at)
+            
+    Example:
+        >>> GET /team/members
+        [
+            {
+                "id": "membership_01ABC123",
+                "user_id": "user_01XYZ789",
+                "email": "john@example.com",
+                "name": "John Doe",
+                "role": "admin",
+                "role_display_name": "Admin",
+                "status": "active",
+                "avatar_url": "https://...",
+                "last_active": "2024-01-01T12:00:00Z",
+                "joined_at": "2023-12-01T10:00:00Z"
+            }
+        ]
+    
+    Performance:
+        - Uses batch fetching to avoid N+1 queries
+        - Fetches all users in a single database query
+        - Only syncs missing users from WorkOS when needed
     """
     memberships = workos_client.list_organization_memberships(
         organization_id=org.id,
@@ -138,10 +218,62 @@ async def invite_member(
     """
     Invite a new member to the organization.
     
-    Requires `admin` or `member` role. The invited user will receive an email
-    with a link to join the organization.
+    This endpoint sends an invitation email to a user to join the organization.
+    The invitation is sent via WorkOS, which handles the email delivery and
+    invitation acceptance flow.
     
-    Rate limited to 20 invitations per hour per IP address.
+    Process:
+        1. Validates user has permission to invite (admin or member)
+        2. Sends invitation via WorkOS API
+        3. WorkOS sends email to the invited user
+        4. User clicks link in email to accept invitation
+        5. User is added to organization with specified role
+    
+    Authentication:
+        Required (session cookie)
+    
+    Authorization:
+        Requires admin or member role
+        
+    Headers:
+        X-Organization-ID: Current organization ID
+        
+    Rate Limiting:
+        20 invitations per hour per IP address
+        
+    Request Body:
+        {
+            "email": "newuser@example.com",
+            "role": "member"  # Optional, defaults to "member"
+        }
+        
+    Returns:
+        dict: Invitation details:
+            - success: Whether invitation was sent
+            - invitation_id: WorkOS invitation ID
+            - email: Invited email address
+            - message: Success message
+            
+    Example:
+        >>> POST /team/invite
+        {
+            "email": "newuser@example.com",
+            "role": "member"
+        }
+        
+        Response:
+        {
+            "success": true,
+            "invitation_id": "inv_01ABC123",
+            "email": "newuser@example.com",
+            "message": "Invitation sent to newuser@example.com"
+        }
+    
+    Error Handling:
+        - 400: Invalid email or WorkOS API error
+        - 403: Insufficient permissions
+        - 429: Rate limit exceeded
+        - 503: WorkOS service unavailable
     """
     try:
         invitation = workos_client.send_invitation(
@@ -186,7 +318,53 @@ async def update_member_role(
     org: Organization = Depends(get_current_org),
     _: str = Depends(require_role(["admin"])),
 ):
-    """Update a team member's role."""
+    """
+    Update a team member's role in the organization.
+    
+    This endpoint changes a team member's role (e.g., from "member" to "admin").
+    Only admins can update roles. The change is immediately effective.
+    
+    Authentication:
+        Required (session cookie)
+    
+    Authorization:
+        Requires admin role only
+        
+    Headers:
+        X-Organization-ID: Current organization ID
+        
+    Path Parameters:
+        membership_id: WorkOS organization membership ID
+        
+    Request Body:
+        {
+            "role": "admin"  # Must be "admin", "member", or "viewer"
+        }
+        
+    Returns:
+        dict: Update confirmation:
+            - success: Whether update succeeded
+            - membership_id: Updated membership ID
+            - new_role: New role assigned
+            
+    Example:
+        >>> PATCH /team/members/membership_01ABC123/role
+        {
+            "role": "admin"
+        }
+        
+        Response:
+        {
+            "success": true,
+            "membership_id": "membership_01ABC123",
+            "new_role": "admin"
+        }
+    
+    Error Handling:
+        - 400: Invalid role or WorkOS API error
+        - 403: Insufficient permissions (not admin)
+        - 503: WorkOS service unavailable
+    """
     try:
         workos_client.update_organization_membership(
             membership_id=membership_id,
@@ -227,7 +405,52 @@ async def remove_member(
     current_user: User = Depends(get_current_user),
     _: str = Depends(require_role(["admin"])),
 ):
-    """Remove a member from the organization."""
+    """
+    Remove a member from the organization.
+    
+    This endpoint removes a team member from the organization. The member
+    loses access to the organization immediately. Only admins can remove members.
+    
+    Safety Checks:
+        - Prevents users from removing themselves
+        - Verifies membership belongs to current organization
+        - Requires admin role
+    
+    Authentication:
+        Required (session cookie)
+    
+    Authorization:
+        Requires admin role only
+        
+    Headers:
+        X-Organization-ID: Current organization ID
+        
+    Path Parameters:
+        membership_id: WorkOS organization membership ID to remove
+        
+    Returns:
+        dict: Removal confirmation:
+            - success: Whether removal succeeded
+            - message: Success message
+            
+    Example:
+        >>> DELETE /team/members/membership_01ABC123
+        
+        Response:
+        {
+            "success": true,
+            "message": "Member removed from organization"
+        }
+    
+    Error Handling:
+        - 400: Cannot remove yourself, invalid membership, or WorkOS API error
+        - 403: Insufficient permissions (not admin)
+        - 503: WorkOS service unavailable
+    
+    Note:
+        Users cannot remove themselves from an organization. This prevents
+        accidental lockouts. To leave an organization, use a different method.
+    """
     try:
         membership = workos_client.get_organization_membership(membership_id)
 

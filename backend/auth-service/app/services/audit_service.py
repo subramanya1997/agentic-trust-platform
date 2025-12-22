@@ -1,4 +1,30 @@
-"""Audit log service for syncing and querying audit events."""
+"""Audit log service for syncing and querying audit events.
+
+This module provides the AuditService class for managing audit logs. It handles
+syncing audit events from WorkOS and querying audit events from the local database.
+
+Key Features:
+- Sync audit events from WorkOS to local database
+- Query audit events with filtering and pagination
+- Create custom audit events for local actions
+- Deduplication of synced events
+- Efficient batch operations
+
+Audit Event Sources:
+- WorkOS: Synced from WorkOS audit logs (user.login, org.create, etc.)
+- Custom: Created locally for application-specific events (agent.create, etc.)
+
+Usage:
+    from app.services import get_audit_service
+    
+    @router.get("/audit/events")
+    async def list_events(
+        org_id: str,
+        service: AuditService = Depends(get_audit_service)
+    ):
+        events = await service.list_events(org_id, limit=50)
+        return events
+"""
 
 import logging
 from datetime import datetime
@@ -14,7 +40,31 @@ logger = logging.getLogger(__name__)
 
 
 class AuditService:
-    """Service for syncing and querying audit logs."""
+    """
+    Service for syncing and querying audit logs.
+    
+    This service manages audit event synchronization from WorkOS and provides
+    querying capabilities for audit events. It handles both WorkOS-synced
+    events and custom events created by the application.
+    
+    Key Responsibilities:
+    - Sync audit events from WorkOS to local database
+    - Query audit events with filtering and pagination
+    - Create custom audit events for application actions
+    - Deduplicate synced events to prevent duplicates
+    
+    Event Deduplication:
+    - Uses WorkOS event ID stored in event_metadata
+    - Prevents duplicate events from multiple syncs
+    - Handles events without WorkOS IDs gracefully
+    
+    Example:
+        service = AuditService(db_session)
+        # Sync events from WorkOS
+        count = await service.sync_workos_events(org_id, limit=100)
+        # Query events
+        events = await service.list_events(org_id, limit=50, offset=0)
+    """
 
     def __init__(self, db: AsyncSession):
         self.db = db

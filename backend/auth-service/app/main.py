@@ -1,4 +1,34 @@
-"""Agentic Trust Auth Service - Main application entry point."""
+"""Agentic Trust Auth Service - Main application entry point.
+
+This module is the FastAPI application entry point. It configures the application,
+sets up middleware, registers routes, and handles application lifecycle events.
+
+Application Structure:
+    - FastAPI app with lifespan management
+    - Middleware stack (security, logging, rate limiting, error handling)
+    - Route registration (auth, organizations, team, permissions, audit)
+    - Prometheus metrics endpoint
+    - OpenTelemetry distributed tracing
+
+Middleware Order (critical for proper operation):
+    1. SecurityHeadersMiddleware - Adds security headers to all responses
+    2. PrometheusMiddleware - Tracks metrics for all requests
+    3. RequestContextMiddleware - Binds request context for logging
+    4. ExceptionHandlerMiddleware - Catches and formats exceptions
+    5. SlowAPIMiddleware - Rate limiting
+    6. CORSMiddleware - CORS handling
+
+Lifecycle Events:
+    - Startup: Initialize database, setup logging, configure tracing
+    - Shutdown: Close database connections, cleanup resources
+
+Usage:
+    # Development
+    uvicorn app.main:app --reload --port 8000
+    
+    # Production
+    uvicorn app.main:app --host 0.0.0.0 --port 8000
+"""
 
 import os
 from contextlib import asynccontextmanager
@@ -26,7 +56,21 @@ from app.routers import audit, auth, health, organizations, permissions, team
 
 
 def initialize_logging() -> None:
-    """Initialize structured logging based on configuration settings."""
+    """
+    Initialize structured logging based on configuration settings.
+    
+    This function sets up structured logging with the appropriate format
+    based on the environment. In development, it uses colored console output.
+    In production, it uses JSON format for log aggregation systems.
+    
+    Logging Configuration:
+        - Development (debug=True): Colored console output
+        - Production (debug=False): JSON output for log aggregation
+        - Request correlation: Automatic request_id, org_id, user_id, trace_id
+        - Service context: service name, environment, version in all logs
+    
+    Called before app creation to ensure all startup logs are properly formatted.
+    """
     setup_structured_logging(
         service_name=settings.service_name,
         environment=settings.service_env,
@@ -37,32 +81,77 @@ def initialize_logging() -> None:
 
 
 # Initialize logging before creating the app
+# This ensures all logs (including startup) are properly formatted
 initialize_logging()
 logger = get_logger(__name__)
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    """Application lifespan handler."""
+    """
+    Application lifespan handler for startup and shutdown events.
+    
+    This context manager handles application lifecycle events:
+    - Startup: Initialize database, verify connectivity
+    - Shutdown: Close database connections, cleanup resources
+    
+    Startup Process:
+        1. Initialize database tables (if needed)
+        2. Verify database connectivity
+        3. Log startup completion
+        4. Continue to request handling
+    
+    Shutdown Process:
+        1. Log shutdown initiation
+        2. Close database connection pool
+        3. Cleanup any remaining resources
+    
+    Error Handling:
+        - Database connection failures are logged but don't prevent startup
+        - Application can start without database (useful for health checks)
+        - Database operations will fail gracefully if database unavailable
+    
+    Args:
+        app: FastAPI application instance
+        
+    Yields:
+        None: Control returns to FastAPI for request handling
+        
+    Example:
+        The lifespan context manager is automatically used by FastAPI:
+        
+        app = FastAPI(lifespan=lifespan)
+        # FastAPI calls lifespan on startup and shutdown
+    """
     # Startup
     logger.info("Starting Agentic Trust API...")
     try:
+        # Initialize database tables (creates tables if they don't exist)
+        # In production, use Alembic migrations instead
         await init_db()
         logger.info("Database connected successfully")
     except Exception as e:
+        # Log warning but don't fail startup
+        # This allows the app to start even if database is temporarily unavailable
+        # Useful for health checks and graceful degradation
         logger.warning(f"Could not connect to database: {e}")
         logger.warning("Server will start, but database operations will fail")
         logger.warning("Make sure PostgreSQL is running: docker-compose up -d")
     
     logger.info(f"Application started - API URL: {settings.api_url}")
+    
+    # Yield control to FastAPI for request handling
+    # Code after yield runs on shutdown
     yield
     
     # Shutdown
     logger.info("Shutting down Agentic Trust API...")
     try:
+        # Close all database connections in the pool
         await close_db()
         logger.info("Database connections closed")
     except Exception as e:
+        # Log error but don't raise (shutdown should complete)
         logger.error(f"Error closing database connections: {e}")
 
 

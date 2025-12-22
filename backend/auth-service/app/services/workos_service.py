@@ -1,4 +1,36 @@
-"""WorkOS synchronization service."""
+"""WorkOS synchronization service.
+
+This module provides the WorkOSService class for synchronizing data between
+WorkOS and the local database. It handles user and organization syncing with
+proper error handling, retry logic, and conflict resolution.
+
+Key Features:
+- User synchronization from WorkOS to local database
+- Organization synchronization with retry logic
+- Concurrent modification handling (SELECT FOR UPDATE)
+- Exponential backoff retry for transient failures
+- Automatic user/organization creation on first sync
+- Update tracking with timestamps
+
+Synchronization Strategy:
+- Users: Synced on first login and when data changes
+- Organizations: Synced when accessed and when created
+- Retry Logic: 3 attempts with exponential backoff
+- Locking: SELECT FOR UPDATE prevents concurrent modification conflicts
+
+Usage:
+    from app.services import get_workos_service
+    from app.dependencies import get_db
+    
+    @router.get("/users/me")
+    async def get_me(
+        db: AsyncSession = Depends(get_db),
+        service: WorkOSService = Depends(get_workos_service)
+    ):
+        # Service is automatically injected with db session
+        user = await service.sync_user_from_session(session.user)
+        return user
+"""
 
 import asyncio
 import logging
@@ -8,7 +40,7 @@ from sqlalchemy.exc import IntegrityError, OperationalError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core import workos_client
-from app.core.exceptions import DatabaseError
+from shared.exceptions import DatabaseError
 from app.core.session import SessionUser
 from app.core.time import utc_now
 from app.models import Organization, User
@@ -17,7 +49,36 @@ logger = logging.getLogger(__name__)
 
 
 class WorkOSService:
-    """Service for syncing WorkOS data to local database."""
+    """
+    Service for syncing WorkOS data to local database.
+    
+    This service handles bidirectional synchronization between WorkOS (source
+    of truth for user/org data) and the local database (for fast access).
+    It provides methods for syncing users and organizations with proper
+    error handling and conflict resolution.
+    
+    Key Responsibilities:
+    - Sync users from WorkOS to local database
+    - Sync organizations from WorkOS to local database
+    - Handle concurrent modifications with row-level locking
+    - Retry transient failures with exponential backoff
+    - Update timestamps on data changes
+    
+    Concurrency Handling:
+    - Uses SELECT FOR UPDATE to lock rows during updates
+    - Prevents lost updates from concurrent modifications
+    - Uses savepoints for nested transaction handling
+    
+    Error Handling:
+    - Retries transient database errors (IntegrityError, OperationalError)
+    - Exponential backoff between retries
+    - Raises DatabaseError after max retries exceeded
+    
+    Example:
+        service = WorkOSService(db_session)
+        user = await service.sync_user_from_session(session_user)
+        org = await service.sync_organization(org_id)
+    """
 
     def __init__(self, db: AsyncSession):
         self.db = db
@@ -107,7 +168,28 @@ class WorkOSService:
                 await asyncio.sleep(wait_time)
 
     async def sync_user_from_session(self, session_user: SessionUser) -> User:
-        """Sync user from WorkOS session to local database."""
+        """
+        Sync user from WorkOS session to local database.
+        
+        This method is called when a user authenticates and their session
+        contains user data. It syncs the user to the local database for
+        faster access on subsequent requests.
+        
+        Args:
+            session_user: SessionUser object from validated WorkOS session
+            
+        Returns:
+            User: Synced User instance from database
+            
+        Raises:
+            DatabaseError: If sync fails after all retries
+            
+        Example:
+            >>> session_user = SessionUser(id="user_123", email="user@example.com")
+            >>> user = await service.sync_user_from_session(session_user)
+            >>> user.id
+            "user_123"
+        """
         return await self._sync_user_data(
             user_id=session_user.id,
             email=session_user.email,
@@ -118,7 +200,26 @@ class WorkOSService:
         )
 
     async def sync_user(self, workos_user) -> User:
-        """Sync user from WorkOS API response to local database."""
+        """
+        Sync user from WorkOS API response to local database.
+        
+        This method syncs a user from a WorkOS API response (e.g., from
+        get_user() call) to the local database. Use this when you have
+        a WorkOSUser object from an API call.
+        
+        Args:
+            workos_user: WorkOSUser object from WorkOS API
+            
+        Returns:
+            User: Synced User instance from database
+            
+        Raises:
+            DatabaseError: If sync fails after all retries
+            
+        Example:
+            >>> workos_user = workos_client.get_user("user_123")
+            >>> user = await service.sync_user(workos_user)
+        """
         return await self._sync_user_data(
             user_id=workos_user.id,
             email=workos_user.email,
@@ -190,7 +291,25 @@ class WorkOSService:
         user: User,
         ip_address: str | None = None,
     ) -> User:
-        """Update user's last login timestamp."""
+        """
+        Update user's last login timestamp and IP address.
+        
+        This method tracks when and from where a user last logged in.
+        It's called after successful authentication to update login tracking.
+        
+        Args:
+            user: User instance to update
+            ip_address: IP address of the login request (optional)
+            
+        Returns:
+            User: Updated User instance
+            
+        Example:
+            >>> user = await service.get_user_by_id("user_123")
+            >>> updated_user = await service.update_user_login(user, ip_address="192.168.1.1")
+            >>> updated_user.last_login_at
+            datetime.datetime(2024, 1, 1, 12, 0, 0, tzinfo=timezone.utc)
+        """
         user.last_login_at = utc_now()
         if ip_address:
             user.last_login_ip = ip_address
@@ -202,13 +321,37 @@ class WorkOSService:
     async def ensure_user_has_organization(self, user: User) -> Organization:
         """
         Ensure user has at least one organization.
-        If user has no organizations, create a personal workspace and add user as admin.
+        
+        This method guarantees that every user has at least one organization.
+        If the user has no organizations, it creates a personal workspace
+        and adds the user as an admin member.
+        
+        Personal Workspace:
+            - Name: "{FirstName}'s Workspace" or "{EmailPrefix}'s Workspace"
+            - Flagged as personal workspace (is_personal_workspace=True)
+            - User is set as owner (owner_user_id=user.id)
+            - User has admin role
+        
+        Process:
+            1. Check if user has any organization memberships
+            2. If yes, return the first organization
+            3. If no, create personal workspace in WorkOS
+            4. Add user as admin member
+            5. Sync to local database with personal workspace flags
         
         Args:
             user: The user to check
             
         Returns:
-            The user's organization (existing or newly created)
+            Organization: The user's organization (existing or newly created)
+            
+        Example:
+            >>> user = await service.get_user_by_id("user_123")
+            >>> org = await service.ensure_user_has_organization(user)
+            >>> org.is_personal_workspace
+            True
+            >>> org.owner_user_id
+            "user_123"
         """
         import logging
         

@@ -1,4 +1,26 @@
-"""Integration tests for authentication routes."""
+"""Integration tests for authentication routes.
+
+This module contains integration tests for the authentication endpoints
+in the auth-service. These tests verify the complete authentication flow
+including login URL generation, OAuth callback handling, session management,
+and logout functionality.
+
+Test Coverage:
+    - Login URL generation (with and without provider)
+    - OAuth callback success and failure scenarios
+    - Logout functionality
+    - Unauthenticated access attempts
+    - Session cookie management
+
+Fixtures Used:
+    - client: Async HTTP client for making requests
+    - test_db: Database session for data verification
+    - mock_workos_client: Mock WorkOS client for external API calls
+
+Note:
+    These tests mock WorkOS API calls to avoid external dependencies.
+    Real integration tests would require a WorkOS test environment.
+"""
 
 import pytest
 from httpx import AsyncClient

@@ -1,4 +1,35 @@
-"""Permission information routes - fetches roles from WorkOS."""
+"""Permission information routes - fetches roles from WorkOS.
+
+This module provides endpoints for querying role and permission information.
+It integrates with WorkOS to fetch role definitions and builds a comprehensive
+permission matrix for the frontend.
+
+Endpoints:
+    - GET /permissions/roles: List all available roles
+    - GET /permissions/organization-roles: Get roles with permissions for current org
+    - GET /permissions/me: Get current user's role
+
+Key Features:
+    - Fetches roles from WorkOS API
+    - Builds permission matrix from role definitions
+    - Provides fallback roles if WorkOS doesn't have roles configured
+    - Maps permissions to human-readable names and categories
+
+Permission Categories:
+    - Agents: Agent creation and management
+    - Integrations: External service integrations
+    - Team: Team member management
+    - Organization: Organization settings
+    - Billing: Billing and subscription management
+    - API Keys: API key management
+    - MCP: MCP server management
+
+Usage:
+    These endpoints are used by the frontend to:
+    - Display available roles in UI
+    - Show permission matrix for role management
+    - Check user's current role and permissions
+"""
 
 import logging
 
@@ -55,7 +86,43 @@ PERMISSION_DEFINITIONS = {
 
 @router.get("/roles", response_model=list[RoleInfo])
 async def list_roles():
-    """List all available roles from WorkOS."""
+    """
+    List all available roles from WorkOS.
+    
+    This endpoint fetches all available roles from WorkOS and returns them
+    in a simplified format. If WorkOS doesn't have roles configured, it
+    returns default roles (admin, member, viewer).
+    
+    Authentication:
+        Not required (public endpoint)
+    
+    Returns:
+        list[RoleInfo]: List of available roles with slug, name, and description
+        
+    Example:
+        >>> GET /permissions/roles
+        [
+            {
+                "slug": "admin",
+                "name": "Admin",
+                "description": "Full access to all features"
+            },
+            {
+                "slug": "member",
+                "name": "Member",
+                "description": "Can create and manage agents, integrations"
+            },
+            {
+                "slug": "viewer",
+                "name": "Viewer",
+                "description": "Read-only access"
+            }
+        ]
+    
+    Note:
+        If WorkOS API fails or doesn't have roles configured, returns
+        default roles to ensure the frontend always has role information.
+    """
     try:
         roles = workos_client.list_roles()
         return [
@@ -84,7 +151,61 @@ async def get_organization_roles_with_permissions(session=Depends(get_session)):
     """
     Get roles with their permissions for the current organization.
     
-    Returns roles from WorkOS along with a permission matrix.
+    This endpoint provides a comprehensive view of all roles, permissions,
+    and their relationships for the current organization. It's used by the
+    frontend to build permission management UI.
+    
+    Process:
+        1. Fetches roles from WorkOS for the current organization
+        2. Extracts permissions from each role
+        3. Builds permission definitions with human-readable names
+        4. Creates role-permission mappings
+        5. Returns complete permission structure
+    
+    Authentication:
+        Required (session cookie)
+    
+    Headers:
+        X-Organization-ID: Current organization ID
+        
+    Returns:
+        PermissionsResponse: Complete permission structure containing:
+            - roles: List of roles with their permissions
+            - permissions: List of all available permissions
+            - rolePermissions: Mappings of roles to permissions
+            
+    Example:
+        >>> GET /permissions/organization-roles
+        {
+            "roles": [
+                {
+                    "id": "role_01ABC123",
+                    "slug": "admin",
+                    "name": "Admin",
+                    "permissions": ["*"]
+                }
+            ],
+            "permissions": [
+                {
+                    "id": "agents:create",
+                    "name": "Create Agents",
+                    "description": "Create new AI agents",
+                    "category": "Agents"
+                }
+            ],
+            "rolePermissions": [
+                {
+                    "roleId": "admin",
+                    "roleName": "Admin",
+                    "permissions": ["*"]
+                }
+            ]
+        }
+    
+    Note:
+        If no organization is selected (missing X-Organization-ID header),
+        returns empty structure. Permissions are enriched with human-readable
+        names from PERMISSION_DEFINITIONS dictionary.
     """
     organization_id = session.organization_id
     
@@ -160,7 +281,33 @@ async def get_organization_roles_with_permissions(session=Depends(get_session)):
 
 @router.get("/me", response_model=MyRoleResponse)
 async def get_my_role(session=Depends(get_session)):
-    """Get current user's role in the selected organization."""
+    """
+    Get current user's role in the selected organization.
+    
+    This endpoint returns the authenticated user's role in the current
+    organization context. It's used by the frontend to determine what
+    actions the user can perform.
+    
+    Authentication:
+        Required (session cookie)
+    
+    Headers:
+        X-Organization-ID: Current organization ID (optional)
+        
+    Returns:
+        MyRoleResponse: User's role and organization ID
+        
+    Example:
+        >>> GET /permissions/me
+        {
+            "role": "admin",
+            "organization_id": "org_01ABC123"
+        }
+    
+    Note:
+        If no organization is selected, organization_id will be None.
+        Role will be None if user is not a member of the organization.
+    """
     return MyRoleResponse(
         role=session.role,
         organization_id=session.organization_id,

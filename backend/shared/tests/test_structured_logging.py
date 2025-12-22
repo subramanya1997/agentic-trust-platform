@@ -1,4 +1,48 @@
-"""Tests for structured logging functionality."""
+"""Tests for structured logging functionality.
+
+This module contains tests for the structured logging system built on
+structlog. The logging system provides JSON output in production and
+colored console output in development, with automatic context binding.
+
+Test Coverage:
+    - Context variable binding (request_id, org_id, user_id, trace_id)
+    - Context clearing
+    - Structured logging setup (development vs production)
+    - JSON output format in production
+    - Context inclusion in log entries
+    - Multiple logger instances sharing context
+    - Logging without context (graceful degradation)
+
+Logging Modes:
+    - Development: Colored console output with human-readable format
+    - Production: JSON output for log aggregation systems
+
+Context Variables:
+    - request_id: Request identifier for correlation
+    - org_id: Organization ID for multi-tenant logging
+    - user_id: User ID for audit trails
+    - trace_id: Distributed trace ID for observability
+
+Log Format (Production):
+    {
+        "event": "log message",
+        "level": "info",
+        "logger": "module.name",
+        "timestamp": "2024-01-01T00:00:00Z",
+        "request_id": "req-123",
+        "org_id": "org-456",
+        "user_id": "user-789",
+        "trace_id": "trace-abc",
+        "extra_field": "value"
+    }
+
+Usage:
+    from shared.log_config import get_logger, bind_request_context
+    
+    bind_request_context(request_id="req-123", org_id="org-456")
+    logger = get_logger(__name__)
+    logger.info("User logged in", user_id="user-789")
+"""
 
 import json
 import logging

@@ -1,4 +1,32 @@
-"""Prometheus metrics for monitoring and observability."""
+"""Prometheus metrics for monitoring and observability.
+
+This module defines all Prometheus metrics used for monitoring the auth service.
+Metrics are exposed at /metrics endpoint and can be scraped by Prometheus
+or other monitoring systems.
+
+Metric Types:
+    - Counter: Incrementing counters (e.g., request counts, errors)
+    - Gauge: Values that can go up or down (e.g., active connections)
+    - Histogram: Distribution of values (e.g., request latency)
+
+Metric Categories:
+    - Request metrics: HTTP request tracking
+    - Database metrics: Query performance and connection pool
+    - Cache metrics: Cache hit/miss rates
+    - User metrics: Session and login tracking
+    - WorkOS API metrics: External API call tracking
+    - Exception metrics: Error tracking by type
+    - Circuit breaker metrics: Circuit breaker state tracking
+
+Usage:
+    Metrics are automatically collected by middleware and instrumented code.
+    Access metrics at http://localhost:8000/metrics
+    
+    Example Prometheus queries:
+    - Rate of authentication requests: rate(auth_requests_total[5m])
+    - Database query p95 latency: histogram_quantile(0.95, db_query_duration_seconds_bucket)
+    - Active sessions: active_sessions
+"""
 
 from prometheus_client import Counter, Gauge, Histogram
 

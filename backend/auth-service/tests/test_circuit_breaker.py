@@ -1,4 +1,31 @@
-"""Unit tests for circuit breaker functionality."""
+"""Unit tests for circuit breaker functionality.
+
+This module contains comprehensive tests for the circuit breaker pattern
+implementation. The circuit breaker protects against cascading failures
+from external services by opening the circuit after a threshold of failures.
+
+Test Coverage:
+    - Circuit breaker states (closed, open, half-open)
+    - Failure threshold and circuit opening
+    - Recovery after timeout
+    - Different exception types (network errors, timeouts, HTTP errors)
+    - Multiple independent circuit breakers per service
+    - Metrics tracking
+    - Function metadata preservation
+    - Integration with WorkOS client
+
+Circuit Breaker Behavior:
+    - Closed: Normal operation, requests pass through
+    - Open: Circuit opened after threshold failures, requests rejected immediately
+    - Half-open: After timeout, allows test requests to check if service recovered
+
+Test Scenarios:
+    - Successful calls when circuit is closed
+    - Circuit opening after consecutive failures
+    - Immediate rejection when circuit is open
+    - Recovery attempts after timeout (half-open state)
+    - Independent circuit breakers for different services
+"""
 
 import time
 from unittest.mock import MagicMock, patch

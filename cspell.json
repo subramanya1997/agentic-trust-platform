@@ -55,7 +55,18 @@
     "httpcore",
     "healthcheck",
     "psql",
-    "pythonpath"
+    "pythonpath",
+    "authkit",
+    "structlog",
+    "dbname",
+    "timedelta",
+    "clickjacking",
+    "nosniff",
+    "geolocation",
+    "slowapi",
+    "contextvars",
+    "startswith",
+    "pyjwt"
   ],
   "ignorePaths": [
     "node_modules/**",

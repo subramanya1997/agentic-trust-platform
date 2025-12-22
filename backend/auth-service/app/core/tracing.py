@@ -1,4 +1,36 @@
-"""OpenTelemetry distributed tracing configuration."""
+"""OpenTelemetry distributed tracing configuration.
+
+This module configures OpenTelemetry distributed tracing for the auth service.
+It instruments FastAPI and SQLAlchemy to automatically create spans for requests
+and database queries, enabling end-to-end request tracing across services.
+
+Key Features:
+- Automatic HTTP request tracing (FastAPI instrumentation)
+- Database query tracing (SQLAlchemy instrumentation)
+- Trace context propagation across services
+- OTLP exporter for trace collection (Jaeger, Zipkin, etc.)
+- Service metadata in traces (name, version, environment)
+
+Trace Collection:
+    Traces are exported via OTLP (OpenTelemetry Protocol) to a collector.
+    Set OTEL_EXPORTER_OTLP_ENDPOINT environment variable to configure endpoint.
+    
+    Example collectors:
+    - Jaeger: http://jaeger:4317
+    - Zipkin: http://zipkin:9411
+    - OpenTelemetry Collector: http://otel-collector:4317
+
+Usage:
+    Tracing is automatically enabled when OTEL_EXPORTER_OTLP_ENDPOINT is set.
+    Manual spans can be created using get_tracer():
+    
+    from app.core.tracing import get_tracer
+    
+    tracer = get_tracer(__name__)
+    with tracer.start_as_current_span("operation") as span:
+        span.set_attribute("user.id", user_id)
+        # ... do work ...
+"""
 
 import logging
 

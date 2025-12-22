@@ -1,4 +1,35 @@
-"""Tests for health check endpoint."""
+"""Tests for health check endpoint.
+
+This module contains tests for the health check endpoints used for
+monitoring and deployment orchestration. Health checks verify that
+the service is running and its dependencies are available.
+
+Test Coverage:
+    - Basic health check endpoint response
+    - Health status values (healthy, degraded)
+    - Service identification
+    - Comprehensive health checks format
+
+Health Check Endpoints:
+    - GET /health: Comprehensive health check with dependency status
+    - GET /health/live: Liveness probe (always returns 200 if service is running)
+    - GET /health/ready: Readiness probe (checks database connectivity)
+
+Response Format:
+    {
+        "status": "healthy" | "degraded",
+        "service": "agentic-trust-api",
+        "checks": {
+            "database": "ok" | "degraded" | "down",
+            "redis": "ok" | "degraded" | "down",
+            ...
+        }
+    }
+
+Note:
+    Health checks are critical for Kubernetes deployments and load balancers
+    to determine if a service instance should receive traffic.
+"""
 
 import pytest
 from httpx import ASGITransport, AsyncClient

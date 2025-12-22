@@ -1,4 +1,41 @@
-"""Input validation and sanitization utilities."""
+"""Input validation and sanitization utilities.
+
+This module provides comprehensive input validation and sanitization functions
+to prevent security vulnerabilities like XSS attacks, SQL injection, and
+data corruption. All validators are designed to be used with Pydantic models
+via Annotated types.
+
+Key Features:
+- HTML sanitization to prevent XSS attacks
+- Null byte removal to prevent security bypasses
+- Email format validation (RFC 5322 compliant)
+- URL-safe slug validation
+- Role validation against allowed values
+- URL format validation
+
+Security Considerations:
+- All string inputs are sanitized to remove HTML tags
+- Null bytes are removed to prevent security bypasses
+- Email validation prevents injection attacks
+- Slug validation prevents SQL injection via special characters
+- Role validation prevents privilege escalation
+
+Usage:
+    from app.core.validators import (
+        SanitizedString,
+        ValidatedEmail,
+        ValidatedSlug,
+        ValidatedName,
+        ValidatedUrl,
+        ValidatedRole
+    )
+    from pydantic import BaseModel
+    
+    class MyModel(BaseModel):
+        name: ValidatedName  # Automatically sanitized and validated
+        email: ValidatedEmail  # Validated email format
+        slug: ValidatedSlug  # URL-safe slug
+"""
 
 import re
 from typing import Annotated
@@ -206,23 +243,36 @@ def validate_role(value: str) -> str:
 
 # Annotated types for use in Pydantic models
 # These apply validation automatically when used in model fields
+# Usage: field_name: ValidatedEmail = Field(...)
 
 # Basic sanitized string (HTML stripped, null bytes removed, whitespace normalized)
+# Use for any free-form text input that needs sanitization
+# Example: description: SanitizedString
 SanitizedString = Annotated[str, BeforeValidator(sanitize_string)]
 
-# Email address (validated format and normalized)
+# Email address (validated format and normalized to lowercase)
+# Validates RFC 5322 compliant format and enforces max 254 characters
+# Example: email: ValidatedEmail
 ValidatedEmail = Annotated[str, AfterValidator(validate_email)]
 
-# URL-safe slug (alphanumeric + hyphens only)
+# URL-safe slug (alphanumeric + hyphens only, max 100 chars)
+# Must start and end with alphanumeric, no consecutive hyphens
+# Example: slug: ValidatedSlug
 ValidatedSlug = Annotated[str, AfterValidator(validate_slug)]
 
-# Name field (sanitized + length validation)
+# Name field (sanitized + length validation: 1-255 characters)
+# Combines sanitization with length checks for name fields
+# Example: name: ValidatedName
 ValidatedName = Annotated[str, BeforeValidator(sanitize_string), AfterValidator(validate_name)]
 
-# URL (http/https scheme validation)
+# URL (http/https scheme validation, max 2048 characters)
+# Allows None for optional URL fields
+# Example: logo_url: ValidatedUrl
 ValidatedUrl = Annotated[str | None, AfterValidator(validate_url)]
 
-# Role (restricted to known values)
+# Role (restricted to known values: admin, member, viewer)
+# Normalizes to lowercase and validates against allowed roles
+# Example: role: ValidatedRole
 ValidatedRole = Annotated[str, AfterValidator(validate_role)]
 
 

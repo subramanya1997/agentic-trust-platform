@@ -1,4 +1,27 @@
-"""Health check endpoints."""
+"""Health check endpoints.
+
+This module provides health check endpoints for monitoring and orchestration.
+These endpoints are used by container orchestration systems (Kubernetes, Docker)
+and monitoring tools to determine service health and readiness.
+
+Endpoints:
+    - GET /health: Comprehensive health check with dependency verification
+    - GET /health/live: Liveness check (service is running)
+    - GET /health/ready: Readiness check (service can accept traffic)
+    - GET /: Root endpoint with service information
+
+Health Checks:
+    - Database connectivity (PostgreSQL)
+    - Redis connectivity
+    - WorkOS circuit breaker state
+
+Usage:
+    These endpoints are typically called by:
+    - Kubernetes liveness/readiness probes
+    - Docker health checks
+    - Load balancers for health monitoring
+    - Monitoring systems (Prometheus, Datadog, etc.)
+"""
 
 import logging
 
@@ -58,12 +81,47 @@ async def health_check():
     """
     Comprehensive health check endpoint.
     
-    Checks:
-    - Service availability (always passes)
-    - Database connectivity (SELECT 1 query)
-    - Redis connectivity (PING command)
+    This endpoint performs health checks on all critical dependencies:
+    - Database: Executes SELECT 1 query to verify connectivity
+    - Redis: Sends PING command to verify connectivity
+    - WorkOS Circuit Breaker: Checks circuit breaker state
     
-    Returns 200 if all checks pass, 503 if any dependency is unhealthy.
+    Response Status Codes:
+        - 200: All checks passed (healthy)
+        - 503: One or more dependencies unhealthy (degraded)
+    
+    Response Format:
+        {
+            "status": "healthy" | "degraded",
+            "service": "agentic-trust-api",
+            "version": "0.1.0",
+            "checks": {
+                "database": "healthy" | "unhealthy: <error>",
+                "redis": "healthy" | "unhealthy: <error>",
+                "workos_circuit": "closed" | "open" | "half_open"
+            }
+        }
+    
+    Health States:
+        - healthy: All dependencies are operational
+        - degraded: One or more dependencies are unhealthy but service can still function
+    
+    Example:
+        >>> GET /health
+        {
+            "status": "healthy",
+            "service": "agentic-trust-api",
+            "version": "0.1.0",
+            "checks": {
+                "database": "healthy",
+                "redis": "healthy",
+                "workos_circuit": "closed"
+            }
+        }
+    
+    Note:
+        This endpoint does NOT require authentication. It's designed to be
+        accessible to monitoring systems and load balancers.
     """
     checks = {
         "status": "healthy",
@@ -114,7 +172,31 @@ async def liveness_check():
     """
     Liveness check - simple endpoint for container health.
     
-    Returns 200 if the service is running (doesn't check dependencies).
+    This endpoint indicates whether the service process is running. It does
+    NOT check dependencies - it only verifies the service itself is alive.
+    
+    Use Cases:
+        - Kubernetes liveness probe
+        - Docker health check
+        - Process monitoring
+    
+    Response:
+        - Always returns 200 if service is running
+        - Does not check database, Redis, or other dependencies
+        
+    Returns:
+        dict: Simple status response
+        
+    Example:
+        >>> GET /health/live
+        {
+            "status": "alive",
+            "service": "agentic-trust-api"
+        }
+    
+    Note:
+        This endpoint should be fast and lightweight. It's called frequently
+        by orchestration systems to detect if the container needs restarting.
     """
     return {
         "status": "alive",
@@ -127,15 +209,67 @@ async def readiness_check():
     """
     Readiness check - full dependency check.
     
-    Checks all dependencies are available before accepting traffic.
-    Returns 200 if ready, 503 if not ready.
+    This endpoint indicates whether the service is ready to accept traffic.
+    It performs comprehensive health checks on all dependencies.
+    
+    Use Cases:
+        - Kubernetes readiness probe
+        - Load balancer health checks
+        - Traffic routing decisions
+    
+    Response:
+        - 200: Service is ready (all dependencies healthy)
+        - 503: Service is not ready (one or more dependencies unhealthy)
+    
+    Returns:
+        JSONResponse: Same format as /health endpoint
+        
+    Example:
+        >>> GET /health/ready
+        {
+            "status": "healthy",
+            "service": "agentic-trust-api",
+            "version": "0.1.0",
+            "checks": {
+                "database": "healthy",
+                "redis": "healthy",
+                "workos_circuit": "closed"
+            }
+        }
+    
+    Note:
+        This endpoint should be used to determine if the service can handle
+        requests. If it returns 503, the service should not receive traffic.
     """
     return await health_check()
 
 
 @router.get("/")
 async def root():
-    """Root endpoint."""
+    """
+    Root endpoint with service information.
+    
+    This endpoint provides basic service metadata. It's useful for service
+    discovery and API exploration.
+    
+    Returns:
+        dict: Service information including:
+            - name: Application name
+            - version: Service version
+            - docs: Link to API documentation (if debug mode enabled)
+            
+    Example:
+        >>> GET /
+        {
+            "name": "Agentic Trust API",
+            "version": "0.1.0",
+            "docs": "/docs"  # Only in debug mode
+        }
+    
+    Note:
+        The docs field is only included when debug mode is enabled.
+        In production, it will be None.
+    """
     from app.config import settings
 
     return {

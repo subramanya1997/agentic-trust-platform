@@ -1,4 +1,32 @@
-"""Tests for request context middleware."""
+"""Tests for request context middleware.
+
+This module contains tests for the RequestContextMiddleware, which manages
+request-scoped context variables for logging and tracing. The middleware
+extracts and binds request IDs, organization IDs, and trace IDs from headers
+or generates them if not present.
+
+Test Coverage:
+    - Request ID generation (UUID format)
+    - Request ID extraction from X-Request-ID header
+    - Organization ID extraction from X-Organization-ID header
+    - Trace ID extraction from OpenTelemetry (when available)
+    - Context clearing after request completion
+    - Context isolation between requests
+    - Error handling (context cleared even on errors)
+    - OpenTelemetry integration (optional)
+
+Context Variables:
+    - request_id: Unique identifier for each request (UUID)
+    - org_id: Organization ID from header (optional)
+    - trace_id: Distributed trace ID from OpenTelemetry (optional)
+
+Response Headers:
+    - X-Request-ID: Echoed back in response headers for client correlation
+
+Usage:
+    The middleware automatically binds context variables that are then
+    available in structured logging throughout the request lifecycle.
+"""
 
 from unittest.mock import AsyncMock, Mock, patch
 from uuid import UUID

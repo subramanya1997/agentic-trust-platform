@@ -1,4 +1,28 @@
-"""User repository for data access abstraction."""
+"""User repository for data access abstraction.
+
+This module provides repository pattern implementation for user data access.
+It defines both a Protocol interface and a SQLAlchemy implementation, allowing
+for easy testing and potential future database migrations.
+
+Key Features:
+- Protocol-based interface for type safety
+- SQLAlchemy implementation for PostgreSQL
+- Batch operations for performance
+- Clean separation of data access logic
+
+Repository Pattern Benefits:
+- Testability: Easy to mock for unit tests
+- Flexibility: Can swap implementations (e.g., for caching)
+- Clean code: Separates data access from business logic
+
+Usage:
+    from app.repositories import SQLAlchemyUserRepository
+    from app.database import get_db
+    
+    async with get_db() as db:
+        repo = SQLAlchemyUserRepository(db)
+        user = await repo.get_by_email("user@example.com")
+"""
 
 from typing import Protocol
 
@@ -9,7 +33,21 @@ from app.models import User
 
 
 class UserRepository(Protocol):
-    """Protocol defining user repository interface."""
+    """
+    Protocol defining user repository interface.
+    
+    This protocol defines the contract for user data access operations.
+    Any class implementing this protocol must provide these methods.
+    Used for type checking and dependency injection.
+    
+    Methods:
+        - get_by_id: Get user by ID
+        - get_by_email: Get user by email
+        - get_by_ids: Batch get users by IDs
+        - create: Create new user
+        - update: Update existing user
+        - delete: Delete user
+    """
 
     async def get_by_id(self, user_id: str) -> User | None:
         """Get user by ID."""
@@ -37,7 +75,24 @@ class UserRepository(Protocol):
 
 
 class SQLAlchemyUserRepository:
-    """SQLAlchemy implementation of UserRepository."""
+    """
+    SQLAlchemy implementation of UserRepository.
+    
+    This class provides the concrete implementation of user data access
+    using SQLAlchemy and PostgreSQL. It implements all methods from the
+    UserRepository protocol.
+    
+    Key Features:
+    - Async database operations
+    - Batch fetching for performance
+    - Proper session management
+    - Type-safe operations
+    
+    Example:
+        repo = SQLAlchemyUserRepository(db_session)
+        user = await repo.get_by_email("user@example.com")
+        users = await repo.get_by_ids(["user_1", "user_2"])
+    """
 
     def __init__(self, db: AsyncSession):
         """

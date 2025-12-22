@@ -1,4 +1,35 @@
-"""Unit tests for input validation and sanitization."""
+"""Unit tests for input validation and sanitization.
+
+This module contains comprehensive tests for input validation and sanitization
+utilities. These validators protect against common security vulnerabilities
+like XSS, SQL injection, and data corruption.
+
+Test Coverage:
+    - String sanitization (HTML removal, null byte removal, whitespace normalization)
+    - Email validation (format, length, normalization)
+    - Slug validation (format, length, special character rejection)
+    - Name validation (sanitization, length, unicode support)
+    - URL validation (scheme validation, length, dangerous character rejection)
+    - Role validation (allowed values, normalization)
+    - XSS prevention (script tags, event handlers, iframes)
+    - SQL injection prevention (consecutive hyphens, null bytes)
+    - Edge cases (empty strings, max length, unicode, emojis)
+    - Pydantic model integration
+
+Security Features:
+    - XSS Prevention: Removes HTML tags, script tags, event handlers
+    - SQL Injection Prevention: Rejects consecutive hyphens, removes null bytes
+    - Input Sanitization: Normalizes whitespace, removes dangerous characters
+    - Length Limits: Prevents DoS attacks from extremely long inputs
+    - Scheme Validation: Only allows http/https URLs
+
+Validation Rules:
+    - Email: RFC 5322 compliant, max 254 chars, lowercase normalized
+    - Slug: Lowercase alphanumeric + hyphens, max 100 chars, no consecutive hyphens
+    - Name: Sanitized HTML, max 255 chars, preserves unicode
+    - URL: http/https only, max 2048 chars, validates format
+    - Role: admin, member, viewer only, lowercase normalized
+"""
 
 import pytest
 from pydantic import BaseModel, ValidationError

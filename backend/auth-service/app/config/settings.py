@@ -1,4 +1,37 @@
-"""Application configuration loaded from environment variables."""
+"""Application configuration loaded from environment variables.
+
+This module defines the Settings class that loads and validates all application
+configuration from environment variables. It uses Pydantic for validation and
+type safety.
+
+Key Features:
+- Environment variable loading with validation
+- Type-safe configuration with Pydantic
+- Required field validation on startup
+- Security key strength validation
+- Sensible defaults for optional settings
+- Cached settings instance (singleton pattern)
+
+Configuration Sources:
+1. Environment variables (primary)
+2. .env file (if present)
+3. Default values (for optional settings)
+
+Security:
+- Validates minimum key lengths for encryption keys
+- Requires all secrets to be set (no defaults for sensitive data)
+- Validates cookie password strength
+
+Usage:
+    from app.config import settings
+    
+    # Access configuration
+    db_url = settings.database_url
+    workos_key = settings.workos_api_key
+    
+    # Settings are cached (singleton)
+    assert settings is get_settings()  # True
+"""
 
 from functools import lru_cache
 
@@ -7,12 +40,49 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
-    """Application settings loaded from environment variables."""
+    """
+    Application settings loaded from environment variables.
+    
+    This class defines all configuration settings for the auth service.
+    Settings are loaded from environment variables with validation and type
+    checking. Required settings must be provided, optional settings have
+    sensible defaults.
+    
+    Configuration Loading:
+        - Reads from environment variables (case-insensitive)
+        - Falls back to .env file if present
+        - Validates all required fields on instantiation
+        - Caches instance for performance (singleton)
+    
+    Required Settings:
+        - DATABASE_URL: PostgreSQL connection string
+        - WORKOS_API_KEY: WorkOS API key
+        - WORKOS_CLIENT_ID: WorkOS client ID
+        - WORKOS_COOKIE_PASSWORD: Cookie encryption password (min 32 chars)
+        - ENCRYPTION_KEY: Encryption key for JWT (min 32 chars)
+    
+    Optional Settings:
+        - Most settings have defaults suitable for development
+        - Production should override defaults via environment variables
+    
+    Validation:
+        - Security keys must be at least 32 characters
+        - All required secrets validated on startup
+        - Database URL format validated by SQLAlchemy
+    
+    Example:
+        # In .env file or environment:
+        DATABASE_URL=postgresql+asyncpg://user:pass@localhost:5432/db
+        WORKOS_API_KEY=sk_test_...
+        WORKOS_CLIENT_ID=client_...
+        WORKOS_COOKIE_PASSWORD=your-32-character-cookie-password-here
+        ENCRYPTION_KEY=your-32-character-encryption-key-here
+    """
 
     model_config = SettingsConfigDict(
-        env_file=".env",
-        env_file_encoding="utf-8",
-        case_sensitive=False,
+        env_file=".env",  # Load from .env file if present
+        env_file_encoding="utf-8",  # UTF-8 encoding for .env file
+        case_sensitive=False,  # Environment variable names are case-insensitive
     )
 
     # App

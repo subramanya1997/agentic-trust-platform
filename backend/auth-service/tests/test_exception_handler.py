@@ -1,4 +1,42 @@
-"""Tests for global exception handler middleware."""
+"""Tests for global exception handler middleware.
+
+This module contains comprehensive tests for the ExceptionHandlerMiddleware,
+which provides centralized exception handling across all FastAPI endpoints.
+It ensures consistent error response formats and proper HTTP status codes.
+
+Test Coverage:
+    - Successful request passthrough
+    - HTTPException handling (FastAPI built-in)
+    - Custom exception types and their status codes:
+        * DatabaseError -> 500
+        * WorkOSError -> 503
+        * AuthenticationError -> 401
+        * AuthorizationError -> 403
+        * ValidationError -> 400
+        * NotFoundError -> 404
+        * ConflictError -> 409
+    - Error details in debug vs production mode
+    - Unhandled exception safety (500 with generic message)
+    - Request ID inclusion in all errors
+    - Timestamp format (ISO-8601)
+    - Exception metrics tracking
+
+Error Response Format:
+    {
+        "error": {
+            "code": "ExceptionClassName",
+            "message": "Human-readable message",
+            "request_id": "req_01ABC123",
+            "timestamp": "2024-01-01T00:00:00Z",
+            "details": {...}  # Only in debug mode
+        }
+    }
+
+Security:
+    - Error details are only included in debug mode
+    - Unhandled exceptions never expose internal details
+    - Request IDs help with debugging without exposing sensitive info
+"""
 
 import json
 from unittest.mock import patch

@@ -1,4 +1,37 @@
-"""Integration tests for team management routes."""
+"""Integration tests for team management routes.
+
+This module contains integration tests for team management endpoints.
+These tests verify authentication requirements and input validation
+for team member operations.
+
+Test Coverage:
+    - Listing team members (requires authentication)
+    - Inviting new members (requires authentication and validation)
+    - Updating member roles (requires authentication)
+    - Removing members (requires authentication)
+    - Listing invitations (requires authentication)
+    - Email validation for invitations
+
+Authentication:
+    All team management endpoints require authentication. Unauthenticated
+    requests should return 401 Unauthorized or 403 Forbidden.
+
+Endpoints Tested:
+    - GET /team/members: List organization members
+    - POST /team/invite: Invite new member
+    - PATCH /team/members/{member_id}/role: Update member role
+    - DELETE /team/members/{member_id}: Remove member
+    - GET /team/invitations: List pending invitations
+
+Validation:
+    - Email format validation
+    - Role validation (admin, member, viewer)
+    - Required field validation
+
+Note:
+    These tests focus on authentication and basic validation. Full integration
+    tests with authenticated sessions would require mock WorkOS sessions.
+"""
 
 import pytest
 from httpx import AsyncClient

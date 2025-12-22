@@ -1,4 +1,45 @@
-"""WorkOS client configuration and helper functions."""
+"""WorkOS client configuration and helper functions.
+
+This module provides a centralized WorkOS client and wrapper functions for
+all WorkOS API interactions. All functions are protected with circuit breakers
+to prevent cascading failures.
+
+Key Features:
+- Centralized WorkOS client configuration
+- Circuit breaker protection on all API calls
+- Sealed session handling (encrypted cookies)
+- User and organization management
+- Team member management
+- Audit log syncing
+- Role management
+
+WorkOS Integration:
+    - User Management: OAuth, sessions, user CRUD
+    - Organizations: Organization CRUD and management
+    - Team Management: Memberships, invitations, roles
+    - Audit Logs: Event syncing for compliance
+
+Session Handling:
+    - Sealed sessions: Encrypted session cookies for security
+    - Session refresh: Automatic token refresh without re-authentication
+    - Session validation: Verify session authenticity with WorkOS
+
+Usage:
+    from app.core.workos_client import (
+        get_authorization_url,
+        authenticate_with_code,
+        load_sealed_session
+    )
+    
+    # Get OAuth URL
+    url = get_authorization_url(provider="GoogleOAuth")
+    
+    # Authenticate with code
+    result = authenticate_with_code(code)
+    
+    # Load session
+    session = load_sealed_session(sealed_session)
+"""
 
 import logging
 
@@ -12,6 +53,7 @@ from app.core.circuit_breaker import with_circuit_breaker
 logger = logging.getLogger(__name__)
 
 # Initialize WorkOS client
+# This client is used for all WorkOS API interactions
 client = WorkOSClient(
     api_key=settings.workos_api_key,
     client_id=settings.workos_client_id,
@@ -26,16 +68,46 @@ def get_authorization_url(
     organization_id: str | None = None,
 ) -> str:
     """
-    Generate WorkOS authorization URL for login.
+    Generate WorkOS authorization URL for OAuth login.
+
+    This function creates the OAuth authorization URL that users are redirected
+    to for authentication. The URL includes all necessary parameters for
+    the OAuth flow.
+
+    OAuth Providers:
+        - "authkit": WorkOS AuthKit (default, supports multiple providers)
+        - "GoogleOAuth": Google OAuth
+        - "MicrosoftOAuth": Microsoft OAuth
+        - "GitHubOAuth": GitHub OAuth
+        - Custom providers configured in WorkOS
+
+    CSRF Protection:
+        The state parameter should be a cryptographically random token that
+        is validated on callback to prevent CSRF attacks.
 
     Args:
-        redirect_uri: Where to redirect after auth (defaults to settings)
-        state: Optional state parameter for CSRF protection
-        provider: Auth provider ("authkit", "GoogleOAuth", "MicrosoftOAuth", etc.)
-        organization_id: Optional org ID for SSO login
+        redirect_uri: Where to redirect after authentication
+                     (defaults to WORKOS_REDIRECT_URI from settings)
+        state: CSRF state token for security (should be random, 32+ chars)
+        provider: OAuth provider name (default: "authkit")
+        organization_id: Optional organization ID for SSO login
+                        (if provided, user must be member of this org)
 
     Returns:
-        Authorization URL to redirect user to
+        str: Complete authorization URL to redirect user to
+
+    Example:
+        >>> import secrets
+        >>> state = secrets.token_urlsafe(32)
+        >>> url = get_authorization_url(
+        ...     provider="GoogleOAuth",
+        ...     state=state
+        ... )
+        >>> # Redirect user to url
+
+    Note:
+        Protected with circuit breaker. Raises CircuitBreakerError if
+        WorkOS API is unavailable.
     """
     return client.user_management.get_authorization_url(
         redirect_uri=redirect_uri or settings.workos_redirect_uri,
@@ -48,19 +120,57 @@ def get_authorization_url(
 @with_circuit_breaker("workos")
 def authenticate_with_code(code: str) -> dict:
     """
-    Exchange authorization code for user and session.
+    Exchange OAuth authorization code for user and session.
+
+    This function completes the OAuth flow by exchanging the authorization
+    code (received from OAuth callback) for user information and a sealed
+    session token. The sealed session is an encrypted cookie that can be
+    used for subsequent authenticated requests.
+
+    OAuth Flow:
+        1. User redirected to authorization URL
+        2. User authenticates with provider
+        3. Provider redirects to callback with code
+        4. This function exchanges code for session
+        5. Sealed session stored in HTTP-only cookie
+
+    Sealed Session:
+        - Encrypted with WORKOS_COOKIE_PASSWORD
+        - HTTP-only cookie (prevents XSS attacks)
+        - Contains user info and refresh token
+        - Validated on each request via load_sealed_session()
 
     Args:
-        code: Authorization code from callback
+        code: Authorization code from OAuth callback (single-use, expires quickly)
 
     Returns:
-        Dict with user, sealed_session, access_token, refresh_token
+        dict: Dictionary containing:
+            - user: WorkOSUser object with user information
+            - sealed_session: Encrypted session token (for cookie)
+            - access_token: OAuth access token (for API calls)
+            - refresh_token: OAuth refresh token (for token refresh)
+
+    Raises:
+        httpx.HTTPStatusError: If code is invalid or expired
+        httpx.RequestError: If network request fails
+        CircuitBreakerError: If WorkOS API is unavailable
+
+    Example:
+        >>> # In OAuth callback handler
+        >>> result = authenticate_with_code(code)
+        >>> user = result["user"]
+        >>> sealed_session = result["sealed_session"]
+        >>> # Set sealed_session as HTTP-only cookie
+
+    Note:
+        The authorization code is single-use and expires quickly (typically
+        within minutes). Must be exchanged immediately after receiving it.
     """
     response = client.user_management.authenticate_with_code(
         code=code,
         session={
-            "seal_session": True,
-            "cookie_password": settings.workos_cookie_password,
+            "seal_session": True,  # Request sealed (encrypted) session
+            "cookie_password": settings.workos_cookie_password,  # Encryption key
         },
     )
 
@@ -77,39 +187,79 @@ def load_sealed_session(sealed_session: str):
     """
     Load and validate a sealed session using WorkOS Python SDK.
 
+    This function decrypts and validates a sealed session cookie, extracting
+    user information and role. It's called on every authenticated request
+    to verify the session is still valid.
+
+    Session Validation:
+        - Decrypts sealed session with WORKOS_COOKIE_PASSWORD
+        - Validates session hasn't expired
+        - Checks refresh token is still valid
+        - Extracts user information and role
+        - Returns authentication status
+
+    Session Expiration:
+        - Sessions expire after configured duration (default: 7 days)
+        - Refresh tokens can extend session without re-authentication
+        - Expired sessions return authenticated=False
+
     Args:
-        sealed_session: The encrypted session cookie value
+        sealed_session: The encrypted session cookie value from HTTP cookie
 
     Returns:
-        AuthenticateWithSessionCookieSuccessResponse with user info and role
+        AuthenticateWithSessionCookieSuccessResponse object containing:
+            - authenticated: bool - Whether session is valid
+            - user: WorkOSUser - User information
+            - role: str - User's role in organization
+            - organization_id: str - Current organization ID
+            - reason: str - Reason if authentication failed (optional)
 
     Raises:
-        ValueError: If session is invalid or expired
-        httpx.RequestError: If network request fails
+        ValueError: If session is invalid, expired, or decryption fails
+        httpx.RequestError: If network request to WorkOS fails
+        CircuitBreakerError: If WorkOS API is unavailable
+
+    Example:
+        >>> # In route handler
+        >>> sealed_session = request.cookies.get("wos-session")
+        >>> auth_response = load_sealed_session(sealed_session)
+        >>> if auth_response.authenticated:
+        ...     user = auth_response.user
+        ...     role = auth_response.role
+
+    Note:
+        This function is called on every authenticated request. Consider
+        caching results if performance is critical (with appropriate
+        cache invalidation on session changes).
     """
     try:
         # WorkOS Python SDK v5.x - load the sealed session
-        # This returns a Session object
+        # This returns a Session object that can be authenticated
         session = client.user_management.load_sealed_session(
             sealed_session=sealed_session,
             cookie_password=settings.workos_cookie_password,
         )
         
         # Authenticate the session to get user data and role
+        # This validates the session and extracts user information
         auth_response = session.authenticate()
         
         # Check authentication FIRST before accessing user
+        # Prevents AttributeError if session is invalid
         if not auth_response.authenticated:
             reason = getattr(auth_response, "reason", "unknown")
             raise ValueError(f"Session is not authenticated or expired: {reason}")
         
         return auth_response
     except ValueError:
+        # Re-raise ValueError (invalid/expired session)
         raise
     except httpx.RequestError as e:
+        # Log network errors for debugging
         logger.error("Network error loading sealed session", exc_info=True, extra={"error": str(e)})
         raise
     except Exception as e:
+        # Catch-all for unexpected errors
         logger.error("Unexpected error loading sealed session", exc_info=True, extra={"error": str(e)})
         raise ValueError(f"Failed to load sealed session: {e!s}")
 
@@ -119,14 +269,49 @@ def refresh_sealed_session(sealed_session: str):
     """
     Refresh a sealed session and return new sealed session data.
     
-    Uses WorkOS session refresh to obtain a new access token without requiring
-    the user to log in again, as long as the refresh token is still valid.
+    This function extends a user's session without requiring re-authentication.
+    It uses the refresh token embedded in the sealed session to obtain a new
+    access token and sealed session cookie.
+    
+    Session Refresh Flow:
+        1. Load existing sealed session
+        2. Extract refresh token from session
+        3. Exchange refresh token for new access token
+        4. Generate new sealed session with updated tokens
+        5. Return new sealed session for cookie update
+    
+    When to Refresh:
+        - Before session expires (proactive refresh)
+        - When access token expires (reactive refresh)
+        - On session validation failure (retry mechanism)
+    
+    Refresh Token Expiration:
+        - Refresh tokens have longer expiration than access tokens
+        - If refresh token expires, user must re-authenticate
+        - Default refresh token expiration: 30 days (WorkOS default)
     
     Args:
-        sealed_session: The encrypted session cookie value
+        sealed_session: The encrypted session cookie value to refresh
     
     Returns:
-        Dict with sealed_session, user, and authenticated status
+        dict: Dictionary containing:
+            - authenticated: bool - Whether refresh succeeded
+            - sealed_session: str - New sealed session token (if authenticated=True)
+            - user: WorkOSUser - User information (if authenticated=True)
+            - reason: str - Failure reason (if authenticated=False)
+    
+    Example:
+        >>> result = refresh_sealed_session(old_session)
+        >>> if result["authenticated"]:
+        ...     new_session = result["sealed_session"]
+        ...     # Update cookie with new_session
+        ... else:
+        ...     # Refresh failed, user must re-login
+        ...     reason = result["reason"]
+    
+    Note:
+        This function does NOT raise exceptions. Always check the
+        "authenticated" field in the return value to determine success.
     """
     try:
         # Load the sealed session
@@ -136,6 +321,7 @@ def refresh_sealed_session(sealed_session: str):
         )
         
         # Refresh the session to get a new access token
+        # This uses the refresh token to obtain new tokens without re-authentication
         refresh_result = session.refresh()
         
         if refresh_result.authenticated:
@@ -146,12 +332,15 @@ def refresh_sealed_session(sealed_session: str):
                 "authenticated": True,
             }
         
-        logger.warning(f"Session refresh failed: {getattr(refresh_result, 'reason', 'unknown')}")
+        # Refresh failed (refresh token expired or invalid)
+        reason = getattr(refresh_result, "reason", "unknown")
+        logger.warning(f"Session refresh failed: {reason}")
         return {
             "authenticated": False,
-            "reason": getattr(refresh_result, "reason", "unknown")
+            "reason": reason
         }
     except Exception as e:
+        # Catch any unexpected errors during refresh
         logger.error(f"Failed to refresh sealed session: {e}")
         return {
             "authenticated": False,

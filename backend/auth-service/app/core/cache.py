@@ -1,4 +1,43 @@
-"""Redis caching service for performance optimization."""
+"""Redis caching service for performance optimization.
+
+This module provides a Redis-backed caching service using the cache-aside
+pattern. It's designed to cache frequently accessed, rarely changed data
+to reduce database load and improve response times.
+
+Key Features:
+- Cache-aside pattern (check cache, fallback to database)
+- JSON serialization for complex data types
+- TTL (time-to-live) support for automatic expiration
+- Pattern-based key deletion for cache invalidation
+- Graceful degradation (returns None on cache errors)
+
+Cache-Aside Pattern:
+    1. Check cache for data
+    2. If found, return cached data
+    3. If not found, fetch from database
+    4. Store in cache for future requests
+    5. Return data
+
+Cache Key Format:
+    - Organization: "org:{org_id}"
+    - User: "user:{user_id}"
+    - Team: "team:{org_id}:members"
+
+TTL Defaults:
+    - Organizations: 10 minutes
+    - Users: 5 minutes
+    - Team members: 2 minutes
+
+Usage:
+    from app.core.cache import CacheService, make_cache_key
+    
+    cache = CacheService()
+    key = make_cache_key("org", org_id)
+    org = await cache.get(key)
+    if not org:
+        org = await fetch_from_db(org_id)
+        await cache.set(key, org, ttl=600)
+"""
 
 import json
 import logging
@@ -16,7 +55,31 @@ class CacheService:
     Redis-backed caching service implementing cache-aside pattern.
     
     This service provides caching for frequently accessed, rarely changed data
-    to reduce database load and improve response times.
+    to reduce database load and improve response times. It uses JSON
+    serialization to store complex Python objects.
+    
+    Key Features:
+    - Async Redis operations
+    - JSON serialization/deserialization
+    - TTL support for automatic expiration
+    - Pattern-based key deletion
+    - Graceful error handling (returns None on errors)
+    
+    Connection Management:
+    - Lazy connection initialization
+    - Connection reuse across requests
+    - Manual close() method for cleanup
+    
+    Example:
+        cache = CacheService()
+        # Get from cache
+        value = await cache.get("my_key")
+        # Set in cache with 5 minute TTL
+        await cache.set("my_key", {"data": "value"}, ttl=300)
+        # Delete from cache
+        await cache.delete("my_key")
+        # Delete all keys matching pattern
+        await cache.delete_pattern("user:*")
     """
 
     def __init__(self, redis_url: str | None = None):
